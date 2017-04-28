@@ -2,6 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DiceMaster;
+using UnityEngine.UI;
+
+/* 
+   攻略關卡的角色應該在資源分配畫面選擇完後，就一直存在，就算死亡也不會destroy。
+   
+                    ＿＿例如戰鬥時應該都在同一個scene，但戰鬥中每個階段(選技能、擲骰子、敵人攻擊、換行動角色)，應該有不同的
+                   ｜   介面，光是不同角色行動，下畫面的頭像和技能按鈕就不同。所以要有這個系統來管理，現在是什麼階段，哪些
+                   ｜   UI物件要顯示，哪些要隱藏。還要根據各階段通知這個check system來處理判定。
+                   ｜   事件判定結束後還要透過此系統來切換scene。
+                   ｜
+   需要一個管理目前介面狀況的系統，基本上是個state machine，它會掌握目前攻略的情況，
+   來調整介面的顯示，還有設定這個checkSystem中的 check event, actioning character, aimed barrier
+   這個系統應該不會因為scene的切換而消失。
+*/
 
 public class checkSystem : MonoBehaviour {
 
@@ -11,6 +25,11 @@ public class checkSystem : MonoBehaviour {
 	private Skill usingSkill; // 目前使用的技能？
 	private bool usedSkill = false; // 有沒有使用技能？
 
+	public Button backButton;
+	public Button nextButton;
+	public Text checkValueText;
+	private Animator textFeedback;
+
 	private Dice[] dice; // 從角色中取得的骰子會放在這裡
 	private int finalCheckValue = 0; // 最終用來做判定的值
 	private int[] checkValue; // 每個骰子擲出來的結果放在這裡
@@ -18,6 +37,11 @@ public class checkSystem : MonoBehaviour {
 
 	private bool isReadyToRoll = false; // 可以開始擲了
 	private bool isRolled = false; // 已經擲了
+
+
+	void Start(){
+		textFeedback = checkValueText.gameObject.GetComponent<Animator> ();
+	}
 
 	// 設定這個check system適用於哪個事件的
 	public void setCheckEvent(int ce){
@@ -35,6 +59,7 @@ public class checkSystem : MonoBehaviour {
 		usedSkill = true;
 	}
 
+	// 設定現在要判定的對象
 	public void setBarrier(Barrier ab){
 		aimedBarrier = ab;
 	}
@@ -68,6 +93,27 @@ public class checkSystem : MonoBehaviour {
 		}
 		aimedBarrier.check (finalCheckValue);
 		Debug.Log("Total " + finalCheckValue);
+		checkValueText.text = "" + finalCheckValue;
+		ShowCheckValue ();
+
+		// 若為戰鬥事件，且敵人未擊倒，則要繼續下一輪選技能、擲骰。 
+		// 這個寫法不好，應該要讓凌駕於check system的state machine處理，
+		// 由它來做介面的刷新，和行動順序。 而且check完，還要讓敵人攻擊，若敵人或目前行動角色死亡，還要重新set character, barrier,
+		// 這邊只是先寫來測試而已。
+		if (checkEvent == 0) {	
+			// clean dice for next turn
+			for (int i = 0; i < dice.Length; i++) {
+				Destroy (dice [i].gameObject, 1.0f);
+			}
+
+			nextButton.gameObject.SetActive (true);
+			SpriteRenderer sr = actioningCharacter.GetComponent<SpriteRenderer> ();
+			sr.enabled = true;
+		}
+	}
+
+	private void ShowCheckValue(){
+		textFeedback.SetTrigger ("Show");
 	}
 
 	// 骰子停止後callback其值，並存在check value陣列中，爾後可以傳給Skill做加權修正。
@@ -99,6 +145,7 @@ public class checkSystem : MonoBehaviour {
 				if (Input.mousePosition.x > 0 && Input.mousePosition.x < 750 && Input.mousePosition.y > 20 && Input.mousePosition.y < 570) {
 					isRolled = true;
 					isReadyToRoll = false;
+					backButton.gameObject.SetActive (false);
 				}
 			}
 		}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DiceMaster;
 using UnityEngine;
 
+// 缺動畫(攻擊、死亡、受傷害)
 public class Character : MonoBehaviour {
 
 	public int Hp;
