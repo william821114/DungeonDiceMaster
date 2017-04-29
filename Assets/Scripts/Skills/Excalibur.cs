@@ -6,7 +6,7 @@ public class Excalibur : Skill {
 	
 	private bool success;
 
-	public override int skillWeight(int[] checkValue){
+    public override int skillWeight(int[] checkValue){
 		// 如果所有值皆大於等於3，則總值再加3
 
 		for (int i = 0; i < checkValue.Length; i++) {
