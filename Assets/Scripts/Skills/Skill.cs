@@ -5,6 +5,7 @@ using UnityEngine;
 public class Skill: MonoBehaviour {
 
 	public int finalCheckValue;
+    public bool isHealSkill;
 
 	//These methods are virtual and thus can be overriden
 	//in child classes

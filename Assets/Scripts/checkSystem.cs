@@ -27,7 +27,10 @@ public class checkSystem : MonoBehaviour {
 
 	public Button backButton;
 	public Button nextButton;
-	public Text checkValueText;
+
+    public Transform skillButtons;
+
+    public Text checkValueText;
 	private Animator textFeedback;
 
 	private Dice[] dice; // 從角色中取得的骰子會放在這裡
@@ -85,13 +88,24 @@ public class checkSystem : MonoBehaviour {
 
 	// 取得最終累計的數值，丟給目標去判定是否結果。
 	public void check(){
+        bool isHeal = false;
 		if (usedSkill) {
 			finalCheckValue = usingSkill.skillWeight (checkValue);
+            isHeal = usingSkill.isHealSkill;
 		} else {
 			for(int i=0; i<checkValue.Length; i++)
 				finalCheckValue += checkValue[i];
 		}
-		aimedBarrier.check (finalCheckValue);
+
+        if (isHeal)
+        {
+            Debug.Log("Using Heal Skill");
+            actioningCharacter.getHeal(finalCheckValue);
+        } else
+        {
+            aimedBarrier.check(finalCheckValue);
+        }
+
 		Debug.Log("Total " + finalCheckValue);
 		checkValueText.text = "" + finalCheckValue;
 		ShowCheckValue ();
@@ -107,6 +121,7 @@ public class checkSystem : MonoBehaviour {
 			}
 
 			nextButton.gameObject.SetActive (true);
+            skillButtons.gameObject.SetActive(true);
 			SpriteRenderer sr = actioningCharacter.GetComponent<SpriteRenderer> ();
 			sr.enabled = true;
 		}
