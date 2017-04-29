@@ -27,7 +27,10 @@ public class checkSystem : MonoBehaviour {
 
 	public Button backButton;
 	public Button nextButton;
-	public Text checkValueText;
+
+    public Transform skillButtons;
+
+    public Text checkValueText;
 	private Animator textFeedback;
 
 	private Dice[] dice; // 從角色中取得的骰子會放在這裡
@@ -118,6 +121,7 @@ public class checkSystem : MonoBehaviour {
 			}
 
 			nextButton.gameObject.SetActive (true);
+            skillButtons.gameObject.SetActive(true);
 			SpriteRenderer sr = actioningCharacter.GetComponent<SpriteRenderer> ();
 			sr.enabled = true;
 		}

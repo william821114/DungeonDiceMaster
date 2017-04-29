@@ -6,7 +6,11 @@ using UnityEngine;
 // 目前還缺受傷的動畫、攻擊的動畫
 public class Monster : Barrier {
 
-	public int Hp;
+    public int MaxHp;
+    public int originAtk;
+    public int originDef;
+
+    public int Hp;
 	public int Atk;
 	public int Def;
 
@@ -15,7 +19,11 @@ public class Monster : Barrier {
 
 	void Start(){
 		monsterAnimator = this.GetComponent<Animator> ();
-	}
+
+        Hp = MaxHp;
+        Atk = originAtk;
+        Def = originDef;
+    }
 
 	public override void check(int finalCheckValue){
 		int damage = finalCheckValue - this.Def;
