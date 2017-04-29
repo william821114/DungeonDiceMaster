@@ -17,7 +17,10 @@ public class Monster : Barrier {
 	private bool isDead = false;
 	private Animator monsterAnimator;
 
-	void Start(){
+    public Character actioningCharacter;
+    public StateManager stateManager;
+
+    void Start(){
 		monsterAnimator = this.GetComponent<Animator> ();
 
         Hp = MaxHp;
@@ -53,4 +56,23 @@ public class Monster : Barrier {
 	private void cleanDeadBody(){
 		Destroy (this.gameObject);
 	}
+
+    // 怪物每一回合的行動
+    private void AI()
+    {
+        // 這邊還要加上動畫
+        actioningCharacter.SendMessage("getHurt", Atk);
+    }
+
+    public void onStateChange(State.BattleState state)
+    {
+        
+        if (state.Equals(State.BattleState.EnemyTurn))
+        {
+            Debug.Log("Deer : It's my turn!");
+            AI();
+            stateManager.SendMessage("setTurn", State.BattleState.PlayerTurn);
+        }
+        
+    }
 }

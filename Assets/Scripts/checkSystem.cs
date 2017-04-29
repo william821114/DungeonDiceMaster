@@ -22,6 +22,7 @@ public class checkSystem : MonoBehaviour {
 	public int checkEvent; // 目前的事件是哪一類？ 0 = battle / 1 = social / 2 = explore
 	public Character actioningCharacter; // 目前行動中的角色是哪隻？
 	public Barrier aimedBarrier; // 目前要判定的對象
+    public StateManager stateManager; //判定目前的state 並在攻擊完之後設定新的state
 	private Skill usingSkill; // 目前使用的技能？
 	private bool usedSkill = false; // 有沒有使用技能？
 
@@ -125,7 +126,11 @@ public class checkSystem : MonoBehaviour {
 			SpriteRenderer sr = actioningCharacter.GetComponent<SpriteRenderer> ();
 			sr.enabled = true;
 		}
-	}
+
+
+        // 更新state: 敵人的回合
+        stateManager.SendMessage("setTurn", State.BattleState.EnemyTurn);
+    }
 
 	private void ShowCheckValue(){
 		textFeedback.SetTrigger ("Show");

@@ -20,6 +20,8 @@ public class Character : MonoBehaviour {
 	public Dice[] exploreDice;
 	public Skill[] skill;
 
+    public StateManager stateManager;
+
 	private bool isDead = false;
 
     private void Start()
@@ -33,11 +35,15 @@ public class Character : MonoBehaviour {
     // 呼叫此function來扣角色HP
     public void getHurt(int damage)
 	{
-		if (!isDead) {	
-			if (Def - damage < 0)
-				Hp = Hp - (Def - damage);
+        Debug.Log("Alice: Ouch! " + damage);
+		if (!isDead) {
+			if (damage - Def > 0)
+            {
+                Hp = Hp - (damage - Def);
+                Debug.Log("Alice: My Hp:" + Hp);
+            }
 
-			if (Hp <= 0)
+            if (Hp <= 0)
 				isDead = true;
 		}
 	}
@@ -74,4 +80,10 @@ public class Character : MonoBehaviour {
 			return null;
 	}
 
+    public void onStateChange(State.BattleState state)
+    {
+        if(state.Equals(State.BattleState.PlayerTurn)) {
+            Debug.Log("Alice : It's my turn!");
+        }
+    }
 }
