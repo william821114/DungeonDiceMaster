@@ -81,6 +81,14 @@ public class Monster : Barrier {
         actioningCharacterAnimator.SetTrigger("Hurt");
     }
 
+    public void MonsterTurnEnd()
+    {
+        if (!stateManager.getState().Equals(State.BattleState.BattleEnd))
+        {
+            stateManager.SendMessage("setTurn", State.BattleState.PlayerTurn);
+        }
+    }
+
     public void onStateChange(State.BattleState state)
     {
         
@@ -89,10 +97,7 @@ public class Monster : Barrier {
             Debug.Log("Deer : It's my turn!");
             AI();
 
-            if(!stateManager.getState().Equals(State.BattleState.BattleEnd))
-            {
-                stateManager.SendMessage("setTurn", State.BattleState.PlayerTurn);
-            }
+            
            
         }
     }

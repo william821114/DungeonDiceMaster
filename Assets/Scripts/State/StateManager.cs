@@ -10,8 +10,14 @@ public class StateManager : MonoBehaviour {
     public Image BattleResult;
     public Text BattleResultText;
 
-	// Use this for initialization
-	void Start () {
+
+    public Button backButton;
+    public Button nextButton;
+
+    public Transform skillButtons;
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -34,6 +40,12 @@ public class StateManager : MonoBehaviour {
         BattleResult.gameObject.SetActive(true);
         BattleResultText.text = (win ? "Win" : "Lose");
 
+    }
+
+    public void prepareForPlayerTurn()
+    {
+        nextButton.gameObject.SetActive(true);
+        skillButtons.gameObject.SetActive(true);
     }
 
     public State.BattleState getState()
