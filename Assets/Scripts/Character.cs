@@ -46,7 +46,6 @@ public class Character : MonoBehaviour {
             if (Hp <= 0)
             {
                 isDead = true;
-                stateManager.setBattleEnd(false);
             }
 				
 		}
@@ -84,10 +83,24 @@ public class Character : MonoBehaviour {
 			return null;
 	}
 
+    public void PlayerTurn()
+    {
+        if (isDead)
+            stateManager.setBattleEnd(false);
+        else
+        {
+            if (!stateManager.getState().Equals(State.BattleState.BattleEnd))
+            {
+                stateManager.SendMessage("setTurn", State.BattleState.PlayerTurn);
+            }
+        }
+    }
+
     public void onStateChange(State.BattleState state)
     {
         if(state.Equals(State.BattleState.PlayerTurn)) {
             Debug.Log("Alice : It's my turn!");
+            stateManager.prepareForPlayerTurn();
         }
     }
 }

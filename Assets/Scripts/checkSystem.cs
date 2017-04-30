@@ -111,21 +111,6 @@ public class checkSystem : MonoBehaviour {
 		checkValueText.text = "" + finalCheckValue;
 		ShowCheckValue ();
 
-		// 若為戰鬥事件，且敵人未擊倒，則要繼續下一輪選技能、擲骰。 
-		// 這個寫法不好，應該要讓凌駕於check system的state machine處理，
-		// 由它來做介面的刷新，和行動順序。 而且check完，還要讓敵人攻擊，若敵人或目前行動角色死亡，還要重新set character, barrier,
-		// 這邊只是先寫來測試而已。
-		if (checkEvent == 0) {	
-			// clean dice for next turn
-			for (int i = 0; i < dice.Length; i++) {
-				Destroy (dice [i].gameObject, 1.0f);
-			}
-
-			nextButton.gameObject.SetActive (true);
-            skillButtons.gameObject.SetActive(true);
-			SpriteRenderer sr = actioningCharacter.GetComponent<SpriteRenderer> ();
-			sr.enabled = true;
-		}
 
 
         // 更新state: 敵人的回合
@@ -137,9 +122,26 @@ public class checkSystem : MonoBehaviour {
     // 等待一秒鐘 換回合
     IEnumerator ChangeTurn()
     {       
-        yield return new WaitForSeconds(1);
         if (!stateManager.getState().Equals(State.BattleState.BattleEnd))
         {
+            // 若為戰鬥事件，且敵人未擊倒，則要繼續下一輪選技能、擲骰。 
+            // 這個寫法不好，應該要讓凌駕於check system的state machine處理，
+            // 由它來做介面的刷新，和行動順序。 而且check完，還要讓敵人攻擊，若敵人或目前行動角色死亡，還要重新set character, barrier,
+            // 這邊只是先寫來測試而已。
+            if (checkEvent == 0)
+            {
+                // clean dice for next turn
+                for (int i = 0; i < dice.Length; i++)
+                {
+                    Destroy(dice[i].gameObject, 1.0f);
+                }
+
+                SpriteRenderer sr = actioningCharacter.GetComponent<SpriteRenderer>();
+                sr.enabled = true;
+            }
+
+            yield return new WaitForSeconds(1);
+
             stateManager.SendMessage("setTurn", State.BattleState.EnemyTurn);
         }   
     }
