@@ -129,10 +129,18 @@ public class checkSystem : MonoBehaviour {
 
 
         // 更新state: 敵人的回合
+
+        StartCoroutine(ChangeTurn());
+
+    }
+
+    IEnumerator ChangeTurn()
+    {       
+        yield return new WaitForSeconds(1);
         stateManager.SendMessage("setTurn", State.BattleState.EnemyTurn);
     }
 
-	private void ShowCheckValue(){
+    private void ShowCheckValue(){
 		textFeedback.SetTrigger ("Show");
 	}
 
