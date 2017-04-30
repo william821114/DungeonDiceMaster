@@ -1,9 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StateManager : MonoBehaviour {
     public State.BattleState currentState;
+
+    //暫時寫在這 應該有更好的寫法
+    public Image BattleResult;
+    public Text BattleResultText;
 
 	// Use this for initialization
 	void Start () {
@@ -18,8 +23,22 @@ public class StateManager : MonoBehaviour {
         GameObject[] battlingObjects = GameObject.FindGameObjectsWithTag("Character");
         foreach (GameObject bObj in battlingObjects)
         {
+            Debug.Log(bObj.name);
             bObj.SendMessage("onStateChange", currentState);
         }
+    }
+
+    public void setBattleEnd(bool win)
+    {
+        currentState = State.BattleState.BattleEnd;
+        BattleResult.gameObject.SetActive(true);
+        BattleResultText.text = (win ? "Win" : "Lose");
+
+    }
+
+    public State.BattleState getState()
+    {
+        return currentState;
     }
 
 }

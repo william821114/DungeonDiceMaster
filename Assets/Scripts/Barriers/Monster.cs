@@ -47,7 +47,9 @@ public class Monster : Barrier {
             if (Hp <= 0) {
 				isDead = true;
 				PlayDieAnimation ();
-			}
+                stateManager.setBattleEnd(true);
+
+            }
 		}
 	}
 
@@ -86,8 +88,12 @@ public class Monster : Barrier {
         {
             Debug.Log("Deer : It's my turn!");
             AI();
-            stateManager.SendMessage("setTurn", State.BattleState.PlayerTurn);
+
+            if(!stateManager.getState().Equals(State.BattleState.BattleEnd))
+            {
+                stateManager.SendMessage("setTurn", State.BattleState.PlayerTurn);
+            }
+           
         }
-        
     }
 }
