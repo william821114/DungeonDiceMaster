@@ -19,6 +19,7 @@ public class Monster : Barrier {
 
     public Character actioningCharacter;
     public StateManager stateManager;
+    public Animator actioningCharacterAnimator;
 
     void Start(){
 		monsterAnimator = this.GetComponent<Animator> ();
@@ -39,11 +40,16 @@ public class Monster : Barrier {
 	public void getHurt(int damage){
 		if (!isDead) {
 			Hp -= damage;
+            PlayHurtAnimation();
 
-			if (Hp <= 0) {
+
+
+            if (Hp <= 0) {
 				isDead = true;
 				PlayDieAnimation ();
-			}
+                stateManager.setBattleEnd(true);
+
+            }
 		}
 	}
 
@@ -51,6 +57,11 @@ public class Monster : Barrier {
 	private void PlayDieAnimation(){
 		monsterAnimator.SetTrigger ("Die");
 	} 
+
+    private void PlayHurtAnimation()
+    {
+        monsterAnimator.SetTrigger("Hurt");
+    }
 
 	// fade out的最後一個frame會呼叫這個，來清掉物件
 	private void cleanDeadBody(){
@@ -61,7 +72,13 @@ public class Monster : Barrier {
     private void AI()
     {
         // 這邊還要加上動畫
+        monsterAnimator.SetTrigger("Attack");
         actioningCharacter.SendMessage("getHurt", Atk);
+    }
+
+    public void MonsterAttackEnd()
+    {
+        actioningCharacterAnimator.SetTrigger("Hurt");
     }
 
     public void onStateChange(State.BattleState state)
@@ -71,8 +88,12 @@ public class Monster : Barrier {
         {
             Debug.Log("Deer : It's my turn!");
             AI();
-            stateManager.SendMessage("setTurn", State.BattleState.PlayerTurn);
+
+            if(!stateManager.getState().Equals(State.BattleState.BattleEnd))
+            {
+                stateManager.SendMessage("setTurn", State.BattleState.PlayerTurn);
+            }
+           
         }
-        
     }
 }

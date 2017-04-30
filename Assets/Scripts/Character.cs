@@ -44,7 +44,11 @@ public class Character : MonoBehaviour {
             }
 
             if (Hp <= 0)
-				isDead = true;
+            {
+                isDead = true;
+                stateManager.setBattleEnd(false);
+            }
+				
 		}
 	}
 

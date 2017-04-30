@@ -129,10 +129,22 @@ public class checkSystem : MonoBehaviour {
 
 
         // 更新state: 敵人的回合
-        stateManager.SendMessage("setTurn", State.BattleState.EnemyTurn);
+        // 用 start Coroutine 我覺得超爛的 但暫時先這樣用
+        StartCoroutine(ChangeTurn());
+
     }
 
-	private void ShowCheckValue(){
+    // 等待一秒鐘 換回合
+    IEnumerator ChangeTurn()
+    {       
+        yield return new WaitForSeconds(1);
+        if (!stateManager.getState().Equals(State.BattleState.BattleEnd))
+        {
+            stateManager.SendMessage("setTurn", State.BattleState.EnemyTurn);
+        }   
+    }
+
+    private void ShowCheckValue(){
 		textFeedback.SetTrigger ("Show");
 	}
 
