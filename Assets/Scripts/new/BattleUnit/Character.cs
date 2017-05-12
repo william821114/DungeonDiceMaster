@@ -27,6 +27,9 @@ public class Character : BattleUnit {
 	public Sprite characterHalf;
 	public Sprite characterFull;
 
+	public Sprite[] battleSkillOn;
+	public Sprite[] battleSkillOff;
+
 	private bool isDead = false;
 
 

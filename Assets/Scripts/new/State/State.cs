@@ -7,6 +7,9 @@ public static class State {
     public enum BattleState
     {
 		RollOrder,
+		SelectBattleSkill,
+		RollBattleDice,
+
         PlayerTurn,
         EnemyTurn,
         BattleEnd

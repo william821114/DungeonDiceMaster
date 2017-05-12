@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DiceMaster;
 using System.Linq;
 
+
 public class StateManager : MonoBehaviour {
 
 	public State.BattleState currentState;
@@ -12,9 +13,10 @@ public class StateManager : MonoBehaviour {
 	public UIManager uiManager;
 	public Monster monster;
 
-
 	private BattleUnit[] battleUnits; // 將所有戰鬥單位排序，放在這裡
+	private int currentUnitIndex = 0; // 指向目前可行動的戰鬥單位
 	private Character[] characters;
+	private Character currentCharacter; // 目前行動的角色
 	private Dice[] dice;
 	private int cvIndex = 0; // index for check value array
 
@@ -39,6 +41,7 @@ public class StateManager : MonoBehaviour {
 
 	public void prepareForRollOrder(){
 		currentState = State.BattleState.RollOrder;
+		uiManager.currentState = currentState;
 
 		// UI: 顯示骰子下板
 		uiManager.showOrderDicePanel();
@@ -128,6 +131,75 @@ public class StateManager : MonoBehaviour {
 
 		// UI: 顯示擲骰子結果
 		uiManager.showOrderValue();
+		destroyAllDice ();
+	}
+	// 清掉畫面上所有順序骰
+	public void destroyAllDice(){
+		for (int i = 0; i < dice.Length; i++) {
+			Destroy (dice[i].gameObject);
+		}
+	} 
+
+//----------------------------------------以上都是戰鬥一開始擲順序相關的function----------------------------------------------
+
+
+	// 設定階段: 目前State Manager自己、UI Magnager都會call這個來設定目前的階段
+	public void setState(State.BattleState state)
+	{
+		currentState = state;
+		uiManager.currentState = currentState; // 通知UI Manager目前是什麼階段，方便設定UI
+
+		switch (state) {
+		// 選擇技能階段
+		case State.BattleState.SelectBattleSkill:
+
+			// 如果現在可行動的戰鬥單位是怪物，則跳過選擇技能階段
+			if (string.Equals (battleUnits [currentUnitIndex].type, "Monster"))
+				setState (State.BattleState.RollBattleDice);
+			else {
+				setCurrentCharacter (battleUnits [currentUnitIndex].order);
+
+				uiManager.setCurrentCharacter(currentCharacter); // 通知UI目前可行動的角色
+				uiManager.showBattleSkillPanel (); // UI: 顯示技能選擇的操作面板
+			}
+	
+			break;
+
+		case State.BattleState.RollBattleDice:
+
+			if (string.Equals (battleUnits [currentUnitIndex].type, "Monster"))
+				Debug.Log ("RollBattleDice");
+			else {
+				uiManager.showDiceRollingPanel ();
+			}
+			break;
+
+		default:
+			Debug.Log ("setState - ErrorState");
+			break;
+		}
+
+		/*
+		// find enemy and heros and notify the change of state
+		GameObject[] battlingObjects = GameObject.FindGameObjectsWithTag("Character");
+		foreach (GameObject bObj in battlingObjects)
+		{
+			Debug.Log(bObj.name);
+			bObj.SendMessage("onStateChange", currentState);
+		}
+		*/
+	}
+
+	// 設定目前可行動的角色
+	private void setCurrentCharacter(int order)
+	{
+		foreach (Character character in characters) {
+
+			if (character.order == order) {	
+				currentCharacter = character;
+				break;
+			}
+		}
 	}
 
 
