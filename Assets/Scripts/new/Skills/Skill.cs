@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Skill: MonoBehaviour {
 
+	public int needMP;
 	public int finalCheckValue;
     public bool isHealSkill;
 

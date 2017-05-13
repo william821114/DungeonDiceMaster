@@ -8,10 +8,12 @@ public static class State {
     {
 		RollOrder,
 		SelectBattleSkill,
-		RollBattleDice,
+		PlayerRollBattleDice,
+		EnemyRollBattleDice,
+		SelectGambleSkill,
+		PlayerAttack,
+		EnemyAttack,
 
-        PlayerTurn,
-        EnemyTurn,
         BattleEnd
     }
 }

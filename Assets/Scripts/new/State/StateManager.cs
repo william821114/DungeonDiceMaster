@@ -11,6 +11,7 @@ public class StateManager : MonoBehaviour {
 	public State.BattleState currentState;
 
 	public UIManager uiManager;
+	public BattleCheckManager bcManager;
 	public Monster monster;
 
 	private BattleUnit[] battleUnits; // 將所有戰鬥單位排序，放在這裡
@@ -31,6 +32,7 @@ public class StateManager : MonoBehaviour {
 		// 將本場戰鬥參戰的角色和怪物告知UI Manager 
 		uiManager.setCharacters(characters);
 		uiManager.setMonster (monster);
+		bcManager.setMonster (monster);
 
 		// UI: 顯示一開始的下畫面角色圖
 		uiManager.showCharacterPieces ();
@@ -86,6 +88,10 @@ public class StateManager : MonoBehaviour {
 			// 讓骰子產生時就旋轉
 			Spinner spinnerTemp = dice [i].GetComponent<Spinner> ();
 			spinnerTemp.triggerOnStart = true;
+
+			// 稍微調小骰子
+			Transform transformTemp = dice[i].GetComponent<Transform>();
+			transformTemp.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
 
 			// 生成骰子註冊callback function
 			dice [i] = GameObject.Instantiate(dice[i],  dicePosition, Quaternion.identity) as Dice;
@@ -149,13 +155,13 @@ public class StateManager : MonoBehaviour {
 		currentState = state;
 		uiManager.currentState = currentState; // 通知UI Manager目前是什麼階段，方便設定UI
 
-		switch (state) {
+		switch (currentState) {
 		// 選擇技能階段
 		case State.BattleState.SelectBattleSkill:
 
 			// 如果現在可行動的戰鬥單位是怪物，則跳過選擇技能階段
 			if (string.Equals (battleUnits [currentUnitIndex].type, "Monster"))
-				setState (State.BattleState.RollBattleDice);
+				setState (State.BattleState.EnemyRollBattleDice);
 			else {
 				setCurrentCharacter (battleUnits [currentUnitIndex].order);
 
@@ -165,29 +171,35 @@ public class StateManager : MonoBehaviour {
 	
 			break;
 
-		case State.BattleState.RollBattleDice:
-
-			if (string.Equals (battleUnits [currentUnitIndex].type, "Monster"))
-				Debug.Log ("RollBattleDice");
-			else {
-				uiManager.showDiceRollingPanel ();
-			}
+		case State.BattleState.PlayerRollBattleDice:
+			bcManager.setCurrentCharacter (currentCharacter);
+			bcManager.setForPlayerToRoll ();
+			uiManager.showDiceRollingPanel ();
 			break;
 
+		case State.BattleState.EnemyRollBattleDice:
+			bcManager.monsterRoll ();
+			uiManager.showEnemyRollingPanel ();
+			break;
+		
+		case State.BattleState.SelectGambleSkill:
+			Debug.Log ("StateManager.setState  - Select Gamble Skill");
+			break;
+
+		case State.BattleState.EnemyAttack:
+			Debug.Log ("StateManager.setState  - EnemyAttack");
+			currentUnitIndex = (currentUnitIndex+1) % battleUnits.Length;
+			break;
+		
+		case State.BattleState.PlayerAttack:
+			Debug.Log ("StateManager.setState  - PlayerAttack");
+			currentUnitIndex = (currentUnitIndex+1) % battleUnits.Length;
+			break;
+		
 		default:
 			Debug.Log ("setState - ErrorState");
 			break;
 		}
-
-		/*
-		// find enemy and heros and notify the change of state
-		GameObject[] battlingObjects = GameObject.FindGameObjectsWithTag("Character");
-		foreach (GameObject bObj in battlingObjects)
-		{
-			Debug.Log(bObj.name);
-			bObj.SendMessage("onStateChange", currentState);
-		}
-		*/
 	}
 
 	// 設定目前可行動的角色

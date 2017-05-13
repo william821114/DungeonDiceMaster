@@ -7,6 +7,8 @@ public class UIManager : MonoBehaviour {
 	public StateManager stateManager;
 	public State.BattleState currentState;
 
+	public BattleCheckManager bcManager;
+
 	public SpriteRenderer[] characterPieces;
 	public SpriteRenderer[] characterDicePanels;
 	public SpriteRenderer monsterDicePanel;
@@ -28,6 +30,7 @@ public class UIManager : MonoBehaviour {
 	private Sprite[] battleSkillOn;
 	private Sprite[] battleSkillOff;
 	private Animator _animator;
+	private bool isBackClicked = false; // 用來判斷是否back button，以此決定面板平移動畫要播哪個方向的
 
 	// Use this for initialization
 	void Start () {
@@ -39,6 +42,7 @@ public class UIManager : MonoBehaviour {
 		
 	}
 
+//-----------------------------------Set Function----------------------------------
 	public void setCharacters(Character[] cs){
 		characters = cs;
 	}
@@ -51,6 +55,101 @@ public class UIManager : MonoBehaviour {
 		currentCharacter = c;
 	}
 
+
+//-----------------------------------Button Function Set----------------------------------
+	private void setNextButton(State.BattleState state){
+
+		State.BattleState nextState = state;
+
+		switch (state) {
+		case State.BattleState.RollOrder:
+			nextState = State.BattleState.SelectBattleSkill;
+			break;
+
+		case State.BattleState.SelectBattleSkill:
+			nextState = State.BattleState.PlayerRollBattleDice;
+			break;
+		
+		case State.BattleState.PlayerRollBattleDice:
+			nextState = State.BattleState.SelectGambleSkill;
+			break;
+
+		case State.BattleState.EnemyRollBattleDice:
+			nextState = State.BattleState.EnemyAttack;
+			break;
+		
+		case State.BattleState.SelectGambleSkill:
+			Debug.Log ("setNextButton - PlayerAttack");
+			break;
+
+		case State.BattleState.EnemyAttack:
+			Debug.Log ("setNextButton - SelectBattleSkill");
+			break;
+
+		case State.BattleState.PlayerAttack:
+			Debug.Log ("setNextButton - SelectBattleSkill");
+			break;
+
+		default:
+			Debug.Log ("setNextButton - ErrorState");
+			break;
+		}
+
+		Button tmp = nextButton.GetComponent<Button> ();
+		tmp.onClick.RemoveAllListeners ();
+		tmp.GetComponent<Button>().onClick.AddListener(() => clickBack(false));
+		tmp.GetComponent<Button>().onClick.AddListener(() => stateManager.setState(nextState));
+	}
+
+
+	private void setBackButton(State.BattleState state){
+
+		State.BattleState previousState = state;
+
+		switch (state) {
+		case State.BattleState.PlayerRollBattleDice:
+			previousState = State.BattleState.SelectBattleSkill;
+			break;
+
+		default:
+			Debug.Log ("setBackButton - ErrorState");
+			break;
+		}
+
+		Button tmp = backButton.GetComponent<Button> ();
+		tmp.onClick.RemoveAllListeners ();
+		tmp.onClick.AddListener(() => clickBack(true));
+		tmp.onClick.AddListener(() => stateManager.setState(previousState));
+	}
+
+
+//-----------------------------------Button Show & Hide----------------------------------
+	public void showNextButton(){
+		setNextButton (currentState);
+		nextButton.gameObject.SetActive (true);
+	}
+
+	public void hideNextButton(){
+		nextButton.gameObject.SetActive (false);
+	}
+
+	public void showBackButton(){
+		setBackButton (currentState);
+		backButton.gameObject.SetActive (true);
+	}
+
+	public void hideBackButton(){
+		backButton.gameObject.SetActive (false);
+	}
+
+
+//-----------------------------------Button Function----------------------------------
+	private void clickBack(bool clicked){
+		this.isBackClicked = clicked;
+	}
+
+
+//-----------------------------------Show & Hide Panel By State----------------------------------
 	public void showCharacterPieces(){
 		for (int i = 0; i < characters.Length; i++) {
 			characterPieces [i].sprite =  characters[i].characterPiece;
@@ -89,95 +188,93 @@ public class UIManager : MonoBehaviour {
 		playOrderValueAnimation ();
 	}
 
-	private void setNextButton(State.BattleState state){
-
-		State.BattleState nextState = state;
-
-		switch (state) {
-		case State.BattleState.RollOrder:
-			nextState = State.BattleState.SelectBattleSkill;
-			break;
-
-		case State.BattleState.SelectBattleSkill:
-			nextState = State.BattleState.RollBattleDice;
-			break;
-		
-		case State.BattleState.RollBattleDice:
-			Debug.Log ("setNextButton - RollBattleDice");
-			break;
-
-		default:
-			Debug.Log ("setNextButton - ErrorState");
-			break;
-		}
-
-		nextButton.GetComponent<Button>().onClick.AddListener(() => stateManager.setState(nextState));
-	}
-
-	private void setBackButton(State.BattleState state){
-
-		State.BattleState previousState = state;
-
-		switch (state) {
-		case State.BattleState.RollBattleDice:
-			previousState = State.BattleState.SelectBattleSkill;
-			break;
-
-		default:
-			Debug.Log ("setBackButton - ErrorState");
-			break;
-		}
-
-		backButton.GetComponent<Button>().onClick.AddListener(() => stateManager.setState(previousState));
-	}
-
-	public void showNextButton(){
-		setNextButton (currentState);
-		nextButton.gameObject.SetActive (true);
-	}
-
-	public void hideNextButton(){
-		nextButton.gameObject.SetActive (false);
-	}
-
-	public void showBackButton(){
-		setBackButton (currentState);
-		backButton.gameObject.SetActive (true);
-	}
-
-	public void hideBackButton(){
-		backButton.gameObject.SetActive (false);
-	}
 
 	public void showBattleSkillPanel(){
 		showNextButton ();
 		hideBackButton ();
 
-		battleSkillOn = currentCharacter.battleSkillOn;
-		battleSkillOff = currentCharacter.battleSkillOff;
+		if (isBackClicked)
+			playBackToBattleSkillAnimation ();
+		else {
+			battleSkillOn = currentCharacter.battleSkillOn;
+			battleSkillOff = currentCharacter.battleSkillOff;
 
-		for (int i = 0; i < battleSkill.Length; i++) {
-			battleSkill [i].sprite =  battleSkillOff[i];
-			SkillButtonGestureManager sbgm = battleSkill [i].gameObject.GetComponent<SkillButtonGestureManager>() ;
-			sbgm.skillOff = battleSkillOff [i];
-			sbgm.skillON = battleSkillOn [i];
+			for (int i = 0; i < battleSkill.Length; i++) {
+
+				battleSkill [i].sprite =  battleSkillOff[i];
+				SkillButtonGestureManager sbgm = battleSkill [i].gameObject.GetComponent<SkillButtonGestureManager>() ;
+				sbgm.skillOff = battleSkillOff [i];
+				sbgm.skillOn = battleSkillOn [i];
+
+				// 如果角色MP不夠，則封鎖技能按鈕，並呈現半透明
+				if (currentCharacter.Mp < currentCharacter.skill [i].needMP) {
+					sbgm.isLocked = true;
+					battleSkill [i].color = new Color(1f,1f,1f,0.5f);
+				}
+			}
+
+			characterHalf.sprite = currentCharacter.characterHalf;
+			characterHP.text = "" + currentCharacter.Hp;
+			characterMP.text = "" + currentCharacter.Mp;
+			characterDEF.text = "" + currentCharacter.Def;
+
+			playSwipeToBattleSkillAnimation ();
 		}
-
-		characterHalf.sprite = currentCharacter.characterHalf;
-		characterHP.text = "" + currentCharacter.Hp;
-		characterMP.text = "" + currentCharacter.Mp;
-		characterDEF.text = "" + currentCharacter.Def;
-
-		playSwipeToBattleSkillAnimation ();
 	}
 
 	public void showDiceRollingPanel(){
 		hideNextButton ();
 		showBackButton ();
 
-		playSwipeToDiceRollingAnimation ();
+		//if (isBackClicked)
+		//	playBackToDiceRollingAnimation ();
+		//else
+			playSwipeToDiceRollingAnimation ();
 	}
 
+	public void showEnemyRollingPanel(){
+		hideNextButton ();
+		hideBackButton ();
+
+		//if (isBackClicked)
+		//	playBackToDiceRollingAnimation ();
+		//else
+		playSwipeToEnemyRollingAnimation ();
+	}
+
+
+//-----------------------------------Anitmation Trigger----------------------------------
+	private void playOrderValueAnimation(){
+		_animator.SetTrigger ("ShowOrderValue");
+	}
+
+	public void playCheckValueAnimation(){
+		_animator.SetTrigger("ShowCheckValue");
+	}
+
+	private void playSwipeToBattleSkillAnimation(){
+		_animator.SetTrigger ("SwipeToBattleSkill");
+	}
+
+	private void playBackToBattleSkillAnimation(){
+		_animator.SetTrigger ("BackToBattleSkill");
+	}
+
+
+	private void playSwipeToDiceRollingAnimation(){
+		_animator.SetTrigger ("SwipeToDiceRolling");
+	}
+
+//	private void playBackToDiceRollingAnimation(){
+//		_animator.SetTrigger ("BackToDiceRolling");
+//	}
+
+	private void playSwipeToEnemyRollingAnimation(){
+		_animator.SetTrigger ("SwipeToEnemyRolling");
+	}
+
+
+//-----------------------------------Other Local Function----------------------------------
 	private string orderString(int number){
 		switch (number) {
 		case 1:
@@ -198,15 +295,8 @@ public class UIManager : MonoBehaviour {
 		}
 	}
 
-	private void playOrderValueAnimation(){
-		_animator.SetTrigger ("ShowOrderValue");
-	}
-
-	private void playSwipeToBattleSkillAnimation(){
-		_animator.SetTrigger ("SwipeToBattleSkill");
-	}
-
-	private void playSwipeToDiceRollingAnimation(){
-		_animator.SetTrigger ("SwipeToDiceRolling");
+	// SwipeToEnemyRollingAnimation 的最後一個frame呼叫
+	private void enemyRollDice(){
+		bcManager.rollDices();
 	}
 }

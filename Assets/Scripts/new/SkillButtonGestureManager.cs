@@ -8,10 +8,13 @@ public class SkillButtonGestureManager : MonoBehaviour {
 	public TapGesture singleTap;
 	public LongPressGesture longPress;
 
-	public Sprite skillON;
+	public Sprite skillOn;
 	public Sprite skillOff;
 
-	private bool state = false;
+	public SkillButtonGestureManager[] otherButtons;
+	public bool state = false;
+	public bool isLocked = false;
+
 	private SpriteRenderer icon;
 
 	// Use this for initialization
@@ -21,12 +24,16 @@ public class SkillButtonGestureManager : MonoBehaviour {
 
 		singleTap.Tapped += (object sender, System.EventArgs e) => 
 		{
-			if(state){
-				icon.sprite = skillOff;
-				state = false;
-			} else{
-				icon.sprite = skillON;
-				state = true;
+			if(!isLocked)
+			{
+				if(state){
+					state = false;
+				} else{
+					state = true;
+					foreach (SkillButtonGestureManager skillButton in otherButtons) {
+						skillButton.state = false;
+					}
+				}
 			}
 		};
 
@@ -36,6 +43,10 @@ public class SkillButtonGestureManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if(state){
+			icon.sprite = skillOn;
+		} else{
+			icon.sprite = skillOff;
+		}
 	}
 }
