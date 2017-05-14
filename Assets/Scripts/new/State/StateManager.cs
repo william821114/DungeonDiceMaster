@@ -98,11 +98,11 @@ public class StateManager : MonoBehaviour {
 			dice [i].onShowNumber.AddListener(RegisterOrderNumber);
 		}
 	}
-		
+
 	public void RegisterOrderNumber(int number)
 	{
 		// cvIndex用來計算有幾個骰子已經停止轉動，當全部都停止轉動時呼叫sortOrder來排戰鬥順序
-		Debug.Log ("Order Number: " + number);
+		//Debug.Log ("Order Number: " + number);
 
 		if (cvIndex < dice.Length - 1) {
 			cvIndex++;
@@ -132,7 +132,7 @@ public class StateManager : MonoBehaviour {
 		// 替每個戰鬥單位填上順位，方便UI Manager顯示。
 		for (int i = 0; i < dice.Length; i++) {
 			battleUnits [i].order = i + 1;
-			Debug.Log(battleUnits[i].order +" "+ battleUnits[i].name+ " value: "+ battleUnits[i].orderValue);
+			//Debug.Log(battleUnits[i].order +" "+ battleUnits[i].name+ " value: "+ battleUnits[i].orderValue);
 		}
 
 		// UI: 顯示擲骰子結果
@@ -165,15 +165,21 @@ public class StateManager : MonoBehaviour {
 			else {
 				setCurrentCharacter (battleUnits [currentUnitIndex].order);
 
-				uiManager.setCurrentCharacter(currentCharacter); // 通知UI目前可行動的角色
-				uiManager.showBattleSkillPanel (); // UI: 顯示技能選擇的操作面板
+				// 如果現在可行動的戰鬥角色已經死亡，則跳過他的回合
+				if (currentCharacter.Hp <= 0) {
+					currentUnitIndex = (currentUnitIndex+1) % battleUnits.Length;
+					setState (State.BattleState.SelectBattleSkill);
+				}else {
+					uiManager.setCurrentCharacter(currentCharacter); // 通知UI目前可行動的角色
+					uiManager.showBattleSkillPanel (); // UI: 顯示技能選擇的操作面板
+				}
 			}
 	
 			break;
 
 		case State.BattleState.PlayerRollBattleDice:
 			bcManager.setCurrentCharacter (currentCharacter);
-			bcManager.setForPlayerToRoll ();
+			bcManager.setForPlayerToRoll (1); // 1表示第一次擲骰子
 			uiManager.showDiceRollingPanel ();
 			break;
 
@@ -183,17 +189,28 @@ public class StateManager : MonoBehaviour {
 			break;
 		
 		case State.BattleState.SelectGambleSkill:
-			Debug.Log ("StateManager.setState  - Select Gamble Skill");
+			uiManager.showGambleSkillPanel ();
+			break;
+
+		case State.BattleState.PlayerRollBattleDice2:
+			bcManager.setForPlayerToRoll (2); // 2表示第二次擲骰子
+			uiManager.showDiceRolling2Panel ();
 			break;
 
 		case State.BattleState.EnemyAttack:
-			Debug.Log ("StateManager.setState  - EnemyAttack");
+			uiManager.showEnemyAttack ();
+			bcManager.destroyAllDice (); // 清掉骰子模型
 			currentUnitIndex = (currentUnitIndex+1) % battleUnits.Length;
 			break;
 		
 		case State.BattleState.PlayerAttack:
-			Debug.Log ("StateManager.setState  - PlayerAttack");
+			uiManager.showPlayerAttack ();
+			bcManager.destroyAllDice (); // 清掉骰子模型
 			currentUnitIndex = (currentUnitIndex+1) % battleUnits.Length;
+			break;
+
+		case State.BattleState.BattleEnd:
+			Debug.Log ("SHOW BATTLE END!!!!"); // 顯示戰鬥結束的畫面
 			break;
 		
 		default:
@@ -213,55 +230,4 @@ public class StateManager : MonoBehaviour {
 			}
 		}
 	}
-
-
-	/*public State.BattleState currentState;
-
-    //暫時寫在這 應該有更好的寫法
-    public Image BattleResult;
-    public Text BattleResultText;
-
-
-    public Button backButton;
-    public Button nextButton;
-
-    public Transform skillButtons;
-
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-    void setTurn(State.BattleState state)
-    {
-        currentState = state;
-
-        // find enemy and heros and notify the change of state
-        GameObject[] battlingObjects = GameObject.FindGameObjectsWithTag("Character");
-        foreach (GameObject bObj in battlingObjects)
-        {
-            Debug.Log(bObj.name);
-            bObj.SendMessage("onStateChange", currentState);
-        }
-    }
-
-    public void setBattleEnd(bool win)
-    {
-        currentState = State.BattleState.BattleEnd;
-        BattleResult.gameObject.SetActive(true);
-        BattleResultText.text = (win ? "Win" : "Lose");
-
-    }
-
-    public void prepareForPlayerTurn()
-    {
-        nextButton.gameObject.SetActive(true);
-        skillButtons.gameObject.SetActive(true);
-    }
-
-    public State.BattleState getState()
-    {
-        return currentState;
-    }*/
-
 }

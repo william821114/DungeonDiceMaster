@@ -11,9 +11,9 @@ public static class State {
 		PlayerRollBattleDice,
 		EnemyRollBattleDice,
 		SelectGambleSkill,
+		PlayerRollBattleDice2,
 		PlayerAttack,
 		EnemyAttack,
-
         BattleEnd
     }
 }
