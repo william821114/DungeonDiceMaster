@@ -90,7 +90,7 @@ public class BattleCheckManager : MonoBehaviour {
 			case 0:
 				// 奪取：隨機偷取敵人一顆骰子一回合，敵人攻擊下次攻擊少一顆骰子，這次多擲一顆敵人取來的骰子
 				// 作法：設定怪物flag，讓他下次回合少一個骰子，monster.getBattleDice要改寫一下（加個判斷式）
-				// 		然後以擲順序骰的呈現方式，顯示出圓形的dice panel，取一個敵人的骰子，讓它自動轉取值。
+				// 		然後以擲順序骰的呈現方式，顯示出圓形的dice panel，取一個敵人的骰子，出現一個按鈕，點撃後讓它旋轉落下取值。
 				//		最後把將這個值加到this.checkValue[]和this.finalCheckValue中，再呼叫check()做最後判定
 				break;
 

@@ -45,6 +45,8 @@ public class UIManager : MonoBehaviour {
 	private Animator _animator;
 	private bool isBackClicked = false; // 用來判斷是否back button，以此決定面板平移動畫要播哪個方向的
 	private GambleSkillManager gsMananger = null;
+	private Skill usingBattleSkill;
+	private int usingGambleSkillIndex;
 
 	// Use this for initialization
 	void Start () {
@@ -104,6 +106,7 @@ public class UIManager : MonoBehaviour {
 		
 		case State.BattleState.PlayerRollBattleDice:
 			nextState = State.BattleState.SelectGambleSkill;
+			tmp.GetComponent<Button>().onClick.AddListener(() => processBattleSkillMP());
 			break;
 
 		case State.BattleState.EnemyRollBattleDice:
@@ -117,6 +120,7 @@ public class UIManager : MonoBehaviour {
 
 		case State.BattleState.PlayerRollBattleDice2:
 			nextState = State.BattleState.PlayerAttack;
+			tmp.GetComponent<Button>().onClick.AddListener(() => processGambleSkillTimes());
 			break;
 
 		case State.BattleState.EnemyAttack:
@@ -190,37 +194,45 @@ public class UIManager : MonoBehaviour {
 	// 告知battle check manager 目前角色選用的技能 
 	// (這個function設置在下一步按鈕上，當選完技能後，點擊下一步按鈕進入下個階段的同時，告知battle check manager)
 	private void setBattleSkill(){
-		Skill tmp = null;
+		usingBattleSkill = null;
 
 		for (int i = 0; i < battleSkill.Length; i++) {
 			SkillButtonGestureManager sbgm = battleSkill [i].gameObject.GetComponent<SkillButtonGestureManager>() ;
 
 			if (sbgm.state) {
-				tmp = currentCharacter.skill [i];
-				currentCharacter.Mp -= currentCharacter.skill [i].needMP;
+				usingBattleSkill = currentCharacter.skill [i];
 				break;
 			}
 		}
 
-		bcManager.setUsingBattleSkill(tmp);
+		bcManager.setUsingBattleSkill(usingBattleSkill);
+	}
+
+	private void processBattleSkillMP(){
+		if(usingBattleSkill)
+			currentCharacter.Mp -= usingBattleSkill.needMP;
 	}
 
 	// 告知battle check manager 目前使用的賭技
 	// (這個function設置在下一步按鈕上，當選完技能後，點擊下一步按鈕進入下個階段的同時，告知battle check manager)
 	private void setGambleSkill(){
-		int tmp = -1;
+		usingGambleSkillIndex = -1;
 
 		for (int i = 0; i < gambleSkill.Length; i++) {
 			SkillButtonGestureManager sbgm = gambleSkill [i].gameObject.GetComponent<SkillButtonGestureManager>() ;
 
 			if (sbgm.state) {
-				tmp = i;
-				gsMananger.skillTimes [i]--;
+				usingGambleSkillIndex = i;
 				break;
 			}
 		}
 
-		bcManager.setUsingGambleSkill(tmp);
+		bcManager.setUsingGambleSkill(usingGambleSkillIndex);
+	}
+
+	private void processGambleSkillTimes(){
+		if(usingGambleSkillIndex != -1)
+			gsMananger.skillTimes [usingGambleSkillIndex]--;
 	}
 
 
