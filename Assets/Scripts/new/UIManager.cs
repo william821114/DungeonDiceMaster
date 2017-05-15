@@ -399,11 +399,14 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void showPlayerAttack(){
-		showNextButton (); // 應該先hide，戰鬥動畫演示完再show，但這邊還沒做戰鬥動畫，所以先show，來測試能不能進入下個回合
-		hideBackButton ();
+        //playPlayerAttackAnimation();
+        playMonsterHurtAnimation();
 
-		playSwipeToAttackScreenAnimation ();
-	}
+        showNextButton (); // 應該先hide，戰鬥動畫演示完再show，但這邊還沒做戰鬥動畫，所以先show，來測試能不能進入下個回合
+		hideBackButton ();
+        playSwipeToAttackScreenAnimation();
+
+    }
 
 
 //-----------------------------------Anitmation Trigger----------------------------------
@@ -449,8 +452,28 @@ public class UIManager : MonoBehaviour {
 		_animator.SetTrigger ("SwipeToAttackScreen");
 	}
 
-//-----------------------------------Other Local Function----------------------------------
-	private string orderString(int number){
+    private void playPlayerAttackAnimation()
+    {
+        
+    }
+
+    private void playPlayerHurtAnimation()
+    {
+
+    }
+
+    private void playMonsterAttackAnimation()
+    {
+
+    }
+
+    private void playMonsterHurtAnimation()
+    {
+        _animator.SetTrigger("ShowMonsterHurtValue");
+    }
+
+    //-----------------------------------Other Local Function----------------------------------
+    private string orderString(int number){
 		switch (number) {
 		case 1:
 			return "1st";

@@ -140,6 +140,7 @@ public class BattleCheckManager : MonoBehaviour {
                 // 目前還沒有賭技，但為了測試狀態機轉換是否正常，所以先設為重擲
                 isReadyToRoll = false;
                 isRolled = true;
+                check();
                 break;
 			}
 
@@ -196,8 +197,9 @@ public class BattleCheckManager : MonoBehaviour {
             // flag立起來就trigger，不然就沒事。
             // (PS. 特殊的技能應該也會在這邊立起flag，寫法應該同上一次彥求寫的isHeal，
 
+            Debug.Log("Roll2");
 
-
+            finalCheckValue = 0;
             // 拿到重擲的final check value
             for (int i = 0; i < checkValue.Length; i++)
             {
@@ -248,6 +250,11 @@ public class BattleCheckManager : MonoBehaviour {
                     monster.check(damage);
                 }
             }
+            // 普通攻擊
+            else
+            {
+                monster.check(damage);
+            }
 
         }	else if(rollState == 3){
             // 這是怪物擲骰子，攻擊玩家的傷害處理。
@@ -256,6 +263,7 @@ public class BattleCheckManager : MonoBehaviour {
             // 然後和前面一樣，對character的class設定hurt flag或其他特殊效果flag
             // 玩家按下繼續按鈕，到enemy attack的階段，在播放玩家傷害動畫。
             // 傷害動畫的寫法也同上面所述。
+            Debug.Log("Roll3");
 
             for (int i = 0; i < checkValue.Length; i++)
             {
@@ -266,6 +274,7 @@ public class BattleCheckManager : MonoBehaviour {
         }
         else if(rollState == 1)
         {
+            Debug.Log("Roll1");
             // 這邊會計算擲骰的結果值，同時處理battle skill的效果
             for (int i = 0; i < checkValue.Length; i++)
             {

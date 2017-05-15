@@ -25,8 +25,9 @@ public class Monster : BattleUnit {
     public Character actioningCharacter;
     public StateManager stateManager;
     public Animator actioningCharacterAnimator;
+    public TextMesh monsterHurtValueText;
 
-	/*
+    /*
     void Start(){
 		monsterAnimator = this.GetComponent<Animator> ();
 
@@ -67,6 +68,7 @@ public class Monster : BattleUnit {
             willGetHurt = true;
             Debug.Log("Monster: get Hurt - " + damage);
             this.Hp -= damage;
+            monsterHurtValueText.text = "-" + damage;
         }
     }
 

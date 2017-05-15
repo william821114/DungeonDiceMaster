@@ -198,6 +198,7 @@ public class StateManager : MonoBehaviour {
             if(usingGambleSkillIndex == -1)
             {
                 uiManager.showDiceRolling2PanelNoSkill();
+                uiManager.playCheckValueAnimation();
             } else
             {
                 uiManager.showDiceRolling2Panel();
