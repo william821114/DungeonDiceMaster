@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour {
 	public TextMesh[] characterHP;
 	public TextMesh[] characterMP;
 	public TextMesh[] characterDEF;
+    public TextMesh[] characterNoHurt;
 
 	public TextMesh monsterHP;
 	public TextMesh monsterDEF;
@@ -52,23 +53,30 @@ public class UIManager : MonoBehaviour {
 	void Start () {
 		_animator = this.GetComponent<Animator> ();
 		gsMananger = (GambleSkillManager)FindObjectOfType (typeof(GambleSkillManager));
-	}
+
+        // 一開始先更新monsterUI一次
+        updateMonsterUI();
+        updateCharactersUI();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
 
 		// 自動更新角色和怪物的狀態數值
-		for (int i = 0; i < characters.Length; i++) {
-			if (characters [i]) {
-				characterHP [i].text = "" + characters [i].Hp;
-				characterMP [i].text = "" + characters [i].Mp;
-				characterDEF [i].text = "" + characters [i].Def; 
-			}
-		}
-		if (monster) {
-			monsterHP.text = "" + monster.Hp;
-			monsterDEF.text = "" + monster.Def;
-		}
+		// for (int i = 0; i < characters.Length; i++) {
+		//	if (characters [i]) {
+		//		characterHP [i].text = "" + characters [i].Hp;
+		//		characterMP [i].text = "" + characters [i].Mp;
+		//		characterDEF [i].text = "" + characters [i].Def; 
+		//	}
+		//}
+
+        // 這邊應該不用自動更新，等playerAttack時再呼叫updateMonsterUI
+		//if (monster) {
+		//	monsterHP.text = "" + monster.Hp;
+		//	monsterDEF.text = "" + monster.Def;
+		//}
 	}
 
 //-----------------------------------Set Function----------------------------------
@@ -83,6 +91,27 @@ public class UIManager : MonoBehaviour {
 	public void setCurrentCharacter(Character c){
 		currentCharacter = c;
 	}
+
+//-----------------------------------update Function----------------------------------
+    public void updateMonsterUI()
+    {
+        monsterHP.text = "" + monster.Hp;
+        monsterDEF.text = "" + monster.Def;
+    }
+
+    public void updateCharactersUI()
+    {
+        for (int i = 0; i < characters.Length; i++)
+        {
+            if (characters[i])
+            {
+                characterHP[i].text = "" + characters[i].Hp;
+                characterMP[i].text = "" + characters[i].Mp;
+                characterDEF[i].text = "" + characters[i].Def;
+                characterNoHurt[i].text = "" + characters[i].noHurtTurn;
+            }
+        }
+    }
 
 
 //-----------------------------------Button Function Set----------------------------------

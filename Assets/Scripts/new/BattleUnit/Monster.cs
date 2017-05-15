@@ -17,6 +17,7 @@ public class Monster : BattleUnit {
 
 	public Dice[] battleDice;
 	public Dice exploreDice;
+    public bool willGetHurt = false;
 
 	private bool isDead = false;
 	private Animator monsterAnimator;
@@ -57,6 +58,32 @@ public class Monster : BattleUnit {
             }
 		}
 	}*/
+
+    public void check(int finalCheckValue)
+    {
+        int damage = finalCheckValue - this.Def;
+        if(damage > 0)
+        {
+            willGetHurt = true;
+            Debug.Log("Monster: get Hurt - " + damage);
+            this.Hp -= damage;
+        }
+    }
+
+    public void AI(int[] checkValue)
+    {
+        //先做一個最簡單的ai，隨機選一個人，直接把finalcheckvalue當傷害打出去
+        int finalCheckValue = 0;
+        Character[] characters = stateManager.getAllCharacters();
+
+        for (int i = 0; i < checkValue.Length; i++)
+        {
+            finalCheckValue += checkValue[i];
+        }
+
+        Character target = characters[Random.Range(0, characters.Length)];
+        target.check(finalCheckValue);
+    }
 
 	public Dice[] getBattleDice(){
 		return battleDice;

@@ -7,6 +7,8 @@ public class Skill: MonoBehaviour {
 	public int needMP;
 	public int finalCheckValue;
     public bool isHealSkill;
+    public bool isNoHurtSkill;
+    public bool isAOE;
 
 	//These methods are virtual and thus can be overriden
 	//in child classes

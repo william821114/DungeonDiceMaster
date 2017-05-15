@@ -42,7 +42,7 @@ public class BattleCheckManager : MonoBehaviour {
 		usingBattleSkill = bs;
 
 		if (usingBattleSkill)
-			Debug.Log ("battle skill - set");
+			Debug.Log ("battle skill - set: " +usingBattleSkill.name);
 		else
 			Debug.Log ("battle skill - unset");
 	}
@@ -182,29 +182,94 @@ public class BattleCheckManager : MonoBehaviour {
 	// 取得最終累計的數值。
 	public void check(){
 		if (rollState == 2) {
-			// 已經是第二次擲骰子了，所以必須檢查技能有無發動，並計算最終結果丟給戰鬥對象做check。
-			//
-			// 寫法應該會是monster.check(finalCheckValue)
-			// 如果判定通過，monster的class應該要設定一個hurt flag
-			// 等到玩家按下繼續按鈕，到達player attack的階段時，
-			// 在呼叫monster.playHurtAnimation()來播放傷害動畫。
-			// playHurtAnimation()應該會有if判斷式來檢查hurt flag，
-			// flag立起來就trigger，不然就沒事。
-			// (PS. 特殊的技能應該也會在這邊立起flag，寫法應該同上一次彥求寫的isHeal，
+            // 已經是第二次擲骰子了，所以必須檢查技能有無發動，並計算最終結果丟給戰鬥對象做check。
+            //
+            // 寫法應該會是monster.check(finalCheckValue)
+            // 如果判定通過，monster的class應該要設定一個hurt flag
+            // 等到玩家按下繼續按鈕，到達player attack的階段時，
+            // 在呼叫monster.playHurtAnimation()來播放傷害動畫。
+            // playHurtAnimation()應該會有if判斷式來檢查hurt flag，
+            // flag立起來就trigger，不然就沒事。
+            // (PS. 特殊的技能應該也會在這邊立起flag，寫法應該同上一次彥求寫的isHeal，
 
-		}	else if(rollState == 3){
-			// 這是怪物擲骰子，攻擊玩家的傷害處理。
-			// 首先怪物應該有AI選擇攻擊對象，monster.AI(finalCheckValue);
-			// AI()會找場上的角色，並根據預先設定好的攻擊選擇，對選定的角色做判定。
-			// 然後和前面一樣，對character的class設定hurt flag或其他特殊效果flag
-			// 玩家按下繼續按鈕，到enemy attack的階段，在播放玩家傷害動畫。
-			// 傷害動畫的寫法也同上面所述。
-		}
 
-		// 這邊會計算擲骰的結果值，同時處理battle skill的效果
-		for (int i = 0; i < checkValue.Length; i++) {
-			finalCheckValue += checkValue [i];
-		}
+
+            // 拿到重擲的final check value
+            for (int i = 0; i < checkValue.Length; i++)
+            {
+                finalCheckValue += checkValue[i];
+            }
+
+            Debug.Log("finalcheck: " + finalCheckValue);
+            int damage = finalCheckValue;
+
+            // 判定技能是否發動
+            if(usingBattleSkill)
+            {
+                currentCharacter.Mp -= usingBattleSkill.needMP;
+
+                // 技能分成迴避技能、治療技能、攻擊技能，但這個做法不好，
+                // 應該要把skillWeight改成回傳一個skillResultCallback物件，這樣才可以因應不能狀況發動不同效果。
+                // 像是可以邊攻擊邊迴避或邊治癒，這之後再改
+
+                if(usingBattleSkill.isNoHurtSkill)
+                {
+                    int skillNoHurtTurn = usingBattleSkill.skillWeight(checkValue);
+
+                    //群體效果或是個人效果
+                    if (usingBattleSkill.isAOE)
+                    {
+                        Character[] characters = stateManager.getAllCharacters();
+                        foreach(Character ch in characters)
+                        {
+                            ch.noHurtTurn += skillNoHurtTurn;
+                        }
+                    } else
+                    {
+                        currentCharacter.noHurtTurn += skillNoHurtTurn;
+                    }
+                    
+                }
+
+                else if(usingBattleSkill.isHealSkill)
+                {
+
+                }
+
+                else
+                {
+                    Debug.Log("Caculate skill damage");
+                    // 計算最終傷害
+                    damage = usingBattleSkill.skillWeight(checkValue);
+                    monster.check(damage);
+                }
+            }
+
+        }	else if(rollState == 3){
+            // 這是怪物擲骰子，攻擊玩家的傷害處理。
+            // 首先怪物應該有AI選擇攻擊對象，monster.AI(finalCheckValue);
+            // AI()會找場上的角色，並根據預先設定好的攻擊選擇，對選定的角色做判定。
+            // 然後和前面一樣，對character的class設定hurt flag或其他特殊效果flag
+            // 玩家按下繼續按鈕，到enemy attack的階段，在播放玩家傷害動畫。
+            // 傷害動畫的寫法也同上面所述。
+
+            for (int i = 0; i < checkValue.Length; i++)
+            {
+                finalCheckValue += checkValue[i];
+            }
+
+            monster.AI(checkValue);
+        }
+        else if(rollState == 1)
+        {
+            // 這邊會計算擲骰的結果值，同時處理battle skill的效果
+            for (int i = 0; i < checkValue.Length; i++)
+            {
+                finalCheckValue += checkValue[i];
+            }
+        }
+		
+
 
 		checkValueText.text = "~" + finalCheckValue + "~";
 		uiManager.playCheckValueAnimation ();

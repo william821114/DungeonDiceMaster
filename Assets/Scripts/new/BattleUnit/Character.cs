@@ -15,6 +15,7 @@ public class Character : BattleUnit {
 	public int Mp;
 	public int Atk;
 	public int Def;
+    public int noHurtTurn; //幾回合迴避傷害
 	public Dice[] battleDice;
 	public Dice socialDice;
 	public Dice exploreDice;
@@ -31,9 +32,9 @@ public class Character : BattleUnit {
 	public Sprite[] battleSkillOff;
 
 	private bool isDead = false;
+    public bool willGetHurt = false;
 
-
-	void Awake() {
+    void Awake() {
 		DontDestroyOnLoad(this.gameObject);
 	}
 	/*
@@ -92,6 +93,25 @@ public class Character : BattleUnit {
 	public Dice getSocialDice(){
 		return socialDice;
 	}
+
+    public void check(int finalCheckValue)
+    {
+        // 檢查迴避勝幾回合 ， 0 的話可攻擊
+        if(noHurtTurn > 0)
+        {
+            noHurtTurn -= 1;
+            Debug.Log("迴避傷害 剩餘次數:" + noHurtTurn);
+        }
+        else {
+            int damage = finalCheckValue - this.Def;
+            if (damage > 0)
+            {
+                willGetHurt = true;
+                Debug.Log("Character: get Hurt - " + damage);
+                this.Hp -= damage;
+            }
+        }   
+    }
 
 	/*
     public void PlayerTurn()

@@ -199,13 +199,16 @@ public class StateManager : MonoBehaviour {
 
 		case State.BattleState.EnemyAttack:
 			uiManager.showEnemyAttack ();
+            uiManager.updateCharactersUI();
 			bcManager.destroyAllDice (); // 清掉骰子模型
 			currentUnitIndex = (currentUnitIndex+1) % battleUnits.Length;
 			break;
 		
 		case State.BattleState.PlayerAttack:
 			uiManager.showPlayerAttack ();
-			bcManager.destroyAllDice (); // 清掉骰子模型
+            uiManager.updateMonsterUI();
+            uiManager.updateCharactersUI();
+            bcManager.destroyAllDice (); // 清掉骰子模型
 			currentUnitIndex = (currentUnitIndex+1) % battleUnits.Length;
 			break;
 
@@ -230,4 +233,10 @@ public class StateManager : MonoBehaviour {
 			}
 		}
 	}
+
+    // 能給別人用的function
+    public Character[] getAllCharacters()
+    {
+        return characters;
+    }
 }
