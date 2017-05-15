@@ -392,7 +392,9 @@ public class UIManager : MonoBehaviour {
     }
 
     public void showEnemyAttack(){
-		showNextButton (); // 應該先hide，戰鬥動畫演示完再show，但這邊還沒做戰鬥動畫，所以先show，來測試能不能進入下個回合
+        playPlayerHurtAnimation();
+
+        showNextButton (); // 應該先hide，戰鬥動畫演示完再show，但這邊還沒做戰鬥動畫，所以先show，來測試能不能進入下個回合
 		hideBackButton ();
 
 		playSwipeToAttackScreenAnimation ();
@@ -459,7 +461,7 @@ public class UIManager : MonoBehaviour {
 
     private void playPlayerHurtAnimation()
     {
-
+        _animator.SetTrigger("ShowPlayerHurtValue");
     }
 
     private void playMonsterAttackAnimation()
