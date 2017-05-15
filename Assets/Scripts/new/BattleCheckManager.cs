@@ -126,20 +126,24 @@ public class BattleCheckManager : MonoBehaviour {
 				break;
 
 			case 5:
-				// 時間機器：全部重擲
-				// 作法：isReadyToRoll = true, finalCheckValue = 0, 畫面中顯示重擲按鈕，點選後重擲。
-				//		或是出現提示叫玩家flick來擲骰子。
-				break;
+                // 時間機器：全部重擲
+                // 作法：isReadyToRoll = true, finalCheckValue = 0, 畫面中顯示重擲按鈕，點選後重擲。
+                //		或是出現提示叫玩家flick來擲骰子。
+                // 目前還沒有賭技，但為了測試狀態機轉換是否正常，所以先設為重擲
+                finalCheckValue = 0;
+                isReadyToRoll = true;
+                isRolled = false;
+                break;
 
 			default:
 				Debug.Log ("No Gamble Skill");
-				break;
+                // 目前還沒有賭技，但為了測試狀態機轉換是否正常，所以先設為重擲
+                isReadyToRoll = false;
+                isRolled = true;
+                break;
 			}
 
-			// 目前還沒有賭技，但為了測試狀態機轉換是否正常，所以先設為重擲
-			finalCheckValue = 0;
-			isReadyToRoll = true;
-			isRolled = false;
+			
 		}
 	}
 

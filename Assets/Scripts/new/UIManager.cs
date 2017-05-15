@@ -255,8 +255,8 @@ public class UIManager : MonoBehaviour {
 				break;
 			}
 		}
-
 		bcManager.setUsingGambleSkill(usingGambleSkillIndex);
+        stateManager.setUsingGambleSkill(usingGambleSkillIndex);
 	}
 
 	private void processGambleSkillTimes(){
@@ -384,7 +384,14 @@ public class UIManager : MonoBehaviour {
 		playSwipeToDiceRolling2Animation ();
 	}
 
-	public void showEnemyAttack(){
+    public void showDiceRolling2PanelNoSkill()
+    {
+        showNextButton();
+        showBackButton();
+        playSwipeToDiceRolling2Animation();
+    }
+
+    public void showEnemyAttack(){
 		showNextButton (); // 應該先hide，戰鬥動畫演示完再show，但這邊還沒做戰鬥動畫，所以先show，來測試能不能進入下個回合
 		hideBackButton ();
 

@@ -20,10 +20,11 @@ public class StateManager : MonoBehaviour {
 	private Character currentCharacter; // 目前行動的角色
 	private Dice[] dice;
 	private int cvIndex = 0; // index for check value array
+    private int usingGambleSkillIndex; //目前使用的賭技
 
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		// Battle Scene一開始，就要找到所有角色，並存成array管理。 所有character都是don't destroy。
 		characters = (Character[])FindObjectsOfType (typeof(Character));
 
@@ -193,8 +194,15 @@ public class StateManager : MonoBehaviour {
 			break;
 
 		case State.BattleState.PlayerRollBattleDice2:
-			bcManager.setForPlayerToRoll (2); // 2表示第二次擲骰子
-			uiManager.showDiceRolling2Panel ();
+            bcManager.setForPlayerToRoll (2); // 2表示第二次擲骰子
+            if(usingGambleSkillIndex == -1)
+            {
+                uiManager.showDiceRolling2PanelNoSkill();
+            } else
+            {
+                uiManager.showDiceRolling2Panel();
+            }
+			
 			break;
 
 		case State.BattleState.EnemyAttack:
@@ -238,5 +246,11 @@ public class StateManager : MonoBehaviour {
     public Character[] getAllCharacters()
     {
         return characters;
+    }
+
+
+    public void setUsingGambleSkill(int index)
+    {
+        usingGambleSkillIndex = index;
     }
 }
