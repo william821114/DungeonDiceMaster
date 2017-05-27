@@ -11,6 +11,8 @@ public class LootManager : MonoBehaviour {
 	private List<int> randomNumbers = new List<int>();
 	private DataManager dataManager;
 	private Dice[] dices;
+	private int hpRecoverValue = 10;
+	private int mpRecoverValue = 3;
 
 	// Use this for initialization
 	void Start () {
@@ -72,6 +74,10 @@ public class LootManager : MonoBehaviour {
 		randomNumbers.RemoveAt (index);
 		Debug.Log (value);
 		return value;
+	}
+
+	public void hpRecover(int characterIndex){
+		//dataManager.team [characterIndex].Hp += hpRecoverValue;
 	}
 		
 }

@@ -9,87 +9,58 @@ public class UIManager : MonoBehaviour {
 
 	public BattleCheckManager bcManager;
 
-	public SpriteRenderer[] characterPieces;
-	public SpriteRenderer[] characterDicePanels;
-	public SpriteRenderer monsterDicePanel;
-	public TextMesh[] orderValue;
-	public TextMesh[] order;
-
 	public TextMesh currentCharacterHP;
 	public TextMesh currentCharacterMP;
 	public TextMesh currentCharacterDEF;
 	public SpriteRenderer currentCharacterHalf;
 	public SpriteRenderer[] battleSkill;
 
-	public TextMesh[] characterHP;
-	public TextMesh[] characterMP;
-	public TextMesh[] characterDEF;
-    public TextMesh[] characterNoHurt;
+	public GameObject mark;
 
 	public TextMesh monsterHP;
 	public TextMesh monsterDEF;
 
 	public Button nextButton;
-	public Button backButton;
 
 	public TextMesh[] gambleSkillTimesText;
 	public SpriteRenderer[] gambleSkill;
 
-	public TextMesh[] characterHurtValue;
-	public TextMesh monsterHurtValue;
-
-	private Character[] characters;
 	private Monster monster;
 	private Character currentCharacter;
 	private Sprite[] battleSkillOn;
 	private Sprite[] battleSkillOff;
 	private Animator _animator;
-	private bool isBackClicked = false; // 用來判斷是否back button，以此決定面板平移動畫要播哪個方向的
-	private GambleSkillManager gsMananger = null;
+	private DataManager dataManager;
 	private Skill usingBattleSkill;
 	private int usingGambleSkillIndex;
 
 	// Use this for initialization
-	void Start () {
-		_animator = this.GetComponent<Animator> ();
-		gsMananger = (GambleSkillManager)FindObjectOfType (typeof(GambleSkillManager));
 
+	void Awake(){
+		_animator = this.GetComponent<Animator> ();
+	}
+	void Start () {
         // 一開始先更新monsterUI一次
         updateMonsterUI();
-        updateCharactersUI();
-
+		updateCharacterUI ();
     }
 	
 	// Update is called once per frame
 	void Update () {
-
-		// 自動更新角色和怪物的狀態數值
-		// for (int i = 0; i < characters.Length; i++) {
-		//	if (characters [i]) {
-		//		characterHP [i].text = "" + characters [i].Hp;
-		//		characterMP [i].text = "" + characters [i].Mp;
-		//		characterDEF [i].text = "" + characters [i].Def; 
-		//	}
-		//}
-
-        // 這邊應該不用自動更新，等playerAttack時再呼叫updateMonsterUI
-		//if (monster) {
-		//	monsterHP.text = "" + monster.Hp;
-		//	monsterDEF.text = "" + monster.Def;
-		//}
+		
 	}
 
 //-----------------------------------Set Function----------------------------------
-	public void setCharacters(Character[] cs){
-		characters = cs;
-	}
-
 	public void setMonster(Monster m){
 		monster = m;
 	}
 
 	public void setCurrentCharacter(Character c){
 		currentCharacter = c;
+	}
+
+	public void setDataManager(DataManager dm){
+		dataManager = dm;
 	}
 
 //-----------------------------------update Function----------------------------------
@@ -99,20 +70,12 @@ public class UIManager : MonoBehaviour {
         monsterDEF.text = "" + monster.Def;
     }
 
-    public void updateCharactersUI()
-    {
-        for (int i = 0; i < characters.Length; i++)
-        {
-            if (characters[i])
-            {
-                characterHP[i].text = "" + characters[i].Hp;
-                characterMP[i].text = "" + characters[i].Mp;
-                characterDEF[i].text = "" + characters[i].Def;
-                characterNoHurt[i].text = "" + characters[i].noHurtTurn;
-            }
-        }
-    }
-
+	public void updateCharacterUI()
+	{
+		currentCharacterHP.text = "" + currentCharacter.Hp;
+		currentCharacterMP.text = "" + currentCharacter.Mp;
+		currentCharacterDEF.text = "" + currentCharacter.Def;
+	}
 
 //-----------------------------------Button Function Set----------------------------------
 	private void setNextButton(State.BattleState state){
@@ -121,13 +84,8 @@ public class UIManager : MonoBehaviour {
 
 		Button tmp = nextButton.GetComponent<Button> ();
 		tmp.onClick.RemoveAllListeners ();
-		tmp.GetComponent<Button>().onClick.AddListener(() => clickBack(false));
 
 		switch (state) {
-		case State.BattleState.RollOrder:
-			nextState = State.BattleState.SelectBattleSkill;
-			break;
-
 		case State.BattleState.SelectBattleSkill:
 			nextState = State.BattleState.PlayerRollBattleDice;
 			tmp.GetComponent<Button>().onClick.AddListener(() => setBattleSkill());
@@ -169,32 +127,6 @@ public class UIManager : MonoBehaviour {
 	}
 
 
-	private void setBackButton(State.BattleState state){
-
-		State.BattleState previousState = state;
-
-		Button tmp = backButton.GetComponent<Button> ();
-		tmp.onClick.RemoveAllListeners ();
-		tmp.onClick.AddListener(() => clickBack(true));
-
-		switch (state) {
-		case State.BattleState.PlayerRollBattleDice:
-			previousState = State.BattleState.SelectBattleSkill;
-			break;
-
-		case State.BattleState.PlayerRollBattleDice2:
-			previousState = State.BattleState.SelectGambleSkill;
-			break;
-
-		default:
-			Debug.Log ("setBackButton - ErrorState");
-			break;
-		}
-			
-		tmp.onClick.AddListener(() => stateManager.setState(previousState));
-	}
-
-
 //-----------------------------------Button Show & Hide----------------------------------
 	public void showNextButton(){
 		setNextButton (currentState);
@@ -205,21 +137,8 @@ public class UIManager : MonoBehaviour {
 		nextButton.gameObject.SetActive (false);
 	}
 
-	public void showBackButton(){
-		setBackButton (currentState);
-		backButton.gameObject.SetActive (true);
-	}
-
-	public void hideBackButton(){
-		backButton.gameObject.SetActive (false);
-	}
-
 
 //-----------------------------------Button Function----------------------------------
-	private void clickBack(bool clicked){
-		this.isBackClicked = clicked;
-	}
-
 	// 告知battle check manager 目前角色選用的技能 
 	// (這個function設置在下一步按鈕上，當選完技能後，點擊下一步按鈕進入下個階段的同時，告知battle check manager)
 	private void setBattleSkill(){
@@ -256,183 +175,118 @@ public class UIManager : MonoBehaviour {
 			}
 		}
 		bcManager.setUsingGambleSkill(usingGambleSkillIndex);
-        stateManager.setUsingGambleSkill(usingGambleSkillIndex);
+        //stateManager.setUsingGambleSkill(usingGambleSkillIndex);
 	}
 
 	private void processGambleSkillTimes(){
 		if(usingGambleSkillIndex != -1)
-			gsMananger.skillTimes [usingGambleSkillIndex]--;
+			dataManager.gambleSkillTimes [usingGambleSkillIndex]--;
 	}
 
 
 //-----------------------------------Show & Hide Panel By State----------------------------------
-	public void showCharacterPieces(){
-		for (int i = 0; i < characters.Length; i++) {
-			characterPieces [i].sprite =  characters[i].characterPiece;
-		}
-	}
-
-	public void showOrderDicePanel(){
-		foreach (SpriteRenderer spriterenderer in characterDicePanels) {
-			spriterenderer.enabled = true;
-		}
-
-		monsterDicePanel.enabled = true;
-	}
-
-	public void hideOrderDicePanel(){
-		foreach (SpriteRenderer spriterenderer in characterDicePanels) {
-			spriterenderer.enabled = false;
-		}
-
-		monsterDicePanel.enabled = false;
-	}
-
-	public void showOrderValue ()
-	{
-		for (int i = 0; i < orderValue.Length; i++) {
-
-			if (i == 0) {
-				orderValue [i].text = ""+monster.orderValue;
-				order [i].text = orderString (monster.order);
-			} else {
-				orderValue [i].text = ""+characters[i-1].orderValue;
-				order [i].text = orderString (characters[i-1].order);
-			}
-		}
-
-		playOrderValueAnimation ();
-	}
-
-
 	public void showBattleSkillPanel(){
 		showNextButton ();
-		hideBackButton ();
 
-		if (isBackClicked)
-			playBackToBattleSkillAnimation ();
-		else {
-			battleSkillOn = currentCharacter.battleSkillOn;
-			battleSkillOff = currentCharacter.battleSkillOff;
+		battleSkillOn = currentCharacter.battleSkillOn;
+		battleSkillOff = currentCharacter.battleSkillOff;
 
-			for (int i = 0; i < battleSkill.Length; i++) {
+		for (int i = 0; i < battleSkill.Length; i++) {
 
-				battleSkill [i].sprite =  battleSkillOff[i];
-				SkillButtonGestureManager sbgm = battleSkill [i].gameObject.GetComponent<SkillButtonGestureManager>() ;
-				sbgm.skillOff = battleSkillOff [i];
-				sbgm.skillOn = battleSkillOn [i];
-				sbgm.state = false;
+			battleSkill [i].sprite =  battleSkillOff[i];
+			SkillButtonGestureManager sbgm = battleSkill [i].gameObject.GetComponent<SkillButtonGestureManager>() ;
+			sbgm.skillOff = battleSkillOff [i];
+			sbgm.skillOn = battleSkillOn [i];				
+			sbgm.state = false;
 
-				// 如果角色MP不夠，則封鎖技能按鈕，並呈現半透明
-				if (currentCharacter.Mp < currentCharacter.skill [i].needMP) {
-					sbgm.isLocked = true;
-					battleSkill [i].color = new Color(1f,1f,1f,0.5f);
-				}
+			// 如果角色MP不夠，則封鎖技能按鈕，並呈現半透明
+			if (currentCharacter.Mp < currentCharacter.skill [i].needMP) {
+				sbgm.isLocked = true;
+				battleSkill [i].color = new Color(1f,1f,1f,0.5f);
 			}
-
-			currentCharacterHalf.sprite = currentCharacter.characterHalf;
-			currentCharacterHP.text = "" + currentCharacter.Hp;
-			currentCharacterMP.text = "" + currentCharacter.Mp;
-			currentCharacterDEF.text = "" + currentCharacter.Def;
-
-			playSwipeToBattleSkillAnimation ();
 		}
+
+		currentCharacter.transform.position = mark.transform.position;
+		currentCharacter.transform.rotation = mark.transform.rotation;
+		currentCharacter.gameObject.transform.parent = mark.transform;
+		//SpriteRenderer tempRenderer = currentCharacter.GetComponentInChildren<SpriteRenderer> ();
+		//tempRenderer.enabled = true;
+		//currentCharacterHalf.sprite = currentCharacter.characterHalf;
+		currentCharacterHP.text = "" + currentCharacter.Hp;
+		currentCharacterMP.text = "" + currentCharacter.Mp;
+		currentCharacterDEF.text = "" + currentCharacter.Def;
+
+		playShowBattleSkillAnimation ();
 	}
 
 	public void showDiceRollingPanel(){
 		hideNextButton ();
-		showBackButton ();
 
 		playSwipeToDiceRollingAnimation ();
 	}
 
 	public void showEnemyRollingPanel(){
 		hideNextButton ();
-		hideBackButton ();
 
 		playSwipeToEnemyRollingAnimation ();
 	}
 
 	public void showGambleSkillPanel(){
 		showNextButton ();
-		hideBackButton ();
 
-		if (isBackClicked)
-			playBackToGambleSkillAnimation ();
-		else {
-			int[] gambleSkillTimes = gsMananger.skillTimes;
+		int[] gambleSkillTimes = dataManager.gambleSkillTimes;
 
-			for (int i = 0; i < gambleSkillTimes.Length; i++) {
-				SkillButtonGestureManager sbgm = gambleSkill [i].gameObject.GetComponent<SkillButtonGestureManager>() ;
-				sbgm.state = false;
-				// 如果技能次數=0，則封鎖技能按鈕，並呈現半透明
-				if (gambleSkillTimes[i] == 0) {
-					sbgm.isLocked = true;
-					gambleSkill [i].color = new Color(1f,1f,1f,0.5f);
-				}
-				gambleSkillTimesText [i].text = "" + gambleSkillTimes[i];
+		for (int i = 0; i < gambleSkillTimes.Length; i++) {
+			SkillButtonGestureManager sbgm = gambleSkill [i].gameObject.GetComponent<SkillButtonGestureManager>() ;
+			sbgm.state = false;
+			// 如果技能次數=0，則封鎖技能按鈕，並呈現半透明
+			if (gambleSkillTimes[i] == 0) {
+				sbgm.isLocked = true;
+				gambleSkill [i].color = new Color(1f,1f,1f,0.5f);
 			}
-	
-			playSwipeToGambleSkillAnimation ();
+			gambleSkillTimesText [i].text = "" + gambleSkillTimes[i];
 		}
+	
+		playSwipeToGambleSkillAnimation ();
 	}
 
 	public void showDiceRolling2Panel(){
 		hideNextButton ();
-		showBackButton ();
+		//showBackButton ();
 
-		playSwipeToDiceRolling2Animation ();
+		if (usingGambleSkillIndex == -1) {
+			stateManager.setState(State.BattleState.PlayerAttack);
+		}
+		else {
+			playSwipeToDiceRolling2Animation ();
+		}
 	}
 
-    public void showDiceRolling2PanelNoSkill()
-    {
-        showNextButton();
-        showBackButton();
-        playSwipeToDiceRolling2Animation();
-    }
-
     public void showEnemyAttack(){
-        playPlayerHurtAnimation();
-
         showNextButton (); // 應該先hide，戰鬥動畫演示完再show，但這邊還沒做戰鬥動畫，所以先show，來測試能不能進入下個回合
-		hideBackButton ();
 
 		playSwipeToAttackScreenAnimation ();
 	}
 
 	public void showPlayerAttack(){
-        //playPlayerAttackAnimation();
-        playMonsterHurtAnimation();
-
         showNextButton (); // 應該先hide，戰鬥動畫演示完再show，但這邊還沒做戰鬥動畫，所以先show，來測試能不能進入下個回合
-		hideBackButton ();
-        playSwipeToAttackScreenAnimation();
+
+		if (usingGambleSkillIndex == -1) 
+			playSwipeToAttackScreen2Animation ();
+		else
+       		playSwipeToAttackScreenAnimation();
 
     }
 
 
 //-----------------------------------Anitmation Trigger----------------------------------
-	private void playOrderValueAnimation(){
-		_animator.SetTrigger ("ShowOrderValue");
+	private void playShowBattleSkillAnimation(){
+		_animator.SetTrigger ("ShowBattleSkill");
 	}
-
-	public void playCheckValueAnimation(){
-		_animator.SetTrigger("ShowCheckValue");
-	}
-
-	private void playSwipeToBattleSkillAnimation(){
-		_animator.SetTrigger ("SwipeToBattleSkill");
-	}
-
-	private void playBackToBattleSkillAnimation(){
-		_animator.SetTrigger ("BackToBattleSkill");
-	}
-
 
 	private void playSwipeToDiceRollingAnimation(){
 		_animator.SetTrigger ("SwipeToDiceRolling");
 	}
-
 
 	private void playSwipeToEnemyRollingAnimation(){
 		_animator.SetTrigger ("SwipeToEnemyRolling");
@@ -440,10 +294,6 @@ public class UIManager : MonoBehaviour {
 
 	private void playSwipeToGambleSkillAnimation(){
 		_animator.SetTrigger ("SwipeToGambleSkill");
-	}
-
-	private void playBackToGambleSkillAnimation(){
-		_animator.SetTrigger ("BackToGambleSkill");
 	}
 
 	private void playSwipeToDiceRolling2Animation(){
@@ -454,47 +304,12 @@ public class UIManager : MonoBehaviour {
 		_animator.SetTrigger ("SwipeToAttackScreen");
 	}
 
-    private void playPlayerAttackAnimation()
-    {
-        
-    }
-
-    private void playPlayerHurtAnimation()
-    {
-        _animator.SetTrigger("ShowPlayerHurtValue");
-    }
-
-    private void playMonsterAttackAnimation()
-    {
-
-    }
-
-    private void playMonsterHurtAnimation()
-    {
-        _animator.SetTrigger("ShowMonsterHurtValue");
-    }
-
-    //-----------------------------------Other Local Function----------------------------------
-    private string orderString(int number){
-		switch (number) {
-		case 1:
-			return "1st";
-
-		case 2:
-			return "2nd";
-
-		case 3:
-			return "3rd";
-
-		case 4:
-			return "4th";
-
-		default:
-			Debug.Log ("PrepareForRollOrder - Error");
-			return "Error";
-		}
+	private void playSwipeToAttackScreen2Animation(){
+		_animator.SetTrigger ("SwipeToAttackScreen2");
 	}
 
+
+//-----------------------------------Other Local Function----------------------------------
 	// SwipeToEnemyRollingAnimation 的最後一個frame呼叫
 	private void enemyRollDice(){
 		bcManager.rollDices();

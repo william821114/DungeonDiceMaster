@@ -6,7 +6,7 @@ using UnityEngine;
 public static class State {
     public enum BattleState
     {
-		RollOrder,
+		//RollOrder,
 		SelectBattleSkill,
 		PlayerRollBattleDice,
 		EnemyRollBattleDice,

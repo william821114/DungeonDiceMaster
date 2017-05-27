@@ -9,7 +9,7 @@ public class tempChangeScene : MonoBehaviour
 		SceneManager.LoadScene("Battle", LoadSceneMode.Single);
 	}
 
-	public void changeLoostScene()
+	public void changeLootScene()
 	{
 		SceneManager.LoadScene("Loot", LoadSceneMode.Single);
 	}

@@ -76,14 +76,13 @@ public class Monster : BattleUnit {
     {
         //先做一個最簡單的ai，隨機選一個人，直接把finalcheckvalue當傷害打出去
         int finalCheckValue = 0;
-        Character[] characters = stateManager.getAllCharacters();
 
         for (int i = 0; i < checkValue.Length; i++)
         {
             finalCheckValue += checkValue[i];
         }
-
-        Character target = characters[Random.Range(0, characters.Length)];
+			
+		Character target = stateManager.getCharacter();
         target.check(finalCheckValue);
     }
 

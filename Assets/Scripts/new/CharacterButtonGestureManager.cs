@@ -46,4 +46,19 @@ public class CharacterButtonGestureManager : MonoBehaviour {
 		}
 	}
 
+	void OnTriggerEnter(Collider other) {
+		if (other.gameObject.tag == "Loot") {
+			int type = other.gameObject.GetComponent<Loot> ().lootType;
+
+			if (type == 0 || type == 1) {
+				state = true;
+				lootManager.destroyAllDice();
+				lootManager.showCharacterDice(index);
+			}
+		}
+	}
+
+	void OnTriggerExit(Collider other) {
+		state = false;
+	}
 }

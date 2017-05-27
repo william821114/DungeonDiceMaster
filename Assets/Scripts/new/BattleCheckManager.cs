@@ -9,6 +9,8 @@ public class BattleCheckManager : MonoBehaviour {
     public StateManager stateManager;
 	public UIManager uiManager;
 	public TextMesh checkValueText;
+	public ValueTextManager valueTextManager;
+
 
 	private Character currentCharacter; // 目前行動中or被選定為攻擊對象的角色是哪隻
 	private Monster monster;
@@ -64,10 +66,10 @@ public class BattleCheckManager : MonoBehaviour {
 				dices = new Dice[d.Length];
 				for (int i = 0; i < dices.Length; i++) {
 					
-					// 解鎖x軸和z軸的移動
+					// 解鎖移動
 					Rigidbody rigidbodyTemp = d [i].GetComponent<Rigidbody> ();
 					rigidbodyTemp.constraints = RigidbodyConstraints.None;
-
+					/*
 					// 骰子產生時不要旋轉
 					Spinner spinnerTemp = d [i].GetComponent<Spinner> ();
 					spinnerTemp.triggerOnStart = false;
@@ -75,7 +77,7 @@ public class BattleCheckManager : MonoBehaviour {
 					// 稍微調大骰子
 					Transform transformTemp = d [i].GetComponent<Transform> ();
 					transformTemp.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
-
+					*/
 					dices [i] = GameObject.Instantiate (d [i], new Vector3 (Random.Range (-3f, 3f), -1f, Random.Range (-6f, -1.5f)), Quaternion.identity) as Dice;
 					dices [i].onShowNumber.AddListener (RegisterNumber);
 				}
@@ -155,11 +157,11 @@ public class BattleCheckManager : MonoBehaviour {
 		dices = new Dice[d.Length];
 
 		for (int i = 0; i < dices.Length; i++) {
-
-			// 解鎖x軸和z軸的移動
+			
+			// 解鎖x移動
 			Rigidbody rigidbodyTemp = d [i].GetComponent<Rigidbody> ();
 			rigidbodyTemp.constraints = RigidbodyConstraints.None;
-
+			/*
 			// 骰子產生時不要旋轉
 			Spinner spinnerTemp = d [i].GetComponent<Spinner> ();
 			spinnerTemp.triggerOnStart = false;
@@ -167,7 +169,7 @@ public class BattleCheckManager : MonoBehaviour {
 			// 稍微調大骰子
 			Transform transformTemp = d [i].GetComponent<Transform> ();
 			transformTemp.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
-
+			*/
 			dices [i] = GameObject.Instantiate (d [i], new Vector3 (Random.Range (-2.5f, 2.5f), -1f, Random.Range (-5.5f, -2f)), Quaternion.identity) as Dice;
 			dices[i].onShowNumber.AddListener(RegisterNumber);
 		}
@@ -222,19 +224,7 @@ public class BattleCheckManager : MonoBehaviour {
                 {
                     int skillNoHurtTurn = usingBattleSkill.skillWeight(checkValue);
 
-                    //群體效果或是個人效果
-                    if (usingBattleSkill.isAOE)
-                    {
-                        Character[] characters = stateManager.getAllCharacters();
-                        foreach(Character ch in characters)
-                        {
-                            ch.noHurtTurn += skillNoHurtTurn;
-                        }
-                    } else
-                    {
-                        currentCharacter.noHurtTurn += skillNoHurtTurn;
-                    }
-                    
+					currentCharacter.noHurtTurn += skillNoHurtTurn;
                 }
 
                 else if(usingBattleSkill.isHealSkill)
@@ -281,11 +271,11 @@ public class BattleCheckManager : MonoBehaviour {
                 finalCheckValue += checkValue[i];
             }
         }
-		
+			
+		if (usingGambleSkillIndex != -1 || rollState == 1 || rollState == 3)
+			valueTextManager.showCheckValue (finalCheckValue);
 
-
-		checkValueText.text = "~" + finalCheckValue + "~";
-		uiManager.playCheckValueAnimation ();
+		uiManager.showNextButton ();
     }
 
 	// 骰子停止後callback其值，並存在check value陣列中，爾後可以傳給Skill做加權修正。
@@ -311,7 +301,7 @@ public class BattleCheckManager : MonoBehaviour {
 
 	public void rollDices()
 	{
-		uiManager.hideBackButton ();
+	//	uiManager.hideBackButton ();
 		if (isReadyToRoll) {
 			foreach (Dice dice in dices) {
 

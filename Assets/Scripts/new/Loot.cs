@@ -17,12 +17,14 @@ public class Loot : MonoBehaviour {
 	public LootManager lootmanager;
 
 	private SpriteRenderer spriteRenderer;
-	private int hpRecoverValue = 10;
-	private int mpRecoverValue = 3;
 	private Vector3 initialPosition;
+	private bool isIllegal = true;
+	private BoxCollider boxCollider;
 
 	void Awake () {
 		spriteRenderer = this.GetComponent<SpriteRenderer> ();
+		boxCollider = this.GetComponent<BoxCollider>();
+
 	}
 
 	// Use this for initialization
@@ -31,12 +33,7 @@ public class Loot : MonoBehaviour {
 
 		transformGesture.TransformStarted += (object sender, System.EventArgs e) => 
 		{
-			//TouchHit hit;
-			//if(transformGesture.GetTargetHitResult(out hit))
-			//{
-			//	hit.RaycastHit.collider.gameObject.SetActive(false);
-			//}
-
+			boxCollider.size = new Vector3(0.2f, 0.2f, 0.2f); 
 		};
 
 		transformGesture.Transformed += (object sender, System.EventArgs e) => 
@@ -46,12 +43,30 @@ public class Loot : MonoBehaviour {
 
 		transformGesture.TransformCompleted += (object sender, System.EventArgs e) => 
 		{
-			//Debug.Log(transformGesture.GetTargetHitResult());
-
-			this.transform.position = initialPosition;
+			if(isIllegal)
+			{
+				this.transform.position = initialPosition;
+				boxCollider.size = new Vector3(1.84f, 2.0f, 0.2f);
+			}
+			else
+			{
+				switch(lootType){
+				case 0:
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+				default:
+					Debug.Log("Loot - TransformCompleted Error");
+						break;
+				}
+			}
 		};
 	}
-
+	
 	// Update is called once per frame
 	void Update () {
 		
@@ -93,5 +108,22 @@ public class Loot : MonoBehaviour {
 			Debug.Log ("showLoot - Error");
 			break;
 		}
+	}
+
+	public void backToInitailPosition(){
+		isIllegal = true;
+		this.transform.position = initialPosition;
+	}
+
+	void OnTriggerEnter(Collider other) {
+		if (other.gameObject.tag == "Character" && lootType == 0 || lootType == 1) {
+			isIllegal = false;
+			Debug.Log (other.gameObject.name);
+		} else if (other.gameObject.tag == "Dice" && lootType == 3)
+			isIllegal = false;
+	}
+
+	void OnTriggerExit(Collider other){
+		isIllegal = true;
 	}
 }

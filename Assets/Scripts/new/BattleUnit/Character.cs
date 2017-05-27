@@ -34,8 +34,11 @@ public class Character : BattleUnit {
 	private bool isDead = false;
     public bool willGetHurt = false;
 
+	private Animator _animator;
+
     void Awake() {
 		DontDestroyOnLoad(this.gameObject);
+		_animator = this.GetComponent<Animator> ();
 	}
 	/*
     void Start()
