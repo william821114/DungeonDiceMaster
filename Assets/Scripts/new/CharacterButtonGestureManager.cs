@@ -52,6 +52,9 @@ public class CharacterButtonGestureManager : MonoBehaviour {
 
 			if (type == 0 || type == 1) {
 				state = true;
+				foreach (CharacterButtonGestureManager characterButton in otherButtons) {
+					characterButton.state = false;
+				}
 				lootManager.destroyAllDice();
 				lootManager.showCharacterDice(index);
 			}

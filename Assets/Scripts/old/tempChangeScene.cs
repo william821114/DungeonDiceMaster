@@ -13,4 +13,9 @@ public class tempChangeScene : MonoBehaviour
 	{
 		SceneManager.LoadScene("Loot", LoadSceneMode.Single);
 	}
+
+	public void changeStartScene()
+	{
+		SceneManager.LoadScene("Start", LoadSceneMode.Single);
+	}
 }

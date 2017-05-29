@@ -36,10 +36,18 @@ public class Character : BattleUnit {
 
 	private Animator _animator;
 
-    void Awake() {
-		DontDestroyOnLoad(this.gameObject);
+	void Awake(){
+		DontDestroyOnLoad (this);
+
+		//if (characterInstance == null) {
+		//	characterInstance = this;
+		//} else {
+		//	DestroyObject(gameObject);
+		//}
+
 		_animator = this.GetComponent<Animator> ();
 	}
+   	
 	/*
     void Start()
     {

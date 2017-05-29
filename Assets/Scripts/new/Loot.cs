@@ -20,6 +20,9 @@ public class Loot : MonoBehaviour {
 	private Vector3 initialPosition;
 	private bool isIllegal = true;
 	private BoxCollider boxCollider;
+	private int characterIndex;
+	private Dice dice;
+	private int diceIndex;
 
 	void Awake () {
 		spriteRenderer = this.GetComponent<SpriteRenderer> ();
@@ -33,6 +36,9 @@ public class Loot : MonoBehaviour {
 
 		transformGesture.TransformStarted += (object sender, System.EventArgs e) => 
 		{
+			if(lootType == 2)
+				lootmanager.showGambleBag(true);
+
 			boxCollider.size = new Vector3(0.2f, 0.2f, 0.2f); 
 		};
 
@@ -47,17 +53,24 @@ public class Loot : MonoBehaviour {
 			{
 				this.transform.position = initialPosition;
 				boxCollider.size = new Vector3(1.84f, 2.0f, 0.2f);
+
+				if(lootType == 2)
+					lootmanager.showGambleBag(false);
 			}
 			else
 			{
 				switch(lootType){
 				case 0:
+					lootmanager.showConfirmPanel(lootType, characterIndex, -1, -1, null);
 					break;
 				case 1:
+					lootmanager.showConfirmPanel(lootType, characterIndex, -1, -1, null);
 					break;
 				case 2:
+					lootmanager.showConfirmPanel(lootType, -1, gambleSkillType, -1, null);
 					break;
 				case 3:
+					lootmanager.showConfirmPanel(lootType, characterIndex, -1, diceIndex, dice);
 					break;
 				default:
 					Debug.Log("Loot - TransformCompleted Error");
@@ -86,6 +99,7 @@ public class Loot : MonoBehaviour {
 			break;
 		case 3:
 			Dice d = dices [Random.Range (0, dices.Length - 1)];
+			dice = d;
 
 			// 鎖定移動
 			Rigidbody rigidbodyTemp = d.GetComponent<Rigidbody> ();
@@ -110,20 +124,60 @@ public class Loot : MonoBehaviour {
 		}
 	}
 
-	public void backToInitailPosition(){
-		isIllegal = true;
-		this.transform.position = initialPosition;
-	}
-
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Character" && lootType == 0 || lootType == 1) {
 			isIllegal = false;
-			Debug.Log (other.gameObject.name);
-		} else if (other.gameObject.tag == "Dice" && lootType == 3)
+
+			switch (other.gameObject.name) {
+			case "Hero_piece1":
+				characterIndex = 0;
+				break;
+			case "Hero_piece2":
+				characterIndex = 1;
+				break;
+			case "Hero_piece3":
+				characterIndex = 2;
+				break;
+			default:
+				Debug.Log ("Loot - OnTriggerEnter Error");
+				break;
+			}
+		} else if (other.gameObject.tag == "GambleBag" && lootType == 2) {
 			isIllegal = false;
+		} else if (other.gameObject.tag == "Dice" && lootType == 3) {
+			isIllegal = false;
+
+			switch(other.gameObject.name){
+			case "Dice1":
+				diceIndex = 0;
+				break;
+			case "Dice2":
+				diceIndex = 1;
+				break;
+			case "Dice3":
+				diceIndex = 2;
+				break;
+			default:
+				Debug.Log("Loot - OnTriggerEnter Error");
+				break;
+			}
+		}
 	}
 
 	void OnTriggerExit(Collider other){
 		isIllegal = true;
+	}
+
+	public void unlockLootGesture(bool unlock){
+		if (unlock)
+			backToInitailPosition();
+		
+		transformGesture.enabled = unlock;
+	}
+
+	private void backToInitailPosition(){
+		isIllegal = true;
+		this.transform.position = initialPosition;
+		boxCollider.size = new Vector3(1.84f, 2.0f, 0.2f);
 	}
 }
