@@ -17,12 +17,20 @@ public class LootManager : MonoBehaviour {
 	public Button acceptButton;
 
 	public int hpRecoverValue;
-	public  int mpRecoverValue;
+	public int mpRecoverValue;
+
+	public Sprite hpPotion;
+	public Sprite mpPotion;
+	public Sprite[] gambleSkill;
+	public Dice[] lootDices;
+
+	public ParticleSystem healEffect;
 
 	private SpriteRenderer[] characterPieces;
 	private List<int> randomNumbers = new List<int>();
 	private DataManager dataManager;
-	private Dice[] dices;
+	private Dice[] characterDices;
+	private Loot loot;
 
 
 	void Awake () {
@@ -48,8 +56,9 @@ public class LootManager : MonoBehaviour {
 			randomNumbers.Add(i);
 
 		for (int i = 0; i < 3; i++) {
-			loots [i].lootType = PickNumber ();
-			loots [i].showLoot ();
+			showLoot(i);
+			//loots [i].lootType = PickNumber ();
+			//loots [i].showLoot ();
 		}		
 	}
 	
@@ -58,10 +67,54 @@ public class LootManager : MonoBehaviour {
 		
 	}
 
+	private void showLoot(int i){
+		int lootType = PickNumber ();
+		loots [i].lootType = lootType;
+		SpriteRenderer sr = loots [i].spriteRenderer;
+
+		switch (lootType) {
+		case 0:
+			sr.sprite = hpPotion;
+			break;
+		case 1:
+			sr.sprite = mpPotion;
+			break;
+		case 2:
+			int gambleSkillType = Random.Range (0, 5);
+			loots [i].gambleSkillType = gambleSkillType;
+			sr.sprite = gambleSkill [gambleSkillType];
+			break;
+		case 3:
+			Dice d = lootDices [Random.Range (0, lootDices.Length - 1)];
+			loots[i].dice = d;
+
+			// 鎖定移動
+			Rigidbody rigidbodyTemp = d.GetComponent<Rigidbody> ();
+			rigidbodyTemp.constraints = RigidbodyConstraints.FreezeAll;
+
+			// 骰子產生時不要旋轉
+			Spinner spinnerTemp = d.GetComponent<Spinner> ();
+			spinnerTemp.triggerOnStart = false;
+
+			// 稍微調大骰子
+			//Transform transformTemp = d.GetComponent<Transform> ();
+			//transformTemp.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
+
+			d = GameObject.Instantiate (d, new Vector3 (0f, 0f, 0f), Quaternion.identity) as Dice;
+			d.transform.parent = loots[i].gameObject.transform;
+			d.transform.localPosition = Vector3.zero;
+
+			break;
+		default:
+			Debug.Log ("showLoot - Error");
+			break;
+		}
+	}
+
 	public void showCharacterDice(int characterIndex)
 	{
 		Dice[] d = dataManager.team [characterIndex].getBattleDice();
-		dices = new Dice[d.Length];
+		characterDices = new Dice[d.Length];
 
 		for (int i = 0; i < d.Length; i++) {
 
@@ -77,16 +130,16 @@ public class LootManager : MonoBehaviour {
 			//Transform transformTemp = d [i].GetComponent<Transform> ();
 			//transformTemp.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
 
-			dices [i] = GameObject.Instantiate (d [i], new Vector3 (0f,0f,0f), Quaternion.identity) as Dice;
-			dices [i].transform.parent = dicePanel[i].transform;
-			dices [i].transform.localPosition = Vector3.zero;
+			characterDices [i] = GameObject.Instantiate (d [i], new Vector3 (0f,0f,0f), Quaternion.identity) as Dice;
+			characterDices [i].transform.parent = dicePanel[i].transform;
+			characterDices [i].transform.localPosition = Vector3.zero;
 		}
 	}
 
 	public void destroyAllDice(){
-		for (int i = 0; i < dices.Length; i++) {
-			if(dices[i])
-				Destroy (dices [i].gameObject);
+		for (int i = 0; i < characterDices.Length; i++) {
+			if(characterDices[i])
+				Destroy (characterDices [i].gameObject);
 		}
 	}
 
@@ -109,28 +162,29 @@ public class LootManager : MonoBehaviour {
 		gamebleBag.SetActive (show);
 	}
 
-	public void showConfirmPanel(int lootType, int characterIndex, int gambleSkillIndex, int diceIndex, Dice dice){
+	public void showConfirmPanel(Loot l){
+		this.loot = l;
 		for (int i = 0; i < loots.Length; i++) {
 			loots [i].unlockLootGesture (false);
 		}
 
 		acceptButton.onClick.RemoveAllListeners ();
 
-		switch (lootType) {
+		switch (loot.lootType) {
 		case 0:
-			acceptButton.onClick.AddListener(() => this.hpRecover(characterIndex) );
-			confirmPanel.showText ("Use Hp Potion on " + dataManager.team[characterIndex].unitName + " ?");
+			acceptButton.onClick.AddListener(() => this.hpRecover(loot.characterIndex) );
+			confirmPanel.showText ("Use Hp Potion on " + dataManager.team[loot.characterIndex].unitName + " ?");
 			break;
 		case 1:
-			acceptButton.onClick.AddListener(() => this.mpRecover(characterIndex) );
-			confirmPanel.showText ("Use Mp Potion on " + dataManager.team[characterIndex].unitName + " ?");
+			acceptButton.onClick.AddListener(() => this.mpRecover(loot.characterIndex) );
+			confirmPanel.showText ("Use Mp Potion on " + dataManager.team[loot.characterIndex].unitName + " ?");
 			break;
 		case 2:
-			acceptButton.onClick.AddListener(() => this.addGambleSkillTimes(gambleSkillIndex) );
+			acceptButton.onClick.AddListener(() => this.addGambleSkillTimes(loot.gambleSkillType) );
 			confirmPanel.showText ("Get This Gamble Skill ?");
 			break;
 		case 3:
-			acceptButton.onClick.AddListener(() => this.changeDice(characterIndex, diceIndex, dice) );
+			acceptButton.onClick.AddListener(() => this.changeDice(loot.characterIndex, loot.diceIndex, loot.dice) );
 			confirmPanel.showText ("Switch the Dice ? \n (Old dice will be destroyed !)");
 			break;
 		default:
@@ -148,7 +202,13 @@ public class LootManager : MonoBehaviour {
 			c.Hp = c.MaxHp;
 		
 		confirmPanel.hide();
-		SceneManager.LoadScene("Start", LoadSceneMode.Single);
+		loot.playLootFadeOutAnimation ();
+
+		healEffect.transform.position = characterButton [characterIndex].transform.position - new Vector3 (0f, 2.5f, 0f);
+		var main = healEffect.main;
+		main.startColor = new ParticleSystem.MinMaxGradient(new Color32 (180,255,180,255));
+		healEffect.gameObject.SetActive (true);
+		healEffect.Play ();
 	}
 
 	public void mpRecover(int characterIndex){
@@ -160,14 +220,20 @@ public class LootManager : MonoBehaviour {
 			c.Mp = c.MaxMp;
 
 		confirmPanel.hide();
-		SceneManager.LoadScene("Start", LoadSceneMode.Single);
+		loot.playLootFadeOutAnimation ();
+
+		healEffect.transform.position = characterButton [characterIndex].transform.position - new Vector3 (0f, 2.5f, 0f);
+		var main = healEffect.main;
+		main.startColor = new ParticleSystem.MinMaxGradient(new Color32 (207,75,248,255));
+		healEffect.gameObject.SetActive (true);
+		healEffect.Play ();
 	}
 
 	public void addGambleSkillTimes(int gambleSkillIndex){
 		dataManager.gambleSkillTimes [gambleSkillIndex]++;
 
 		confirmPanel.hide();
-		SceneManager.LoadScene("Start", LoadSceneMode.Single);
+		loot.playLootShrinkAnimation ();
 	}
 
 	public void changeDice(int characterIndex, int diceIndex, Dice dice){
@@ -179,6 +245,8 @@ public class LootManager : MonoBehaviour {
 
 	public void freeAllLoots(){
 		confirmPanel.hide ();
+		showGambleBag (false);
+
 		for (int i = 0; i < loots.Length; i++) {
 			loots [i].unlockLootGesture (true);
 		}

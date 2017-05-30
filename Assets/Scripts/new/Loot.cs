@@ -4,30 +4,28 @@ using UnityEngine;
 using DiceMaster;
 using TouchScript.Gestures;
 using TouchScript.Hit;
+using UnityEngine.SceneManagement;
 
 public class Loot : MonoBehaviour {
 
 	public int lootType; // 0=HP; 1=MP; 2=GambleSkill; 3=Dice
 	public int gambleSkillType; // 0~5
-	public Sprite hpPotion;
-	public Sprite mpPotion;
-	public Sprite[] gambleSkill;
-	public Dice[] dices;
 	public TransformGesture transformGesture;
 	public LootManager lootmanager;
+	public SpriteRenderer spriteRenderer;
+	public Animator _animator;
+	public Dice dice;
 
-	private SpriteRenderer spriteRenderer;
+	public ScreenEffectManager screenEffect;
+
 	private Vector3 initialPosition;
 	private bool isIllegal = true;
 	private BoxCollider boxCollider;
-	private int characterIndex;
-	private Dice dice;
-	private int diceIndex;
+	public int characterIndex;
+	public int diceIndex;
 
 	void Awake () {
-		spriteRenderer = this.GetComponent<SpriteRenderer> ();
-		boxCollider = this.GetComponent<BoxCollider>();
-
+		boxCollider = this.GetComponent<BoxCollider> ();
 	}
 
 	// Use this for initialization
@@ -59,23 +57,7 @@ public class Loot : MonoBehaviour {
 			}
 			else
 			{
-				switch(lootType){
-				case 0:
-					lootmanager.showConfirmPanel(lootType, characterIndex, -1, -1, null);
-					break;
-				case 1:
-					lootmanager.showConfirmPanel(lootType, characterIndex, -1, -1, null);
-					break;
-				case 2:
-					lootmanager.showConfirmPanel(lootType, -1, gambleSkillType, -1, null);
-					break;
-				case 3:
-					lootmanager.showConfirmPanel(lootType, characterIndex, -1, diceIndex, dice);
-					break;
-				default:
-					Debug.Log("Loot - TransformCompleted Error");
-						break;
-				}
+					lootmanager.showConfirmPanel(this);
 			}
 		};
 	}
@@ -83,45 +65,6 @@ public class Loot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-	}
-
-	public void showLoot(){
-		switch (lootType) {
-		case 0:
-			spriteRenderer.sprite = hpPotion;
-			break;
-		case 1:
-			spriteRenderer.sprite = mpPotion;
-			break;
-		case 2:
-			gambleSkillType = Random.Range (0, 5);
-			spriteRenderer.sprite = gambleSkill[gambleSkillType];
-			break;
-		case 3:
-			Dice d = dices [Random.Range (0, dices.Length - 1)];
-			dice = d;
-
-			// 鎖定移動
-			Rigidbody rigidbodyTemp = d.GetComponent<Rigidbody> ();
-			rigidbodyTemp.constraints = RigidbodyConstraints.FreezeAll;
-
-			// 骰子產生時不要旋轉
-			Spinner spinnerTemp = d.GetComponent<Spinner> ();
-			spinnerTemp.triggerOnStart = false;
-
-			// 稍微調大骰子
-			//Transform transformTemp = d.GetComponent<Transform> ();
-			//transformTemp.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
-
-			d = GameObject.Instantiate (d, new Vector3 (0f, 0f, 0f), Quaternion.identity) as Dice;
-			d.transform.parent = this.gameObject.transform;
-			d.transform.localPosition = Vector3.zero;
-
-			break;
-		default:
-			Debug.Log ("showLoot - Error");
-			break;
-		}
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -179,5 +122,18 @@ public class Loot : MonoBehaviour {
 		isIllegal = true;
 		this.transform.position = initialPosition;
 		boxCollider.size = new Vector3(1.84f, 2.0f, 0.2f);
+	}
+
+	public void playLootFadeOutAnimation(){
+		_animator.SetTrigger ("LootFadeOut");
+	}
+
+	public void playLootShrinkAnimation(){
+		_animator.applyRootMotion = false;
+		_animator.SetTrigger ("LootShrink");
+	}
+
+	public void fadeOutScreen(){
+		screenEffect.fullScreenFadeOut ();
 	}
 }
