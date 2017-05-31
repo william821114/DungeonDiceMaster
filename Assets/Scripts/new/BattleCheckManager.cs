@@ -218,37 +218,34 @@ public class BattleCheckManager : MonoBehaviour {
                 // 應該要把skillWeight改成回傳一個skillResultCallback物件，這樣才可以因應不能狀況發動不同效果。
                 // 像是可以邊攻擊邊迴避或邊治癒，這之後再改
 
-                if(usingBattleSkill.isNoHurtSkill)
+                
+                SkillEffect skilleffect = usingBattleSkill.calSkillEffect(checkValue);
+
+                // 此技能有傷害
+                if (skilleffect.isDamage)
                 {
-                    int skillNoHurtTurn = usingBattleSkill.skillWeight(checkValue);
-
-                    //群體效果或是個人效果
-                    if (usingBattleSkill.isAOE)
-                    {
-                        Character[] characters = stateManager.getAllCharacters();
-                        foreach(Character ch in characters)
-                        {
-                            ch.noHurtTurn += skillNoHurtTurn;
-                        }
-                    } else
-                    {
-                        currentCharacter.noHurtTurn += skillNoHurtTurn;
-                    }
-                    
-                }
-
-                else if(usingBattleSkill.isHealSkill)
-                {
-
-                }
-
-                else
-                {
-                    Debug.Log("Caculate skill damage");
-                    // 計算最終傷害
-                    damage = usingBattleSkill.skillWeight(checkValue);
+                    damage = skilleffect.damage;
                     monster.check(damage);
                 }
+
+                // 此技能有治療
+                if (skilleffect.isHeal)
+                {
+                    currentCharacter.getHeal(skilleffect.heal);
+                }
+
+                // 此技能有回避
+                if (skilleffect.isDodge)
+                {
+                    currentCharacter.noHurtTurn += skilleffect.dodge;
+                }
+
+                // 此技能有減傷頓，之後再作
+                if (skilleffect.isShield)
+                {
+
+                }
+
             }
             // 普通攻擊
             else

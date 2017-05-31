@@ -6,9 +6,12 @@ public class Skill: MonoBehaviour {
 
 	public int needMP;
 	public int finalCheckValue;
-    public bool isHealSkill;
-    public bool isNoHurtSkill;
-    public bool isAOE;
+
+    // new skill parameter
+    public bool isDamage;
+    public bool isDodge;
+    public bool isShield;
+    public bool isHeal;
 
 	//These methods are virtual and thus can be overriden
 	//in child classes
@@ -17,4 +20,10 @@ public class Skill: MonoBehaviour {
 		Debug.Log("pass check value to skill");
 		return finalCheckValue;
 	}
+
+    public virtual SkillEffect calSkillEffect(int[] checkValue)
+    {
+        SkillEffect skilleffect = new SkillEffect(this.isDamage, this.isHeal, this.isDodge, this.isShield, finalCheckValue, 0, 0, 0);
+        return skilleffect;
+    }
 }
