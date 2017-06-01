@@ -233,7 +233,7 @@ public class BattleCheckManager : MonoBehaviour {
                 // 此技能有治療
                 if (skilleffect.isHeal)
                 {
-                    currentCharacter.getHeal(skilleffect.heal);
+                    currentCharacter.recoverHP(skilleffect.heal);
                 }
 
                 // 此技能有回避
@@ -251,13 +251,13 @@ public class BattleCheckManager : MonoBehaviour {
                 // 此技能有回復MP
                 if (skilleffect.isHealMP)
                 {
-
+                    currentCharacter.recoverMP(skilleffect.healMP);
                 }
 
                 // 此技能減少對面的MP
                 if (skilleffect.isMPDamage)
                 {
-
+                    monster.damageMp(skilleffect.MPDamage);
                 }
 
                 // 此技能封印骰子

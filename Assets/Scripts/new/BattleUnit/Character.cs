@@ -47,38 +47,6 @@ public class Character : BattleUnit {
 
 		_animator = this.GetComponent<Animator> ();
 	}
-   	
-	/*
-    void Start()
-    {
-        Hp = MaxHp;
-        Mp = MaxMp;
-        Atk = originAtk;
-        Def = originDef;
-    }
-
-    // 呼叫此function來扣角色HP
-    public void getHurt(int damage)
-	{
-        Debug.Log("Alice: Ouch! " + damage);
-		if (!isDead) {
-			if (damage - Def > 0)
-            {
-                Hp = Hp - (damage - Def);
-                Debug.Log("Alice: My Hp:" + Hp);
-            }
-
-            if (Hp <= 0)
-            {
-                isDead = true;
-            }
-				
-		}
-	}
-
-    // call this function to heal hp
-   
-	*/
 
 	public Dice[] getBattleDice(){
 		return battleDice;
@@ -111,40 +79,16 @@ public class Character : BattleUnit {
         }   
     }
 
-    public void getHeal(int value)
+    public void recoverHP(int value)
     {
         if (!isDead)
         {
-            if (Hp + value >= MaxHp)
-            {
-                Hp = MaxHp;
-            }
-            else
-            {
-                Hp += value;
-            }
+            Hp = (Hp + value) >= MaxHp ? MaxHp : (Hp + value);
         }
     }
 
-    /*
-    public void PlayerTurn()
+    public void recoverMP(int value)
     {
-        if (isDead)
-            stateManager.setBattleEnd(false);
-        else
-        {
-            if (!stateManager.getState().Equals(State.BattleState.BattleEnd))
-            {
-                stateManager.SendMessage("setTurn", State.BattleState.PlayerTurn);
-            }
-        }
+        Mp = (Mp + value) >= MaxMp ? MaxMp : (Mp + value);
     }
-
-    public void onStateChange(State.BattleState state)
-    {
-        if(state.Equals(State.BattleState.PlayerTurn)) {
-            Debug.Log("Alice : It's my turn!");
-            stateManager.prepareForPlayerTurn();
-        }
-    }*/
 }
