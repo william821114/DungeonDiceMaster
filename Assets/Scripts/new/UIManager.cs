@@ -93,7 +93,7 @@ public class UIManager : MonoBehaviour {
 		
 		case State.BattleState.PlayerRollBattleDice:
 			nextState = State.BattleState.SelectGambleSkill;
-			tmp.GetComponent<Button>().onClick.AddListener(() => processBattleSkillMP());
+			//tmp.GetComponent<Button>().onClick.AddListener(() => processBattleSkillMP());
 			break;
 
 		case State.BattleState.EnemyRollBattleDice:
@@ -156,10 +156,12 @@ public class UIManager : MonoBehaviour {
 		bcManager.setUsingBattleSkill(usingBattleSkill);
 	}
 
-	private void processBattleSkillMP(){
+	/*private void processBattleSkillMP(){
 		if(usingBattleSkill)
-			currentCharacter.Mp -= usingBattleSkill.needMP;
-	}
+			//currentCharacter.Mp -= usingBattleSkill.needMP;
+
+		Debug.Log ("XXXX");
+	}*/
 
 	// 告知battle check manager 目前使用的賭技
 	// (這個function設置在下一步按鈕上，當選完技能後，點擊下一步按鈕進入下個階段的同時，告知battle check manager)
@@ -203,6 +205,7 @@ public class UIManager : MonoBehaviour {
 			if (currentCharacter.Mp < currentCharacter.skill [i].needMP) {
 				sbgm.isLocked = true;
 				battleSkill [i].color = new Color(1f,1f,1f,0.5f);
+				Debug.Log("XXXX");
 			}
 		}
 
@@ -315,3 +318,4 @@ public class UIManager : MonoBehaviour {
 		bcManager.rollDices();
 	}
 }
+	

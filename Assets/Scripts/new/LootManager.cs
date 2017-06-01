@@ -14,6 +14,7 @@ public class LootManager : MonoBehaviour {
 	public TextMesh[] hp;
 	public TextMesh[] mp;
 	public UITextManager confirmPanel;
+	public UITextManager detailPanel;
 	public Button acceptButton;
 
 	public int hpRecoverValue;
@@ -186,6 +187,34 @@ public class LootManager : MonoBehaviour {
 		case 3:
 			acceptButton.onClick.AddListener(() => this.changeDice(loot.characterIndex, loot.diceIndex, loot.dice) );
 			confirmPanel.showText ("Switch the Dice ? \n (Old dice will be destroyed !)");
+			break;
+		default:
+			Debug.Log("LootManager - showConfirmPanel Error");
+			break;
+		}
+	}
+
+	public void showDetailPanel(Loot l){
+		this.loot = l;
+		for (int i = 0; i < loots.Length; i++) {
+			loots [i].unlockLootGesture (false);
+		}
+
+		acceptButton.onClick.RemoveAllListeners ();
+
+		switch (loot.lootType) {
+		case 0:
+			detailPanel.showLootDetail (loot.lootType, loot.spriteRenderer.sprite);
+			break;
+		case 1:
+			detailPanel.showLootDetail (loot.lootType, loot.spriteRenderer.sprite);
+			break;
+		case 2:
+			detailPanel.showGambleSkillDetail (loot.gambleSkillType, loot.spriteRenderer.sprite);
+			break;
+		case 3:
+			//detailPanel.showDiceDetail (loot.dice);
+			freeAllLoots();
 			break;
 		default:
 			Debug.Log("LootManager - showConfirmPanel Error");

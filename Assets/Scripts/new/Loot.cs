@@ -11,6 +11,7 @@ public class Loot : MonoBehaviour {
 	public int lootType; // 0=HP; 1=MP; 2=GambleSkill; 3=Dice
 	public int gambleSkillType; // 0~5
 	public TransformGesture transformGesture;
+	public TapGesture singleTap;
 	public LootManager lootmanager;
 	public SpriteRenderer spriteRenderer;
 	public Animator _animator;
@@ -31,6 +32,11 @@ public class Loot : MonoBehaviour {
 	// Use this for initialization
 	void Start() {
 		initialPosition = this.transform.position;
+
+		singleTap.Tapped += (object sender, System.EventArgs e) => 
+		{
+			lootmanager.showDetailPanel(this);
+		};
 
 		transformGesture.TransformStarted += (object sender, System.EventArgs e) => 
 		{
@@ -57,7 +63,7 @@ public class Loot : MonoBehaviour {
 			}
 			else
 			{
-					lootmanager.showConfirmPanel(this);
+				lootmanager.showConfirmPanel(this);
 			}
 		};
 	}
@@ -114,7 +120,8 @@ public class Loot : MonoBehaviour {
 	public void unlockLootGesture(bool unlock){
 		if (unlock)
 			backToInitailPosition();
-		
+
+		singleTap.enabled = unlock;
 		transformGesture.enabled = unlock;
 	}
 

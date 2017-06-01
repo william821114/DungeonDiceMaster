@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DiceMaster;
-using System.Linq;
+using UnityEngine.SceneManagement;
 
 
 public class StateManager : MonoBehaviour {
@@ -13,6 +13,7 @@ public class StateManager : MonoBehaviour {
 	public UIManager uiManager;
 	public BattleCheckManager bcManager;
 	public Monster monster;
+	public GameObject monsterMark;
 
 	private DataManager dataManager;
 	private BattleUnit[] battleUnits = new BattleUnit[2]; // 將所有戰鬥單位排序，放在這裡
@@ -26,6 +27,10 @@ public class StateManager : MonoBehaviour {
 		currentCharacter = dataManager.choosedHero;
 
 		// 從怪物池中隨機產生怪物，目前先寫死。
+		monster = GameObject.Instantiate (dataManager.choosedMonster, Vector3.zero, Quaternion.identity) as Monster;
+		monster.transform.position = monsterMark.transform.position;
+		monster.transform.rotation = monsterMark.transform.rotation;
+		monster.gameObject.transform.parent = monsterMark.transform;
 
 		// 將本場戰鬥參戰的角色和怪物告知UI Manager 
 		uiManager.setDataManager(dataManager);
@@ -101,7 +106,11 @@ public class StateManager : MonoBehaviour {
 
 		case State.BattleState.BattleEnd:
 			currentCharacter.transform.parent = null;
-			Debug.Log ("SHOW BATTLE END!!!!"); // 顯示戰鬥結束的畫面
+
+			if(currentCharacter.Hp > 0)
+				SceneManager.LoadScene("Loot", LoadSceneMode.Single);
+			else
+				Debug.Log ("SHOW BATTLE END!!!!"); // 顯示戰鬥結束的畫面
 			break;
 		
 		default:
