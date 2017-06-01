@@ -77,20 +77,7 @@ public class Character : BattleUnit {
 	}
 
     // call this function to heal hp
-    public void getHeal(int value)
-    {
-        if (!isDead)
-        {
-            if(Hp + value >= MaxHp)
-            {
-                Hp = MaxHp;
-            }
-            else
-            {
-                Hp += value;
-            }
-        }
-    }
+   
 	*/
 
 	public Dice[] getBattleDice(){
@@ -124,7 +111,22 @@ public class Character : BattleUnit {
         }   
     }
 
-	/*
+    public void getHeal(int value)
+    {
+        if (!isDead)
+        {
+            if (Hp + value >= MaxHp)
+            {
+                Hp = MaxHp;
+            }
+            else
+            {
+                Hp += value;
+            }
+        }
+    }
+
+    /*
     public void PlayerTurn()
     {
         if (isDead)

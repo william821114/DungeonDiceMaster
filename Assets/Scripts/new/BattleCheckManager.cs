@@ -212,7 +212,7 @@ public class BattleCheckManager : MonoBehaviour {
             int damage = finalCheckValue;
 
             // 判定技能是否發動
-            if(usingBattleSkill)
+            if (usingBattleSkill)
             {
                 currentCharacter.Mp -= usingBattleSkill.needMP;
 
@@ -220,25 +220,34 @@ public class BattleCheckManager : MonoBehaviour {
                 // 應該要把skillWeight改成回傳一個skillResultCallback物件，這樣才可以因應不能狀況發動不同效果。
                 // 像是可以邊攻擊邊迴避或邊治癒，這之後再改
 
-                if(usingBattleSkill.isNoHurtSkill)
+
+                SkillEffect skilleffect = usingBattleSkill.calSkillEffect(checkValue);
+
+                // 此技能有傷害
+                if (skilleffect.isDamage)
                 {
-                    int skillNoHurtTurn = usingBattleSkill.skillWeight(checkValue);
-
-					currentCharacter.noHurtTurn += skillNoHurtTurn;
-                }
-
-                else if(usingBattleSkill.isHealSkill)
-                {
-
-                }
-
-                else
-                {
-                    Debug.Log("Caculate skill damage");
-                    // 計算最終傷害
-                    damage = usingBattleSkill.skillWeight(checkValue);
+                    damage = skilleffect.damage;
                     monster.check(damage);
                 }
+
+                // 此技能有治療
+                if (skilleffect.isHeal)
+                {
+                    currentCharacter.getHeal(skilleffect.heal);
+                }
+
+                // 此技能有回避
+                if (skilleffect.isDodge)
+                {
+                    currentCharacter.noHurtTurn += skilleffect.dodge;
+                }
+
+                // 此技能有減傷頓，之後再作
+                if (skilleffect.isShield)
+                {
+
+                }
+
             }
             // 普通攻擊
             else
