@@ -42,7 +42,15 @@ public class Dodge : Skill
 
         }
 
-        SkillEffect skilleffect = new SkillEffect(this.isDamage, this.isHeal, this.isDodge, this.isShield, 0, 0, finalCheckValue, 0);
+        SkillEffect skilleffect = new SkillEffect(this.isDamage,
+                                        this.isHeal,
+                                        this.isDodge,
+                                        this.isShield,
+                                        this.isDisable,
+                                        this.isSelfDisable,
+                                        this.isMPDamage,
+                                        this.isHealMP);
+        skilleffect.setDodge(finalCheckValue);
         return skilleffect;
     }
 }

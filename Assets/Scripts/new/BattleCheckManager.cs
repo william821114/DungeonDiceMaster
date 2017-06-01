@@ -248,6 +248,30 @@ public class BattleCheckManager : MonoBehaviour {
 
                 }
 
+                // 此技能有回復MP
+                if (skilleffect.isHealMP)
+                {
+
+                }
+
+                // 此技能減少對面的MP
+                if (skilleffect.isMPDamage)
+                {
+
+                }
+
+                // 此技能封印骰子
+                if(skilleffect.isDisable)
+                {
+
+                }
+
+                // 此技能封印自己骰子
+                if(skilleffect.isSelfDisable)
+                {
+
+                }
+
             }
             // 普通攻擊
             else

@@ -10,9 +10,13 @@ public class Skill : MonoBehaviour
 
     // new skill parameter
     public bool isDamage;
+    public bool isHeal;
+    public bool isMPDamage;
+    public bool isHealMP;
     public bool isDodge;
     public bool isShield;
-    public bool isHeal;
+    public bool isDisable;
+    public bool isSelfDisable;
 
     //These methods are virtual and thus can be overriden
     //in child classes
@@ -25,7 +29,16 @@ public class Skill : MonoBehaviour
 
     public virtual SkillEffect calSkillEffect(int[] checkValue)
     {
-        SkillEffect skilleffect = new SkillEffect(this.isDamage, this.isHeal, this.isDodge, this.isShield, finalCheckValue, 0, 0, 0);
+        SkillEffect skilleffect = new SkillEffect(this.isDamage,
+                                                this.isHeal,
+                                                this.isDodge,
+                                                this.isShield,
+                                                this.isDisable,
+                                                this.isSelfDisable,
+                                                this.isMPDamage,
+                                                this.isHealMP);
+
+
         return skilleffect;
     }
 }
