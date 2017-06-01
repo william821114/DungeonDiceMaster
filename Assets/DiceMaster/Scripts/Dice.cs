@@ -18,6 +18,7 @@ namespace DiceMaster
 
         public bool verbose = false;
         public ShowNumberEvent onShowNumber;
+		public int value; // 新添加，方便對特定骰子取值
 
         // State
         private Rigidbody rb;
@@ -73,6 +74,8 @@ namespace DiceMaster
                     break;
                 }
             }
+
+			value = shownNumber;
 
             if (onShowNumber != null) onShowNumber.Invoke(shownNumber);
             if (verbose) Debug.Log(this.name + " shown number: " + shownNumber);
