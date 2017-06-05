@@ -27,6 +27,15 @@ public class AllIn: Skill {
 
     public override SkillEffect calSkillEffect(int[] checkValue)
     {
+        SkillEffect skilleffect = new SkillEffect(this.isDamage,
+                                        this.isHeal,
+                                        this.isDodge,
+                                        this.isShield,
+                                        this.isDisable,
+                                        this.isSelfDisable,
+                                        this.isMPDamage,
+                                        this.isHealMP);
+
         bool isAllSix = true;
         for (int i = 0; i < checkValue.Length; i++)
         {
@@ -37,6 +46,7 @@ public class AllIn: Skill {
         if (isAllSix)
         {
             finalCheckValue = 60;
+            skilleffect.setSkillActivated(true);
             Debug.Log("梭哈成功! - " + finalCheckValue);
         }
         else
@@ -44,14 +54,7 @@ public class AllIn: Skill {
             finalCheckValue = 0;
         }
 
-        SkillEffect skilleffect = new SkillEffect(this.isDamage,
-                                        this.isHeal,
-                                        this.isDodge,
-                                        this.isShield,
-                                        this.isDisable,
-                                        this.isSelfDisable,
-                                        this.isMPDamage,
-                                        this.isHealMP);
+        
         skilleffect.setDamage(finalCheckValue);
         return skilleffect;
     }

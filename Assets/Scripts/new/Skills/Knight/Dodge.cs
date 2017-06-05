@@ -27,6 +27,15 @@ public class Dodge : Skill
 
     public override SkillEffect calSkillEffect(int[] checkValue)
     {
+        SkillEffect skilleffect = new SkillEffect(this.isDamage,
+                                       this.isHeal,
+                                       this.isDodge,
+                                       this.isShield,
+                                       this.isDisable,
+                                       this.isSelfDisable,
+                                       this.isMPDamage,
+                                       this.isHealMP);
+
         bool isTrigger = true;
         finalCheckValue = 0;
         for (int i = 0; i < checkValue.Length; i++)
@@ -38,18 +47,11 @@ public class Dodge : Skill
         {
 
             Debug.Log("迴避發動成功!");
+            skilleffect.setSkillActivated(true);
             finalCheckValue = 1;
 
         }
 
-        SkillEffect skilleffect = new SkillEffect(this.isDamage,
-                                        this.isHeal,
-                                        this.isDodge,
-                                        this.isShield,
-                                        this.isDisable,
-                                        this.isSelfDisable,
-                                        this.isMPDamage,
-                                        this.isHealMP);
         skilleffect.setDodge(finalCheckValue);
         return skilleffect;
     }

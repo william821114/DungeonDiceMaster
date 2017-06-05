@@ -22,6 +22,14 @@ public class FireBall: Skill {
 
     public override SkillEffect calSkillEffect(int[] checkValue)
     {
+        SkillEffect skilleffect = new SkillEffect(this.isDamage,
+                                                this.isHeal,
+                                                this.isDodge,
+                                                this.isShield,
+                                                this.isDisable,
+                                                this.isSelfDisable,
+                                                this.isMPDamage,
+                                                this.isHealMP);
         finalCheckValue = 0;
         for (int i = 0; i < checkValue.Length; i++)
         {
@@ -31,17 +39,11 @@ public class FireBall: Skill {
         if (finalCheckValue >= 8)
         {
             finalCheckValue += 5;
+            skilleffect.setSkillActivated(true);
             Debug.Log("火球發動成功! - " + finalCheckValue);
         }
 
-        SkillEffect skilleffect = new SkillEffect(this.isDamage,
-                                                this.isHeal,
-                                                this.isDodge,
-                                                this.isShield,
-                                                this.isDisable,
-                                                this.isSelfDisable,
-                                                this.isMPDamage,
-                                                this.isHealMP);
+        
         skilleffect.setDamage(finalCheckValue);
         return skilleffect;
     }

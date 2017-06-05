@@ -12,6 +12,7 @@ public class SkillEffect
     public bool isShield;
     public bool isDisable;
     public bool isSelfDisable;
+    public bool isSkillActivated;
     public int damage;
     public int heal;
     public int MPDamage;
@@ -34,6 +35,10 @@ public class SkillEffect
         this.isSelfDisable = isSelfDisable;
         this.isMPDamage = isMPDamage;
         this.isHealMP = isHealMP;
+
+        // 初始值設定 activated 為 false，在 Skill 中的 calSkillEffect 發動成功時，
+        // 將這個參數設定為 true ，以觸發技能發動的特效
+        this.isSkillActivated = false;
     }
 
     public void setHeal(int val)
@@ -76,6 +81,11 @@ public class SkillEffect
     public void setHealMP(int val)
     {
         this.healMP = val;
+    }
+
+    public void setSkillActivated(bool val)
+    {
+        this.isSkillActivated = val;
     }
 
 }

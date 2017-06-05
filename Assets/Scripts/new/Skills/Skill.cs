@@ -9,6 +9,7 @@ public class Skill : MonoBehaviour
     public int finalCheckValue;
 
     // new skill parameter
+    public bool isSkillActivated;
     public bool isDamage;
     public bool isHeal;
     public bool isMPDamage;
@@ -37,7 +38,6 @@ public class Skill : MonoBehaviour
                                                 this.isSelfDisable,
                                                 this.isMPDamage,
                                                 this.isHealMP);
-
 
         return skilleffect;
     }

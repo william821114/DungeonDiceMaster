@@ -46,6 +46,7 @@ public class RoundSlash : Skill
         if (isTrigger)
         {
             finalCheckValue += 4;
+            skilleffect.setSkillActivated(true);
             Debug.Log("迴旋斬發動成功! - " + finalCheckValue);
         }
 

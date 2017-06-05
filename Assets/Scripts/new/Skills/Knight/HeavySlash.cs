@@ -34,6 +34,7 @@ public class HeavySlash : Skill
             finalCheckValue *= 2;
             skilleffect.setDamage(finalCheckValue);
             skilleffect.setHeal(2);
+            skilleffect.setSkillActivated(true);
             Debug.Log("重擊發動成攻! - " + finalCheckValue);
         }
 

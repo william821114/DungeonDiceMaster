@@ -25,6 +25,15 @@ public class Gamble: Skill {
 
     public override SkillEffect calSkillEffect(int[] checkValue)
     {
+        SkillEffect skilleffect = new SkillEffect(this.isDamage,
+                                        this.isHeal,
+                                        this.isDodge,
+                                        this.isShield,
+                                        this.isDisable,
+                                        this.isSelfDisable,
+                                        this.isMPDamage,
+                                        this.isHealMP);
+
         finalCheckValue = 0;
         for (int i = 0; i < checkValue.Length; i++)
         {
@@ -34,6 +43,7 @@ public class Gamble: Skill {
         if (finalCheckValue >= 12)
         {
             finalCheckValue *= 2;
+            skilleffect.setSkillActivated(true);
             Debug.Log("賭術發動成功! -" + finalCheckValue);
         }
         else
@@ -41,14 +51,7 @@ public class Gamble: Skill {
             finalCheckValue = 0;
         }
 
-        SkillEffect skilleffect = new SkillEffect(this.isDamage,
-                                        this.isHeal,
-                                        this.isDodge,
-                                        this.isShield,
-                                        this.isDisable,
-                                        this.isSelfDisable,
-                                        this.isMPDamage,
-                                        this.isHealMP);
+        
         skilleffect.setDamage(finalCheckValue);
         return skilleffect;
     }

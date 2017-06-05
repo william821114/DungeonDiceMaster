@@ -22,6 +22,15 @@ public class WindProtect: Skill {
 
     public override SkillEffect calSkillEffect(int[] checkValue)
     {
+        SkillEffect skilleffect = new SkillEffect(this.isDamage,
+                                                this.isHeal,
+                                                this.isDodge,
+                                                this.isShield,
+                                                this.isDisable,
+                                                this.isSelfDisable,
+                                                this.isMPDamage,
+                                                this.isHealMP);
+
         finalCheckValue = 0;
         for (int i = 0; i < checkValue.Length; i++)
         {
@@ -31,17 +40,11 @@ public class WindProtect: Skill {
         if (finalCheckValue > 10)
         {
             Debug.Log("風之守護!");
+            skilleffect.setSkillActivated(true);
             finalCheckValue = 1;
         }
 
-        SkillEffect skilleffect = new SkillEffect(this.isDamage,
-                                                this.isHeal,
-                                                this.isDodge,
-                                                this.isShield,
-                                                this.isDisable,
-                                                this.isSelfDisable,
-                                                this.isMPDamage,
-                                                this.isHealMP);
+        
         skilleffect.setDodge(finalCheckValue);
         return skilleffect;
     }
