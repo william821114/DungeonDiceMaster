@@ -74,6 +74,10 @@ public class Character : BattleUnit {
             {
                 willGetHurt = true;
                 Debug.Log("Character: get Hurt - " + damage);
+                //取得 player hurtvalue並預先更新數字
+                TextMesh HurtValue = this.gameObject.transform.GetChild(1).gameObject.GetComponent<TextMesh>();
+                HurtValue.text = "-" + damage.ToString();
+
                 this.Hp -= damage;
             }
         }   

@@ -312,6 +312,11 @@ public class UIManager : MonoBehaviour {
         playMonsterHurtAnimation();
     }
 
+    public void showPlayerHurt()
+    {
+        playPlayerHurtAnimation();
+    }
+
 
     //-----------------------------------Anitmation Trigger----------------------------------
     private void playShowBattleSkillAnimation() {
@@ -355,7 +360,8 @@ public class UIManager : MonoBehaviour {
 
     private void playPlayerHurtAnimation()
     {
-
+        Animator playerAnimator = currentCharacter.gameObject.GetComponent<Animator>();
+        playerAnimator.SetTrigger("hurt");
     }
 
 
