@@ -202,6 +202,9 @@ public class BattleCheckManager : MonoBehaviour {
 
             Debug.Log("Roll2");
 
+            // 重置 Skill Effect
+            usingBattleSkillEffect = null;
+
             finalCheckValue = 0;
             // 拿到重擲的final check value
             for (int i = 0; i < checkValue.Length; i++)
@@ -211,6 +214,7 @@ public class BattleCheckManager : MonoBehaviour {
 
             Debug.Log("finalcheck: " + finalCheckValue);
             int damage = finalCheckValue;
+
 
             // 判定技能是否發動
             if (usingBattleSkill)
@@ -354,4 +358,9 @@ public class BattleCheckManager : MonoBehaviour {
 			isReadyToRoll = false;
 		}
 	}
+
+    public SkillEffect getBattleSkillEffect()
+    {
+        return usingBattleSkillEffect;
+    }
 }

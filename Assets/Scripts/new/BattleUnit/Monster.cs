@@ -73,6 +73,12 @@ public class Monster : BattleUnit {
         {
             willGetHurt = true;
             Debug.Log("Monster: get Hurt - " + damage);
+
+            //取得 monster底下的 hurtvalue並預先更新數字
+            TextMesh HurtValue = this.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMesh>();
+            HurtValue.text = "-" + damage.ToString();
+
+
             this.Hp -= damage;
             //monsterHurtValueText.text = "-" + damage;
         }

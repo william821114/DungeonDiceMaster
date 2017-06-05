@@ -97,11 +97,7 @@ public class StateManager : MonoBehaviour {
 			break;
 		
 		case State.BattleState.PlayerAttack:
-			uiManager.showPlayerAttack ();
-			uiManager.updateMonsterUI ();
-			uiManager.updateCharacterUI ();
-            bcManager.destroyAllDice (); // 清掉骰子模型
-			currentUnitIndex = (currentUnitIndex+1) % battleUnits.Length;
+            StartCoroutine(PlayerAttackRoutine());
 			break;
 
 		case State.BattleState.BattleEnd:
@@ -119,8 +115,21 @@ public class StateManager : MonoBehaviour {
 		}
 	}
 
-	// 能給別人用的function
-	public Character getCharacter()
+    IEnumerator PlayerAttackRoutine()
+    {
+        uiManager.showPlayerAttack();
+        yield return new WaitForSeconds(2);
+        uiManager.showMonsterHurt();
+        yield return new WaitForSeconds(2);
+        uiManager.updateMonsterUI();
+        uiManager.updateCharacterUI();
+        uiManager.showNextButton();
+        bcManager.destroyAllDice(); // 清掉骰子模型
+        currentUnitIndex = (currentUnitIndex + 1) % battleUnits.Length;
+    }
+
+    // 能給別人用的function
+    public Character getCharacter()
 	{
 		return currentCharacter;
 	}

@@ -19,6 +19,8 @@ public class Skill : MonoBehaviour
     public bool isDisable;
     public bool isSelfDisable;
 
+    public string skillName_ch;
+
     //These methods are virtual and thus can be overriden
     //in child classes
     public virtual int skillWeight(int[] checkValue)
