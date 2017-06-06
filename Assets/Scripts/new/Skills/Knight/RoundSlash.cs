@@ -28,7 +28,15 @@ public class RoundSlash : Skill
     {
         bool isTrigger = true;
         finalCheckValue = 0;
-        SkillEffect skilleffect;
+        SkillEffect skilleffect = new SkillEffect(this.isDamage,
+                                        this.isHeal,
+                                        this.isDodge,
+                                        this.isShield,
+                                        this.isDisable,
+                                        this.isSelfDisable,
+                                        this.isMPDamage,
+                                        this.isHealMP);
+
         for (int i = 0; i < checkValue.Length; i++)
         {
             finalCheckValue += checkValue[i];
@@ -38,10 +46,11 @@ public class RoundSlash : Skill
         if (isTrigger)
         {
             finalCheckValue += 4;
+            skilleffect.setSkillActivated(true);
             Debug.Log("迴旋斬發動成功! - " + finalCheckValue);
         }
 
-        skilleffect = new SkillEffect(this.isDamage, this.isHeal, this.isDodge, this.isShield, finalCheckValue, 0, 0, 0);
+        skilleffect.setDamage(finalCheckValue);
         return skilleffect;
     }
 }

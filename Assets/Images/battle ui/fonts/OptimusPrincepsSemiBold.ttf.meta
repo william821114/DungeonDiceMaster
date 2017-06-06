@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cc2eaf2d5531f405299bf97ffb2eb43c
+guid: 3fd2529609f4c314d9522578417757b5
 timeCreated: 1494462644
 licenseType: Free
 TrueTypeFontImporter:
@@ -12,7 +12,8 @@ TrueTypeFontImporter:
   fontName: OptimusPrincepsSemiBold
   fontNames:
   - OptimusPrincepsSemiBold
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: cc2eaf2d5531f405299bf97ffb2eb43c, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

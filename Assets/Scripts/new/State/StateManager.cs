@@ -90,18 +90,11 @@ public class StateManager : MonoBehaviour {
 			break;
 
 		case State.BattleState.EnemyAttack:
-			uiManager.showEnemyAttack ();
-			uiManager.updateCharacterUI();
-			bcManager.destroyAllDice (); // 清掉骰子模型
-			currentUnitIndex = (currentUnitIndex+1) % battleUnits.Length;
-			break;
+            StartCoroutine(MonsterAttackRoutine());
+            break;
 		
 		case State.BattleState.PlayerAttack:
-			uiManager.showPlayerAttack ();
-			uiManager.updateMonsterUI ();
-			uiManager.updateCharacterUI ();
-            bcManager.destroyAllDice (); // 清掉骰子模型
-			currentUnitIndex = (currentUnitIndex+1) % battleUnits.Length;
+            StartCoroutine(PlayerAttackRoutine());
 			break;
 
 		case State.BattleState.BattleEnd:
@@ -119,8 +112,45 @@ public class StateManager : MonoBehaviour {
 		}
 	}
 
-	// 能給別人用的function
-	public Character getCharacter()
+    IEnumerator PlayerAttackRoutine()
+    {
+        uiManager.showPlayerAttack();
+        
+        yield return new WaitForSeconds(2);
+        monster.gameObject.GetComponents<AudioSource>()[0].Play(0);
+        uiManager.showMonsterHurt();
+        yield return new WaitForSeconds(1.5f);
+        // demo用
+        if(monster.Hp <= 0)
+        {
+            SceneManager.LoadScene("Loot", LoadSceneMode.Single);
+        }
+
+        uiManager.updateMonsterUI();
+        uiManager.updateCharacterUI();
+        uiManager.showNextButton();
+        bcManager.destroyAllDice(); // 清掉骰子模型
+        currentUnitIndex = (currentUnitIndex + 1) % battleUnits.Length;
+    }
+
+    IEnumerator MonsterAttackRoutine()
+    {
+        uiManager.showEnemyAttack();
+        yield return new WaitForSeconds(1);
+        uiManager.showPlayerHurt();
+        monster.gameObject.GetComponents<AudioSource>()[1].Play(0);
+        yield return new WaitForSeconds(0.5f);
+        currentCharacter.gameObject.GetComponents<AudioSource>()[0].Play(0);
+        yield return new WaitForSeconds(0.5f);
+
+        uiManager.updateCharacterUI();
+        bcManager.destroyAllDice(); // 清掉骰子模型
+        uiManager.showNextButton(); 
+        currentUnitIndex = (currentUnitIndex + 1) % battleUnits.Length;
+    }
+
+    // 能給別人用的function
+    public Character getCharacter()
 	{
 		return currentCharacter;
 	}

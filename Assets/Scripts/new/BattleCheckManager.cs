@@ -15,6 +15,7 @@ public class BattleCheckManager : MonoBehaviour {
 	private Character currentCharacter; // 目前行動中or被選定為攻擊對象的角色是哪隻
 	private Monster monster;
 	private Skill usingBattleSkill; // 目前使用的戰鬥技能
+    private SkillEffect usingBattleSkillEffect; // 戰鬥技能在本回合中造成的效果
 	private int usingGambleSkillIndex; // 目前使用的賭博技能，因為賭技通用且固定，直接用int來表示，另一個原因是賭技歧異度大，不太適合統一繼承。
 
 	private Dice[] dices; // 從角色中取得的骰子會放在這裡
@@ -201,6 +202,9 @@ public class BattleCheckManager : MonoBehaviour {
 
             Debug.Log("Roll2");
 
+            // 重置 Skill Effect
+            usingBattleSkillEffect = null;
+
             finalCheckValue = 0;
             // 拿到重擲的final check value
             for (int i = 0; i < checkValue.Length; i++)
@@ -210,6 +214,7 @@ public class BattleCheckManager : MonoBehaviour {
 
             Debug.Log("finalcheck: " + finalCheckValue);
             int damage = finalCheckValue;
+
 
             // 判定技能是否發動
             if (usingBattleSkill)
@@ -221,29 +226,55 @@ public class BattleCheckManager : MonoBehaviour {
                 // 像是可以邊攻擊邊迴避或邊治癒，這之後再改
 
 
-                SkillEffect skilleffect = usingBattleSkill.calSkillEffect(checkValue);
+                usingBattleSkillEffect = usingBattleSkill.calSkillEffect(checkValue);
+                
 
                 // 此技能有傷害
-                if (skilleffect.isDamage)
+                if (usingBattleSkillEffect.isDamage)
                 {
-                    damage = skilleffect.damage;
+                    damage = usingBattleSkillEffect.damage;
                     monster.check(damage);
                 }
 
                 // 此技能有治療
-                if (skilleffect.isHeal)
+                if (usingBattleSkillEffect.isHeal)
                 {
-                    currentCharacter.getHeal(skilleffect.heal);
+                    currentCharacter.recoverHP(usingBattleSkillEffect.heal);
+
                 }
 
                 // 此技能有回避
-                if (skilleffect.isDodge)
+                if (usingBattleSkillEffect.isDodge)
                 {
-                    currentCharacter.noHurtTurn += skilleffect.dodge;
+                    currentCharacter.noHurtTurn += usingBattleSkillEffect.dodge;
                 }
 
                 // 此技能有減傷頓，之後再作
-                if (skilleffect.isShield)
+                if (usingBattleSkillEffect.isShield)
+                {
+
+                }
+
+                // 此技能有回復MP
+                if (usingBattleSkillEffect.isHealMP)
+                {
+                    currentCharacter.recoverMP(usingBattleSkillEffect.healMP);
+                }
+
+                // 此技能減少對面的MP
+                if (usingBattleSkillEffect.isMPDamage)
+                {
+                    monster.damageMp(usingBattleSkillEffect.MPDamage);
+                }
+
+                // 此技能封印骰子
+                if(usingBattleSkillEffect.isDisable)
+                {
+
+                }
+
+                // 此技能封印自己骰子
+                if(usingBattleSkillEffect.isSelfDisable)
                 {
 
                 }
@@ -327,4 +358,9 @@ public class BattleCheckManager : MonoBehaviour {
 			isReadyToRoll = false;
 		}
 	}
+
+    public SkillEffect getBattleSkillEffect()
+    {
+        return usingBattleSkillEffect;
+    }
 }
