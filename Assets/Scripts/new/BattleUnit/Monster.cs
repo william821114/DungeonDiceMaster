@@ -8,10 +8,12 @@ using DiceMaster;
 public class Monster : BattleUnit {
 
     public int MaxHp;
+    public int MaxMp;
     public int originAtk;
     public int originDef;
 
     public int Hp;
+    public int Mp;
 	public int Atk;
 	public int Def;
 
@@ -71,7 +73,15 @@ public class Monster : BattleUnit {
         {
             willGetHurt = true;
             Debug.Log("Monster: get Hurt - " + damage);
+
+            //取得 monster底下的 hurtvalue並預先更新數字
+            TextMesh HurtValue = this.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMesh>();
+            HurtValue.text = "-" + damage.ToString();
+
+
             this.Hp -= damage;
+
+            if (this.Hp < 0) this.Hp = 0;
             //monsterHurtValueText.text = "-" + damage;
         }
     }
@@ -114,37 +124,10 @@ public class Monster : BattleUnit {
 		Destroy (this.gameObject);
 	}
 
-    // 怪物每一回合的行動
-    private void AI()
+    */
+
+    public void damageMp(int value)
     {
-        // 這邊還要加上動畫
-        monsterAnimator.SetTrigger("Attack");
-        actioningCharacter.SendMessage("getHurt", Atk);
+        this.Mp = (Mp - value > 0) ? (Mp - value) : 0;
     }
-
-    public void MonsterAttackEnd()
-    {
-        actioningCharacterAnimator.SetTrigger("Hurt");
-    }
-
-    public void MonsterTurnEnd()
-    {
-        if (!stateManager.getState().Equals(State.BattleState.BattleEnd))
-        {
-            stateManager.SendMessage("setTurn", State.BattleState.PlayerTurn);
-        }
-    }
-
-    public void onStateChange(State.BattleState state)
-    {
-        
-        if (state.Equals(State.BattleState.EnemyTurn))
-        {
-            Debug.Log("Deer : It's my turn!");
-            AI();
-
-            
-           
-        }
-    }*/
 }
