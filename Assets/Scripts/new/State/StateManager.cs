@@ -84,8 +84,8 @@ public class StateManager : MonoBehaviour {
 			break;
 
 		case State.BattleState.PlayerRollBattleDice2:
-            uiManager.showDiceRolling2Panel();
 			bcManager.setForPlayerToRoll (2); // 2表示第二次擲骰子
+            uiManager.showDiceRolling2Panel();
 
 			break;
 

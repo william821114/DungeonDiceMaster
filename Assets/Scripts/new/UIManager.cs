@@ -259,10 +259,8 @@ public class UIManager : MonoBehaviour {
     }
 
     public void showDiceRolling2Panel() {
-        hideNextButton();
-        //showBackButton ();
-
         if (usingGambleSkillIndex == -1) {
+			hideNextButton();
             stateManager.setState(State.BattleState.PlayerAttack);
         }
         else {
