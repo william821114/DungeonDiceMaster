@@ -84,9 +84,9 @@ public class StateManager : MonoBehaviour {
 			break;
 
 		case State.BattleState.PlayerRollBattleDice2:
-            bcManager.setForPlayerToRoll (2); // 2表示第二次擲骰子
             uiManager.showDiceRolling2Panel();
-			
+			bcManager.setForPlayerToRoll (2); // 2表示第二次擲骰子
+
 			break;
 
 		case State.BattleState.EnemyAttack:
@@ -114,8 +114,9 @@ public class StateManager : MonoBehaviour {
 
     IEnumerator PlayerAttackRoutine()
     {
-        uiManager.showPlayerAttack();
-        
+		uiManager.showPlayerAttack();
+		bcManager.destroyAllDice(); // 清掉骰子模型
+
         yield return new WaitForSeconds(2);
         monster.gameObject.GetComponents<AudioSource>()[0].Play(0);
         uiManager.showMonsterHurt();
@@ -123,19 +124,23 @@ public class StateManager : MonoBehaviour {
         // demo用
         if(monster.Hp <= 0)
         {
+			// 提醒一下，換scene前一定要移除角色parent，不然就算有Don't Destroy，也因為父親被砍，而消失。
+			// 只有戰敗死亡的時候，才不用管，反正都要重頭來過
+			currentCharacter.transform.parent = null;
             SceneManager.LoadScene("Loot", LoadSceneMode.Single);
         }
 
         uiManager.updateMonsterUI();
         uiManager.updateCharacterUI();
         uiManager.showNextButton();
-        bcManager.destroyAllDice(); // 清掉骰子模型
         currentUnitIndex = (currentUnitIndex + 1) % battleUnits.Length;
     }
 
     IEnumerator MonsterAttackRoutine()
     {
         uiManager.showEnemyAttack();
+		bcManager.destroyAllDice(); // 清掉骰子模型
+
         yield return new WaitForSeconds(1);
         uiManager.showPlayerHurt();
         monster.gameObject.GetComponents<AudioSource>()[1].Play(0);
@@ -144,7 +149,6 @@ public class StateManager : MonoBehaviour {
         yield return new WaitForSeconds(0.5f);
 
         uiManager.updateCharacterUI();
-        bcManager.destroyAllDice(); // 清掉骰子模型
         uiManager.showNextButton(); 
         currentUnitIndex = (currentUnitIndex + 1) % battleUnits.Length;
     }

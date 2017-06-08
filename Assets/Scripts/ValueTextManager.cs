@@ -24,6 +24,18 @@ public class ValueTextManager : MonoBehaviour {
 		_animator.SetTrigger ("ShowCheckValueText");
 	} 
 
+	public void showCheckValue2(string checkValueText){
+		this.gameObject.SetActive (true);
+		valueText.text = checkValueText;
+		_animator.SetTrigger ("ShowCheckValueText");
+	} 
+
+	public void showGambleSkillValue(int diceValue){
+		this.gameObject.SetActive (true);
+		valueText.text = "" + diceValue;
+		_animator.SetTrigger ("ShowGambleSkillValue");
+	}
+
 	public void hide(){
 		this.gameObject.SetActive (false);
 	}

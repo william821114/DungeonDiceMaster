@@ -14,6 +14,9 @@ public class SkillButtonGestureManager : MonoBehaviour {
 	public SkillButtonGestureManager[] otherButtons;
 	public bool state = false;
 	public bool isLocked = false;
+	public int index;
+
+	public UIManager uimanager;
 
 	private SpriteRenderer icon;
 
@@ -37,7 +40,11 @@ public class SkillButtonGestureManager : MonoBehaviour {
 			}
 		};
 
-
+		longPress.LongPressed += (object sender, System.EventArgs e) => 
+		{
+			if(!isLocked)
+				uimanager.showSkillDetailPanel(index);
+		};
 		
 	}
 	

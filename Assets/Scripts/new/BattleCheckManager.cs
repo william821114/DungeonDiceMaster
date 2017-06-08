@@ -9,7 +9,9 @@ public class BattleCheckManager : MonoBehaviour {
     public StateManager stateManager;
 	public UIManager uiManager;
 	public TextMesh checkValueText;
-	public ValueTextManager valueTextManager;
+	public ValueTextManager checkValueTextManager, gamebleValueTextManager;
+	public Dice normalD6;
+	public Collider flickArea;
 
 
 	private Character currentCharacter; // 目前行動中or被選定為攻擊對象的角色是哪隻
@@ -105,12 +107,50 @@ public class BattleCheckManager : MonoBehaviour {
 				//		設定TextMesh.text = 3，對有改變的骰子呼叫動畫播放，讓這個TextMesh淡入淡出。
 				//		(PS. TextMesh要綁上我寫的script - textRendererChange，因為要改動MeshRenderer的sorting layer，
 				//		Unity只有SpriteRenderer可以在insperctor中設定layer)
+				isReadyToRoll = false;
+				isRolled = true;
+				for (int i = 0; i < dices.Length; i++) {
+					if (dices [i].value < 3) {
+						dices [i].value = 3;
+
+						Quaternion rotationTemp = Quaternion.identity;;
+						rotationTemp.eulerAngles = new Vector3(90f,0f,0f);
+							
+						ValueTextManager gvt;
+						gvt = GameObject.Instantiate (gamebleValueTextManager, Vector3.zero, rotationTemp) as ValueTextManager;
+						gvt.transform.SetParent(dices [i].gameObject.transform, true);
+						gvt.transform.localPosition = Vector3.zero;
+						gvt.showGambleSkillValue (3);
+					}
+
+					if (checkValue [i] < 3)
+						checkValue [i] = 3;
+				}
+				check ();
 				break;
 
 			case 2:
 				// 口袋夾層：多值一顆普通D6
 				// 作法：以擲順序骰的呈現方式，顯示出圓形的dice panel，取一個普通D6，讓它自動轉取值。
 				//		最後把將這個值加到this.checkValue[]和this.finalCheckValue中，再呼叫check()做最後判定
+
+				int[] temp = checkValue;
+				checkValue = new int[dices.Length + 1];
+				for (int i = 0; i < checkValue.Length - 1; i++)
+					checkValue [i] = temp [i];
+				cvIndex = dices.Length;
+
+				destroyAllDice();
+
+				dices = new Dice[1];
+				// 解鎖移動
+				Rigidbody rigidbodyTemp = normalD6.GetComponent<Rigidbody> ();
+				rigidbodyTemp.constraints = RigidbodyConstraints.None;
+				dices [0] = GameObject.Instantiate (normalD6, new Vector3 (0f, -1f,-4.5f), Quaternion.identity) as Dice;
+				dices [0].onShowNumber.AddListener (RegisterNumber);
+
+				isReadyToRoll = true;
+				isRolled = false;
 				break;
 
 			case 3:
@@ -121,11 +161,37 @@ public class BattleCheckManager : MonoBehaviour {
 				//		選取骰子後，畫面中間要顯示ReRoll的按鈕讓玩家點選（或出現提示叫玩家flick來擲骰子）。
 				//		這時候注意，Destroy選擇的骰子，並紀錄且顯示它的數值在畫面中間。(finalCheckValue = 保留的骰子值)
 				//		isReadyToRoll = true, 呼叫rollDice, 在check()處理最終值（把保留的骰子值加回去）
+				flickArea.enabled = false;
+				for(int i=0; i<dices.Length; i++)
+				{
+					DiceTapGestureManager dtgm = dices [i].GetComponent<DiceTapGestureManager> ();
+					dtgm.tapable = true;
+				}
 				break;
 
 			case 4:
 				// 要從哪邊看？：全部6變成9
 				// 作法：同【盜夢空間】
+				isReadyToRoll = false;
+				isRolled = true;
+				for (int i = 0; i < dices.Length; i++) {
+					if (dices [i].value == 6) {
+						dices [i].value = 9;
+
+						Quaternion rotationTemp = Quaternion.identity;;
+						rotationTemp.eulerAngles = new Vector3(90f,0f,0f);
+
+						ValueTextManager gvt;
+						gvt = GameObject.Instantiate (gamebleValueTextManager, Vector3.zero, rotationTemp) as ValueTextManager;
+						gvt.transform.SetParent(dices [i].gameObject.transform, true);
+						gvt.transform.localPosition = Vector3.zero;
+						gvt.showGambleSkillValue (9);
+					}
+
+					if (checkValue [i] == 6 )
+						checkValue [i] = 9;
+				}
+				check ();
 				break;
 
 			case 5:
@@ -141,9 +207,9 @@ public class BattleCheckManager : MonoBehaviour {
 			default:
 				Debug.Log ("No Gamble Skill");
                 // 目前還沒有賭技，但為了測試狀態機轉換是否正常，所以先設為重擲
-                isReadyToRoll = false;
-                isRolled = true;
-                check();
+				isReadyToRoll = false;
+				isRolled = true;
+				check ();
                 break;
 			}
 
@@ -313,9 +379,17 @@ public class BattleCheckManager : MonoBehaviour {
         }
 			
 		if (usingGambleSkillIndex != -1 || rollState == 1 || rollState == 3)
-			valueTextManager.showCheckValue (finalCheckValue);
+		{
+			if (usingGambleSkillIndex == 2 && rollState == 2) {
+				string checkValueText = "~" + (finalCheckValue - checkValue [checkValue.Length - 1]) + "+" + checkValue [checkValue.Length - 1] + "~";
+				checkValueTextManager.showCheckValue2 (checkValueText);
+			}
+			else
+				checkValueTextManager.showCheckValue (finalCheckValue);
+		}
 
-		uiManager.showNextButton ();
+		if (usingGambleSkillIndex != -1 || rollState == 1 || rollState == 3)
+			uiManager.showNextButton ();
     }
 
 	// 骰子停止後callback其值，並存在check value陣列中，爾後可以傳給Skill做加權修正。
@@ -363,4 +437,12 @@ public class BattleCheckManager : MonoBehaviour {
     {
         return usingBattleSkillEffect;
     }
+
+	public void lockSelectDice(bool toLock, int lockedDiceValue){
+		flickArea.enabled = toLock;
+		checkValue [0] = lockedDiceValue;
+		cvIndex = 1;
+		isRolled = false;
+		isReadyToRoll = true;
+	}
 }
