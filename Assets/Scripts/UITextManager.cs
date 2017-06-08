@@ -89,8 +89,33 @@ public class UITextManager : MonoBehaviour {
 		
 	}
 
-	public void showBattleSkillDetail(string detail, Sprite image){
-	
+	public void showBattleSkillDetail(string character, int skillType, Sprite image){
+		this.gameObject.SetActive (true);
+		this.icon.sprite = image;
+
+		if (character == "Knight") {
+			switch (skillType) {
+			case 0:
+				title.text = "Round Slash";
+				information.text = "If each dice you rolled greater than 2, \nattack power +4.";
+				break;
+			case 1:
+				title.text = "Heavy Slash";
+				information.text = "If dices total value greater than 7, \n double attack power & recover 2 HP.";
+				break;
+			case 2:
+				title.text = "Dodge";
+				information.text = "If dices total value less than 5, \n dodge next turn's damage.";
+				break;
+			default:
+				Debug.Log ("UITextManager - showBattleSkillDetail error");
+				break;
+			}
+		} else if (character == "Theif") {
+		} else if (character == "Priest") {
+		}
+
+		_animator.SetTrigger ("ShowPanel");
 	}
 	
 	public void hide(){

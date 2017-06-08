@@ -29,6 +29,8 @@ public class UIManager : MonoBehaviour {
     public Text battleSkillText;
     public Image battleSkillImage;
 
+	public UITextManager textManager;
+
     private Monster monster;
     private Character currentCharacter;
     private Sprite[] battleSkillOn;
@@ -209,7 +211,6 @@ public class UIManager : MonoBehaviour {
             if (currentCharacter.Mp < currentCharacter.skill[i].needMP) {
                 sbgm.isLocked = true;
                 battleSkill[i].color = new Color(1f, 1f, 1f, 0.5f);
-                Debug.Log("XXXX");
             }
         }
 
@@ -276,6 +277,8 @@ public class UIManager : MonoBehaviour {
     }
 
     public void showPlayerAttack() {
+		hideNextButton();
+
         SkillEffect se = bcManager.getBattleSkillEffect();
 
         if (se == null)
@@ -369,6 +372,33 @@ public class UIManager : MonoBehaviour {
 	// SwipeToEnemyRollingAnimation 的最後一個frame呼叫
 	private void enemyRollDice(){
 		bcManager.rollDices();
+	}
+
+
+	public void showSkillDetailPanel(int index){
+		if (currentState == State.BattleState.SelectBattleSkill) {
+			textManager.showBattleSkillDetail (currentCharacter.unitName, index, battleSkill [index].sprite);
+			lockSkillButton (true);
+		} else if (currentState == State.BattleState.SelectGambleSkill) {
+			textManager.showGambleSkillDetail (index, gambleSkill [index].sprite);
+			lockSkillButton (true);
+		}
+	}
+
+	public void lockSkillButton(bool toLock){
+		if (currentState == State.BattleState.SelectBattleSkill) {
+			for (int i = 0; i < battleSkill.Length; i++) {
+				SkillButtonGestureManager sbgm = battleSkill [i].gameObject.GetComponent<SkillButtonGestureManager> ();
+				sbgm.isLocked = toLock;
+			}
+		} else if (currentState == State.BattleState.SelectGambleSkill) {
+			for (int i = 0; i < gambleSkill.Length; i++) {
+				SkillButtonGestureManager sbgm = gambleSkill [i].gameObject.GetComponent<SkillButtonGestureManager> ();
+				sbgm.isLocked = toLock;
+			}
+		}
+
+		nextButton.interactable = !toLock;
 	}
 }
 	
