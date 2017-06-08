@@ -259,13 +259,15 @@ public class UIManager : MonoBehaviour {
     }
 
     public void showDiceRolling2Panel() {
-        if (usingGambleSkillIndex == -1) {
-			hideNextButton();
-            stateManager.setState(State.BattleState.PlayerAttack);
-        }
-        else {
-            playSwipeToDiceRolling2Animation();
-        }
+		if (usingGambleSkillIndex == -1) {
+			hideNextButton ();
+			stateManager.setState (State.BattleState.PlayerAttack);
+		} else if (usingGambleSkillIndex == 1 || usingGambleSkillIndex == 4) {
+			playSwipeToDiceRolling2Animation ();
+		} else {
+			hideNextButton ();
+			playSwipeToDiceRolling2Animation ();
+		}
     }
 
     public void showEnemyAttack() {
