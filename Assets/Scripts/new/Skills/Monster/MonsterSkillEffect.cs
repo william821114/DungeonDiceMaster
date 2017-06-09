@@ -66,6 +66,7 @@ public class MonsterSkillEffect
 
     public void setDisable(int val, int turn)
     {
+        this.isDisable = true;
         this.disable = val;
         this.disableTurns = turn;
     }

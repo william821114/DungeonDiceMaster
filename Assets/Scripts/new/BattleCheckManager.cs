@@ -336,7 +336,8 @@ public class BattleCheckManager : MonoBehaviour {
                 // 此技能封印骰子
                 if(usingBattleSkillEffect.isDisable)
                 {
-
+                    DiceState dicestate = monster.diceStates[usingBattleSkillEffect.disable];
+                    dicestate.addDisableTurn(usingBattleSkillEffect.disableTurns);
                 }
 
                 // 此技能封印自己骰子

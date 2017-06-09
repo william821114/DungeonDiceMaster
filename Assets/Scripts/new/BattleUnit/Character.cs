@@ -17,7 +17,8 @@ public class Character : BattleUnit {
 	public int Def;
     public int noHurtTurn; //幾回合迴避傷害
 	public Dice[] battleDice;
-	public Dice socialDice;
+    public DiceState[] diceStates;
+    public Dice socialDice;
 	public Dice exploreDice;
 	public Skill[] skill;
 
@@ -39,13 +40,19 @@ public class Character : BattleUnit {
 	void Awake(){
 		DontDestroyOnLoad (this);
 
-		//if (characterInstance == null) {
-		//	characterInstance = this;
-		//} else {
-		//	DestroyObject(gameObject);
-		//}
+        diceStates = new DiceState[battleDice.Length];
+        for (int i = 0; i < battleDice.Length; i++)
+        {
+            diceStates[i] = new DiceState();
+        }
 
-		_animator = this.GetComponent<Animator> ();
+        //if (characterInstance == null) {
+        //	characterInstance = this;
+        //} else {
+        //	DestroyObject(gameObject);
+        //}
+
+        _animator = this.GetComponent<Animator> ();
 	}
 
 	public Dice[] getBattleDice(){
@@ -112,6 +119,16 @@ public class Character : BattleUnit {
                 }
             }
         }
+
+        if(mse.isDisable)
+        {
+            this.diceStates[mse.disable].addDisableTurn(mse.disableTurns);
+
+            for(int i = 0; i< this.diceStates.Length; i ++)
+            {
+                Debug.Log(this.diceStates[i].disableTurn);
+            }
+        }
     }
 
     public void recoverHP(int value)
@@ -125,5 +142,13 @@ public class Character : BattleUnit {
     public void recoverMP(int value)
     {
         Mp = (Mp + value) >= MaxMp ? MaxMp : (Mp + value);
+    }
+
+    public void turnEnd()
+    {
+        for(int i = 0; i < this.diceStates.Length; i ++)
+        {
+            this.diceStates[i].decreaseDisableTurn();
+        }
     }
 }

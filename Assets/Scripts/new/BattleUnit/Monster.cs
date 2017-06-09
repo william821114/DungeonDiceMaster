@@ -18,8 +18,11 @@ public class Monster : BattleUnit
     public int Atk;
     public int Def;
 
+    public string description;
+
     public Dice[] battleDice;
     public Dice exploreDice;
+    public DiceState[] diceStates;
     public bool willGetHurt = false;
     public MonsterSkill[] skill;
 
@@ -30,12 +33,20 @@ public class Monster : BattleUnit
     public StateManager stateManager;
     public Animator actioningCharacterAnimator;
 
+    
+
     //public TextMesh monsterHurtValueText;
 
 
-    void Start()
+    void Awake()
     {
         stateManager = (StateManager)FindObjectOfType(typeof(StateManager));
+        this.diceStates = new DiceState[battleDice.Length];
+        for(int i = 0; i < battleDice.Length; i ++)
+        {
+            this.diceStates[i] = new DiceState();
+        }
+        
     }
 
     public void check(int finalCheckValue)
@@ -109,6 +120,14 @@ public class Monster : BattleUnit
         if (!isDead)
         {
             Hp = (Hp + value) >= MaxHp ? MaxHp : (Hp + value);
+        }
+    }
+
+    public void turnEnd()
+    {
+        for (int i = 0; i < this.diceStates.Length; i++)
+        {
+            this.diceStates[i].decreaseDisableTurn();
         }
     }
 }

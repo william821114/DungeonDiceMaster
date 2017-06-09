@@ -6,9 +6,9 @@ public class Deer : Monster {
 
     public override void AI(int[] checkValue)
     {
-        // 怪物血量大於50%時，若骰子總和大於 6 ，攻擊加 5
+        // 踢: 怪物血量大於50%時，若骰子總和大於 6 ，攻擊加 5
         // 怪物血量小於50 %時，50%機率 : 補血補到滿
-        // 50% 機率 發動困獸之鬥: 如果所有骰子都大於2，攻擊最後 *2
+        // 發動困獸之鬥: 50% 機率 如果所有骰子都大於2，攻擊最後 *2
         int finalCheckValue = 0;
         int k = Random.Range(0, 15000);
         Character target = stateManager.getCharacter();

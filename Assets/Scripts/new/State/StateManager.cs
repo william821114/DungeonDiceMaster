@@ -56,16 +56,26 @@ public class StateManager : MonoBehaviour {
 		switch (currentState) {
 		// 選擇技能階段
 		case State.BattleState.SelectBattleSkill:
-
+                   
 			// 如果現在可行動的戰鬥單位是怪物，則跳過選擇技能階段
 			if (string.Equals (battleUnits [currentUnitIndex].type, "Monster"))
-				setState (State.BattleState.EnemyRollBattleDice);
+                {
+                    //執行turn end來解除腳色骰子的封印狀態
+                    currentCharacter.turnEnd();
+
+                    setState(State.BattleState.EnemyRollBattleDice);
+                }
+                    
 			else {
 				// 如果角色死亡，則Game Over
 				if (currentCharacter.Hp <= 0) {
 					setState (State.BattleState.BattleEnd);
 				}else {
-					uiManager.showBattleSkillPanel (); // UI: 顯示技能選擇的操作面板
+                        //執行turn end來解除骰子的封印狀態
+                        Debug.Log(monster.name);
+                    monster.turnEnd();
+
+                    uiManager.showBattleSkillPanel (); // UI: 顯示技能選擇的操作面板
 				}
 			}
 			break;

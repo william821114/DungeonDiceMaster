@@ -51,7 +51,7 @@ public class Dodge : Skill
             finalCheckValue = 1;
 
         }
-
+        skilleffect.setDisable(0, 2);
         skilleffect.setDodge(finalCheckValue);
         return skilleffect;
     }
