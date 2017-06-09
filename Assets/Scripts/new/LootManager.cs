@@ -27,6 +27,8 @@ public class LootManager : MonoBehaviour {
 
 	public ParticleSystem healEffect;
 
+	public ScreenEffectManager screenEffectManager;
+
 	private SpriteRenderer[] characterPieces;
 	private List<int> randomNumbers = new List<int>();
 	private DataManager dataManager;
@@ -269,7 +271,7 @@ public class LootManager : MonoBehaviour {
 		dataManager.team [characterIndex].battleDice [diceIndex] = dice;
 
 		confirmPanel.hide();
-		SceneManager.LoadScene("Start", LoadSceneMode.Single);
+		screenEffectManager.fullScreenFadeOut ();
 	}
 
 	public void freeAllLoots(){

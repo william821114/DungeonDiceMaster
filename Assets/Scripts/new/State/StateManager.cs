@@ -15,6 +15,8 @@ public class StateManager : MonoBehaviour {
 	public Monster monster;
 	public GameObject monsterMark;
 
+	public ScreenEffectManager screenEffectManager;
+
 	private DataManager dataManager;
 	private BattleUnit[] battleUnits = new BattleUnit[2]; // 將所有戰鬥單位排序，放在這裡
 	private int currentUnitIndex = 0; // 指向目前可行動的戰鬥單位
@@ -100,10 +102,10 @@ public class StateManager : MonoBehaviour {
 		case State.BattleState.BattleEnd:
 			currentCharacter.transform.parent = null;
 
-			if(currentCharacter.Hp > 0)
-				SceneManager.LoadScene("Loot", LoadSceneMode.Single);
+			if (currentCharacter.Hp > 0)
+				screenEffectManager.fadeOutToLoot();
 			else
-				Debug.Log ("SHOW BATTLE END!!!!"); // 顯示戰鬥結束的畫面
+				screenEffectManager.fadeOutToGameOver();
 			break;
 		
 		default:

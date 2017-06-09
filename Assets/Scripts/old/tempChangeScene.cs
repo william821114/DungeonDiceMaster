@@ -23,4 +23,9 @@ public class tempChangeScene : MonoBehaviour
 	{
 		SceneManager.LoadScene("BeforeBattle", LoadSceneMode.Single);
 	}
+
+	public void changeGameOverScene()
+	{
+		SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
+	}
 }
