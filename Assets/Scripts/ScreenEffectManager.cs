@@ -6,18 +6,27 @@ using UnityEngine.SceneManagement;
 public class ScreenEffectManager : MonoBehaviour {
 
 	public int nextSceneToLoad; // 0=Start 1=ChooseHero 2=Battle 3=Loot 4=GameOver
+	public bool noFadeIn;
 
 	private Animator _animator;
 
 	// Use this for initialization
 	void Start () {
 		_animator = this.GetComponent<Animator> ();
-		
+
+		if (!noFadeIn) {
+			fullScreenFadeIn ();
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	public void fullScreenFadeIn()
+	{
+		_animator.SetTrigger ("FullScreenFadeIn");
 	}
 
 	public void fullScreenFadeOut()

@@ -26,7 +26,7 @@ public class ChooseHeroManager : MonoBehaviour {
 			def [i].text = "" + dataManager.team [i].Def;
 		}
 
-
+		setHero (1);
 		showMonster ();
 	}
 	

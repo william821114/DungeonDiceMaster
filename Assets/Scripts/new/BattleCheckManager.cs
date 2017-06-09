@@ -81,7 +81,7 @@ public class BattleCheckManager : MonoBehaviour {
 					Transform transformTemp = d [i].GetComponent<Transform> ();
 					transformTemp.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
 					*/
-					dices [i] = GameObject.Instantiate (d [i], new Vector3 (Random.Range (-3f, 3f), -1f, Random.Range (-6f, -1.5f)), Quaternion.identity) as Dice;
+					dices [i] = GameObject.Instantiate (d [i], new Vector3 (Random.Range (-2.5f, 2.5f), -1f, Random.Range (-5.5f, -2f)), Quaternion.identity) as Dice;
 					dices [i].onShowNumber.AddListener (RegisterNumber);
 				}
 				checkValue = new int[dices.Length];

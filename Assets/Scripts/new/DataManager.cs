@@ -19,6 +19,7 @@ public class DataManager : MonoBehaviour {
 			dataManagerInstance = this;
 			for(int i=0; i<team.Length; i++) {
 				team[i] =  Instantiate(team[i], new Vector3(0f, 10f, 0f), Quaternion.identity);
+				team [i].transform.SetParent(this.transform);
 			}
 
 			choosedHero = team [1];

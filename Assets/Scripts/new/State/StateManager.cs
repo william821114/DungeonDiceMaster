@@ -100,7 +100,8 @@ public class StateManager : MonoBehaviour {
 			break;
 
 		case State.BattleState.BattleEnd:
-			currentCharacter.transform.parent = null;
+			currentCharacter.transform.SetParent (dataManager.transform, false);
+			currentCharacter.transform.localPosition = new Vector3 (0f, 10f, 0f);
 
 			if (currentCharacter.Hp > 0)
 				screenEffectManager.fadeOutToLoot();
@@ -126,10 +127,11 @@ public class StateManager : MonoBehaviour {
         // demo用
         if(monster.Hp <= 0)
         {
-			// 提醒一下，換scene前一定要移除角色parent，不然就算有Don't Destroy，也因為父親被砍，而消失。
+			// 提醒一下，換scene前一定要將角色parent移回dataManager，不然就算有Don't Destroy，也因為父親被砍，而消失。
 			// 只有戰敗死亡的時候，才不用管，反正都要重頭來過
-			currentCharacter.transform.parent = null;
-            SceneManager.LoadScene("Loot", LoadSceneMode.Single);
+			currentCharacter.transform.SetParent(dataManager.transform, false);
+			currentCharacter.transform.localPosition = new Vector3 (0f, 10f, 0f);
+			screenEffectManager.fadeOutToLoot();
         }
 
         uiManager.updateMonsterUI();
