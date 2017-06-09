@@ -42,16 +42,19 @@ public class MonsterSkillEffect
 
     public void setHeal(int val)
     {
+        this.isHeal = true;
         this.heal = val;
     }
 
     public void setDamage(int val)
     {
+        this.isDamage = true;
         this.damage = val;
     }
 
     public void setDodge(int val)
     {
+        this.isDodge = true;
         this.dodge = val;
     }
 

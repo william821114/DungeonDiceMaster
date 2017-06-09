@@ -28,6 +28,7 @@ public class Monster : BattleUnit
     public Character actioningCharacter;
     public StateManager stateManager;
     public Animator actioningCharacterAnimator;
+
     //public TextMesh monsterHurtValueText;
 
 
@@ -35,38 +36,6 @@ public class Monster : BattleUnit
     {
         stateManager = (StateManager)FindObjectOfType(typeof(StateManager));
     }
-    /*
-    void Start(){
-		monsterAnimator = this.GetComponent<Animator> ();
-
-        Hp = MaxHp;
-        Atk = originAtk;
-        Def = originDef;
-    }
-
-	public override void check(int finalCheckValue){
-		int damage = finalCheckValue - this.Def;
-		Debug.Log (damage);
-
-		if (damage > 0)
-			getHurt (damage);
-	}
-
-	public void getHurt(int damage){
-		if (!isDead) {
-			Hp -= damage;
-            PlayHurtAnimation();
-
-
-
-            if (Hp <= 0) {
-				isDead = true;
-				PlayDieAnimation ();
-                stateManager.setBattleEnd(true);
-
-            }
-		}
-	}*/
 
     public void check(int finalCheckValue)
     {
@@ -96,6 +65,7 @@ public class Monster : BattleUnit
         int finalCheckValue = 0;
         int k = Random.Range(0, 15000);
         Character target = stateManager.getCharacter();
+        MonsterSkillEffect mse = new MonsterSkillEffect();
 
         if (this.Hp > this.MaxHp / 2)
         {
@@ -106,7 +76,9 @@ public class Monster : BattleUnit
 
             if (finalCheckValue >= 6)
             {
+                mse.setSkillActivated(true);
                 finalCheckValue += 5;
+                mse.setDamage(finalCheckValue);
                 Debug.Log("猛獸踢發動成功! -" + finalCheckValue);
             }
         }
@@ -115,7 +87,10 @@ public class Monster : BattleUnit
         {
             if (k < 7500)
             {
-                // heal
+                // heal 回復一半的血
+                mse.setSkillActivated(true);
+                mse.setHeal(MaxHp / 2);
+                this.recoverHP(MaxHp / 2);
                 Debug.Log("Monster Heal");
             }
 
@@ -124,7 +99,7 @@ public class Monster : BattleUnit
                 bool isAllBiggerthan2 = true;
                 for (int i = 0; i < checkValue.Length; i++)
                 {
-                    if (finalCheckValue < 2)
+                    if (checkValue[i] < 2)
                     {
                         isAllBiggerthan2 = false;
                     }
@@ -134,12 +109,15 @@ public class Monster : BattleUnit
                 if (isAllBiggerthan2)
                 {
                     finalCheckValue *= 2;
+                    mse.setSkillActivated(true);
+                    mse.setDamage(finalCheckValue);
                     Debug.Log("困獸之鬥發動成功! -" + finalCheckValue);
                 }
             }
         }
 
-        target.check(finalCheckValue);
+        //target.check(finalCheckValue);
+        target.check(mse);
 
 
     }
@@ -175,5 +153,13 @@ public class Monster : BattleUnit
     public void damageMp(int value)
     {
         this.Mp = (Mp - value > 0) ? (Mp - value) : 0;
+    }
+
+    public void recoverHP(int value)
+    {
+        if (!isDead)
+        {
+            Hp = (Hp + value) >= MaxHp ? MaxHp : (Hp + value);
+        }
     }
 }

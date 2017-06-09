@@ -83,6 +83,37 @@ public class Character : BattleUnit {
         }   
     }
 
+    public void check(MonsterSkillEffect mse)
+    {
+        if (mse.isSkillActivated)
+        {
+            Debug.Log("怪獸技能發動成功!");
+        }
+
+        if (mse.isDamage)
+        {
+            if (noHurtTurn > 0)
+            {
+                noHurtTurn -= 1;
+                Debug.Log("迴避傷害 剩餘次數:" + noHurtTurn);
+            }
+            else
+            {
+                int damage = mse.damage - this.Def;
+                if (damage > 0)
+                {
+                    willGetHurt = true;
+                    Debug.Log("Character: get Hurt - " + damage);
+                    //取得 player hurtvalue並預先更新數字
+                    TextMesh HurtValue = this.gameObject.transform.GetChild(1).gameObject.GetComponent<TextMesh>();
+                    HurtValue.text = "-" + damage.ToString();
+
+                    this.Hp -= damage;
+                }
+            }
+        }
+    }
+
     public void recoverHP(int value)
     {
         if (!isDead)
