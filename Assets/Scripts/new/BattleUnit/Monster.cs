@@ -21,6 +21,7 @@ public class Monster : BattleUnit
     public Dice[] battleDice;
     public Dice exploreDice;
     public bool willGetHurt = false;
+    public MonsterSkill[] skill;
 
     private bool isDead = false;
     private Animator monsterAnimator;
@@ -57,69 +58,17 @@ public class Monster : BattleUnit
         }
     }
 
-    public void AI(int[] checkValue)
+    public virtual void AI(int[] checkValue)
     {
-        // 怪物血量大於50%時，若骰子總和大於 6 ，攻擊加 5
-        // 怪物血量小於50 %時，50%機率 : 補血補到滿
-        // 50% 機率 發動困獸之鬥: 如果所有骰子都大於2，攻擊最後 *2
+        // override
         int finalCheckValue = 0;
-        int k = Random.Range(0, 15000);
         Character target = stateManager.getCharacter();
-        MonsterSkillEffect mse = new MonsterSkillEffect();
-
-        if (this.Hp > this.MaxHp / 2)
+        for (int i = 0; i < checkValue.Length; i++)
         {
-            for (int i = 0; i < checkValue.Length; i++)
-            {
-                finalCheckValue += checkValue[i];
-            }
-
-            if (finalCheckValue >= 6)
-            {
-                mse.setSkillActivated(true);
-                finalCheckValue += 5;
-                mse.setDamage(finalCheckValue);
-                Debug.Log("猛獸踢發動成功! -" + finalCheckValue);
-            }
+            finalCheckValue += checkValue[i];
         }
 
-        else
-        {
-            if (k < 7500)
-            {
-                // heal 回復一半的血
-                mse.setSkillActivated(true);
-                mse.setHeal(MaxHp / 2);
-                this.recoverHP(MaxHp / 2);
-                Debug.Log("Monster Heal");
-            }
-
-            else
-            {
-                bool isAllBiggerthan2 = true;
-                for (int i = 0; i < checkValue.Length; i++)
-                {
-                    if (checkValue[i] < 2)
-                    {
-                        isAllBiggerthan2 = false;
-                    }
-                    finalCheckValue += checkValue[i];
-                }
-
-                if (isAllBiggerthan2)
-                {
-                    finalCheckValue *= 2;
-                    mse.setSkillActivated(true);
-                    mse.setDamage(finalCheckValue);
-                    Debug.Log("困獸之鬥發動成功! -" + finalCheckValue);
-                }
-            }
-        }
-
-        //target.check(finalCheckValue);
-        target.check(mse);
-
-
+        target.check(finalCheckValue);
     }
 
     public Dice[] getBattleDice()

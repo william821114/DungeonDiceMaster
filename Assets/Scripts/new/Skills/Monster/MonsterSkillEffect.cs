@@ -23,6 +23,7 @@ public class MonsterSkillEffect
     public int disableTurns;
     public int selfDisable;
     public int selfDisableTurns;
+    public MonsterSkill usingSkill;
 
     public MonsterSkillEffect()
     {
@@ -88,6 +89,11 @@ public class MonsterSkillEffect
     public void setSkillActivated(bool val)
     {
         this.isSkillActivated = val;
+    }
+
+    public void setUsingSkill(MonsterSkill skill)
+    {
+        this.usingSkill = skill;
     }
 
 }
