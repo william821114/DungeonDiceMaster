@@ -94,7 +94,7 @@ public class Character : BattleUnit {
     {
         if (mse.isSkillActivated)
         {
-            Debug.Log("怪獸技能發動成功!");
+            Debug.Log("怪獸技能 " + mse.usingSkill.name + " 發動成功!");
         }
 
         if (mse.isDamage)

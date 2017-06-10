@@ -14,19 +14,22 @@ public class StateManager : MonoBehaviour {
 	public BattleCheckManager bcManager;
 	public Monster monster;
 	public GameObject monsterMark;
+    public int turn;
 
-	public ScreenEffectManager screenEffectManager;
+    public ScreenEffectManager screenEffectManager;
 
 	private DataManager dataManager;
 	private BattleUnit[] battleUnits = new BattleUnit[2]; // 將所有戰鬥單位排序，放在這裡
 	private int currentUnitIndex = 0; // 指向目前可行動的戰鬥單位
 	private Character currentCharacter; // 目前行動的角色
+    
 
     // Use this for initialization
     void Start () {
 		// Battle Scene一開始，就要找到所有角色，並存成array管理。 所有character都是don't destroy。
 		dataManager = (DataManager)FindObjectOfType (typeof(DataManager));
 		currentCharacter = dataManager.choosedHero;
+        turn = 0;
 
 		// 從怪物池中隨機產生怪物，目前先寫死。
 		monster = GameObject.Instantiate (dataManager.choosedMonster, Vector3.zero, Quaternion.identity) as Monster;
@@ -70,10 +73,13 @@ public class StateManager : MonoBehaviour {
 				// 如果角色死亡，則Game Over
 				if (currentCharacter.Hp <= 0) {
 					setState (State.BattleState.BattleEnd);
-				}else {
-                        //執行turn end來解除骰子的封印狀態
-                        Debug.Log(monster.name);
+				}
+                else {
+                    //執行turn end來解除骰子的封印狀態
+                    Debug.Log(monster.name);
                     monster.turnEnd();
+                    // 回合數 + 1
+                    turn += 1;
 
                     uiManager.showBattleSkillPanel (); // UI: 顯示技能選擇的操作面板
 				}
