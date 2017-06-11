@@ -21,6 +21,7 @@ public class BattleCheckManager : MonoBehaviour {
 	private int usingGambleSkillIndex; // 目前使用的賭博技能，因為賭技通用且固定，直接用int來表示，另一個原因是賭技歧異度大，不太適合統一繼承。
 
 	private Dice[] dices; // 從角色中取得的骰子會放在這裡
+    private Dice[] disableddices;
 	private int finalCheckValue = 0; // 最終用來做判定的值
 	private int[] checkValue; // 每個骰子擲出來的結果放在這裡
 	private int cvIndex = 0; // index for check value array
@@ -66,22 +67,17 @@ public class BattleCheckManager : MonoBehaviour {
 			if (!isReadyToRoll) {
 
 				Dice[] d = currentCharacter.getBattleDice ();
-                DiceState[] disabledDices = currentCharacter.diceStates;
-				dices = new Dice[d.Length];
-				for (int i = 0; i < dices.Length; i++) {
+                Dice[] disableDices = currentCharacter.getDisableDice();
 
+                // 召喚battledice
+                dices = new Dice[d.Length];
+                disableddices = new Dice[disableDices.Length];
 
-                    // 若是被鎖住 就不給移動
+                for (int i = 0; i < dices.Length; i++) {
 
-                    if (disabledDices[i].disableTurn == 0)
-                    {
-                        // 解鎖移動
-                        Rigidbody rigidbodyTemp = d[i].GetComponent<Rigidbody>();
-                        rigidbodyTemp.constraints = RigidbodyConstraints.None;
-                    }
-                    
-                    
-
+                    // 解鎖移動
+                    Rigidbody rigidbodyTemp = d[i].GetComponent<Rigidbody>();
+                    rigidbodyTemp.constraints = RigidbodyConstraints.None;
 
                     /*
 					// 骰子產生時不要旋轉
@@ -93,14 +89,28 @@ public class BattleCheckManager : MonoBehaviour {
 					transformTemp.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
 					*/
 
-                    
                     dices[i] = GameObject.Instantiate(d[i], new Vector3(Random.Range(-2.5f, 2.5f), -1f, Random.Range(-5.5f, -2f)), Quaternion.identity) as Dice;
-
-                    if (disabledDices[i].disableTurn == 0)
-                    {
-                        dices[i].onShowNumber.AddListener(RegisterNumber);
-                    }                
+                    dices[i].onShowNumber.AddListener(RegisterNumber);
+                              
 				}
+
+                //召喚disabledice
+                for (int i = 0; i < disableDices.Length; i++)
+                {
+                    disableddices[i] = GameObject.Instantiate(d[i], new Vector3(Random.Range(-2.5f, 2.5f), -2.5f, Random.Range(-5.5f, -2f)), Quaternion.identity) as Dice;
+                    disableddices[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+
+
+                    Quaternion rotationTemp = Quaternion.identity; ;
+                    rotationTemp.eulerAngles = new Vector3(90f, 0f, 0f);
+
+                    ValueTextManager gvt;
+                    gvt = GameObject.Instantiate(gamebleValueTextManager, Vector3.zero, rotationTemp) as ValueTextManager;
+                    gvt.transform.SetParent(disableddices[i].gameObject.transform, true);
+                    gvt.transform.localPosition = Vector3.zero;
+                    gvt.showDiceStateValue("封");
+                }
+
 				checkValue = new int[dices.Length];
 				finalCheckValue = 0;
 				isReadyToRoll = true;
@@ -268,7 +278,13 @@ public class BattleCheckManager : MonoBehaviour {
 			if(dices[i])
 				Destroy (dices [i].gameObject);
 		}
-	}
+
+        for (int i = 0; i < disableddices.Length; i++)
+        {
+            if (disableddices[i])
+                Destroy(disableddices[i].gameObject);
+        }
+    }
 
 	// 取得最終累計的數值。
 	public void check(){
