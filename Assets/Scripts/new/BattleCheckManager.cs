@@ -66,13 +66,24 @@ public class BattleCheckManager : MonoBehaviour {
 			if (!isReadyToRoll) {
 
 				Dice[] d = currentCharacter.getBattleDice ();
+                DiceState[] disabledDices = currentCharacter.diceStates;
 				dices = new Dice[d.Length];
 				for (int i = 0; i < dices.Length; i++) {
-					
-					// 解鎖移動
-					Rigidbody rigidbodyTemp = d [i].GetComponent<Rigidbody> ();
-					rigidbodyTemp.constraints = RigidbodyConstraints.None;
-					/*
+
+
+                    // 若是被鎖住 就不給移動
+
+                    if (disabledDices[i].disableTurn == 0)
+                    {
+                        // 解鎖移動
+                        Rigidbody rigidbodyTemp = d[i].GetComponent<Rigidbody>();
+                        rigidbodyTemp.constraints = RigidbodyConstraints.None;
+                    }
+                    
+                    
+
+
+                    /*
 					// 骰子產生時不要旋轉
 					Spinner spinnerTemp = d [i].GetComponent<Spinner> ();
 					spinnerTemp.triggerOnStart = false;
@@ -81,8 +92,14 @@ public class BattleCheckManager : MonoBehaviour {
 					Transform transformTemp = d [i].GetComponent<Transform> ();
 					transformTemp.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
 					*/
-					dices [i] = GameObject.Instantiate (d [i], new Vector3 (Random.Range (-2.5f, 2.5f), -1f, Random.Range (-5.5f, -2f)), Quaternion.identity) as Dice;
-					dices [i].onShowNumber.AddListener (RegisterNumber);
+
+                    
+                    dices[i] = GameObject.Instantiate(d[i], new Vector3(Random.Range(-2.5f, 2.5f), -1f, Random.Range(-5.5f, -2f)), Quaternion.identity) as Dice;
+
+                    if (disabledDices[i].disableTurn == 0)
+                    {
+                        dices[i].onShowNumber.AddListener(RegisterNumber);
+                    }                
 				}
 				checkValue = new int[dices.Length];
 				finalCheckValue = 0;
