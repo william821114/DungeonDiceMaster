@@ -287,7 +287,15 @@ public class UIManager : MonoBehaviour {
 
     public void showPlayerAttack() {
 		hideNextButton();
+        if (usingGambleSkillIndex == -1)
+            playSwipeToAttackScreen2Animation();
+        else
+            playSwipeToAttackScreenAnimation();
 
+    }
+
+    public void showPlayerSkillActivate()
+    {
         SkillEffect se = bcManager.getBattleSkillEffect();
 
         if (se == null)
@@ -310,12 +318,6 @@ public class UIManager : MonoBehaviour {
                 Debug.Log("普通攻擊動畫! 技能失敗");
             }
         }
-
-        if (usingGambleSkillIndex == -1)
-            playSwipeToAttackScreen2Animation();
-        else
-            playSwipeToAttackScreenAnimation();
-
     }
 
     public void showMonsterHurt()
@@ -327,6 +329,11 @@ public class UIManager : MonoBehaviour {
     public void showPlayerHurt()
     {
         playPlayerHurtAnimation();
+    }
+
+    public void showMonsterAttack()
+    {
+        playMonsterAtkAnimation();
     }
 
 
@@ -377,10 +384,16 @@ public class UIManager : MonoBehaviour {
         playerAnimator.SetTrigger("hurt");
     }
 
+    private void playMonsterAtkAnimation()
+    {
+        Animator monsterAnimator = monster.gameObject.GetComponent<Animator>();
+        monsterAnimator.SetTrigger("attack");
+    }
+
 
 //-----------------------------------Other Local Function----------------------------------
-	// SwipeToEnemyRollingAnimation 的最後一個frame呼叫
-	private void enemyRollDice(){
+// SwipeToEnemyRollingAnimation 的最後一個frame呼叫
+    private void enemyRollDice(){
 		bcManager.rollDices();
 	}
 

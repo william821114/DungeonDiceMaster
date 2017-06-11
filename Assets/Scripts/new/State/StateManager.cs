@@ -145,7 +145,9 @@ public class StateManager : MonoBehaviour {
 		uiManager.showPlayerAttack();
 		bcManager.destroyAllDice(); // 清掉骰子模型
 
-        yield return new WaitForSeconds(2);
+        uiManager.showPlayerSkillActivate();
+
+        yield return new WaitForSeconds(1.5f);
         audioManager.playPlayerAttack();
         uiManager.showMonsterHurt();
         yield return new WaitForSeconds(1.5f);
@@ -171,6 +173,9 @@ public class StateManager : MonoBehaviour {
 		bcManager.destroyAllDice(); // 清掉骰子模型
 
         yield return new WaitForSeconds(1);
+
+        uiManager.showMonsterAttack();
+        yield return new WaitForSeconds(0.5f);
         uiManager.showPlayerHurt();
         audioManager.playMonsterAttack();
         yield return new WaitForSeconds(0.5f);
