@@ -36,6 +36,13 @@ public class ValueTextManager : MonoBehaviour {
 		_animator.SetTrigger ("ShowGambleSkillValue");
 	}
 
+    public void showDiceStateValue(string diceValue)
+    {
+        this.gameObject.SetActive(true);
+        valueText.text = diceValue;
+        _animator.SetTrigger("ShowDisableDice");
+    }
+
 	public void hide(){
 		this.gameObject.SetActive (false);
 	}

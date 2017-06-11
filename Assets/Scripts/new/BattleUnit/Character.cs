@@ -56,8 +56,30 @@ public class Character : BattleUnit {
 	}
 
 	public Dice[] getBattleDice(){
-		return battleDice;
+        List<Dice> usableBattleDices = new List<Dice>();
+        for(int i = 0; i < battleDice.Length; i ++)
+        {
+            if(diceStates[i].disableTurn == 0)
+            {
+                usableBattleDices.Add(battleDice[i]);
+            }
+        }
+
+		return usableBattleDices.ToArray();
 	}
+
+    public Dice[] getDisableDice()
+    {
+        List<Dice> disableDices = new List<Dice>();
+        for (int i = 0; i < battleDice.Length; i++)
+        {
+            if (diceStates[i].disableTurn > 0)
+            {
+                disableDices.Add(battleDice[i]);
+            }
+        }
+        return disableDices.ToArray();
+    }
 
 	public Dice getExploreDice(){
 		return exploreDice;
