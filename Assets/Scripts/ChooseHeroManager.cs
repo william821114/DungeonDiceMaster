@@ -5,6 +5,7 @@ using UnityEngine;
 public class ChooseHeroManager : MonoBehaviour {
 
 	public GameObject monsterMark;
+	public MonsterSkillButtonManager[] msbm;
 
 	public TextMesh[] hp;
 	public TextMesh[] mp;
@@ -15,6 +16,7 @@ public class ChooseHeroManager : MonoBehaviour {
 
 	private DataManager dataManager;
 	private Monster monster;
+	private Sprite[] monsterSkillIcon;
 
 	// Use this for initialization
 	void Start () {
@@ -51,5 +53,12 @@ public class ChooseHeroManager : MonoBehaviour {
 		monster.transform.position = monsterMark.transform.position;
 		monster.transform.rotation = monsterMark.transform.rotation;
 		monster.gameObject.transform.parent = monsterMark.transform;
+
+		this.monsterSkillIcon = monster.monsterSkills;
+
+		for (int i = 0; i < monsterSkillIcon.Length; i++) {
+			msbm [i].spriteRenderer.sprite = monsterSkillIcon [i];
+			msbm [i].monsterName = monster.unitName;
+		}
 	}
 }

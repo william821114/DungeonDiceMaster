@@ -26,6 +26,8 @@ public class Monster : BattleUnit
     public bool willGetHurt = false;
     public MonsterSkill[] skill;
 
+	public Sprite[] monsterSkills;
+
     private bool isDead = false;
     private Animator monsterAnimator;
 

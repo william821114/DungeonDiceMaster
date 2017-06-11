@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour {
     public TextMesh currentCharacterDEF;
     public SpriteRenderer currentCharacterHalf;
     public SpriteRenderer[] battleSkill;
+	public MonsterSkillButtonManager[] msbm;
 
     public GameObject mark;
 
@@ -32,6 +33,7 @@ public class UIManager : MonoBehaviour {
 	public UITextManager textManager;
 
     private Monster monster;
+	private Sprite[] monsterSkillIcon;
     private Character currentCharacter;
     private Sprite[] battleSkillOn;
     private Sprite[] battleSkillOff;
@@ -59,6 +61,13 @@ public class UIManager : MonoBehaviour {
     //-----------------------------------Set Function----------------------------------
     public void setMonster(Monster m) {
         monster = m;
+
+		this.monsterSkillIcon = monster.monsterSkills;
+
+		for (int i = 0; i < monsterSkillIcon.Length; i++) {
+			msbm [i].spriteRenderer.sprite = monsterSkillIcon [i];
+			msbm [i].monsterName = monster.unitName;
+		}
     }
 
     public void setCurrentCharacter(Character c) {

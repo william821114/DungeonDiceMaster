@@ -117,6 +117,69 @@ public class UITextManager : MonoBehaviour {
 
 		_animator.SetTrigger ("ShowPanel");
 	}
+
+	public void showMonsterSkillDetail(string monster, int skillType, Sprite image){
+		this.gameObject.SetActive (true);
+		this.icon.sprite = image;
+
+		if (monster == "Deer") {
+			switch (skillType) {
+			case 0:
+				title.text = "Antlers";
+				information.text = "When enemy's HP greater than 50%, \nprobable attack power +5.";
+				break;
+			case 1:
+				title.text = "Heal";
+				information.text = "When enemy's HP less than 50%, \nprobable recover 50% Max HP.";
+				break;
+			case 2:
+				title.text = "Trapped Beast";
+				information.text = "When enemy's HP less than 50%, \nprobable double attack power.";
+				break;
+			default:
+				Debug.Log ("UITextManager - showBattleSkillDetail error");
+				break;
+			}
+		} else if (monster == "Rogue") {
+			switch (skillType) {
+			case 0:
+				title.text = "High Defence";
+				information.text = "This enemy uses 'Steal' skill every turn.";
+				break;
+			case 1:
+				title.text = "Low Attack";
+				information.text = "This enemy's attack will down 1/3.";
+				break;
+			case 2:
+				title.text = "Steal";
+				information.text = "Take a random dice from hero.";
+				break;
+			default:
+				Debug.Log ("UITextManager - showBattleSkillDetail error");
+				break;
+			}
+		} else if (monster == "FireMagician") {
+			switch (skillType) {
+			case 0:
+				title.text = "Fire Ball";
+				information.text = "If each dice this enemy rolled less than 3, \nhis attack power +10.";
+				break;
+			case 1:
+				title.text = "Seal Magic";
+				information.text = "If each dice this enemy rolled is odd number, \nseal one player dices 2 turns.";
+				break;
+			case 2:
+				title.text = "Wide Fire";
+				information.text = "Multiple of 3's turn, \nif each dice this enemy rolled is even number, \ngive player 40 damage.";
+				break;
+			default:
+				Debug.Log ("UITextManager - showBattleSkillDetail error");
+				break;
+			}
+		}
+
+		_animator.SetTrigger ("ShowPanel");
+	}
 	
 	public void hide(){
 		this.gameObject.SetActive (false);
