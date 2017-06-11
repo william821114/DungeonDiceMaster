@@ -147,7 +147,16 @@ public class StateManager : MonoBehaviour {
 
         uiManager.showPlayerSkillActivate();
 
-        yield return new WaitForSeconds(1.5f);
+
+        if (bcManager.getBattleSkillEffect() == null)
+            yield return new WaitForSeconds(1.5f);
+        else
+            yield return new WaitForSeconds(1);
+
+
+        uiManager.showPlayerAttackAnim();
+        yield return new WaitForSeconds(0.5f);
+
         audioManager.playPlayerAttack();
         uiManager.showMonsterHurt();
         yield return new WaitForSeconds(1.5f);

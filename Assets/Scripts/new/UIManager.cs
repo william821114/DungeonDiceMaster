@@ -336,6 +336,10 @@ public class UIManager : MonoBehaviour {
         playMonsterAtkAnimation();
     }
 
+    public void showPlayerAttackAnim()
+    {
+        playPlayerAtkAnimation();
+    }
 
     //-----------------------------------Anitmation Trigger----------------------------------
     private void playShowBattleSkillAnimation() {
@@ -388,6 +392,12 @@ public class UIManager : MonoBehaviour {
     {
         Animator monsterAnimator = monster.gameObject.GetComponent<Animator>();
         monsterAnimator.SetTrigger("attack");
+    }
+
+    private void playPlayerAtkAnimation()
+    {
+        Animator playerAnimator = currentCharacter.gameObject.GetComponent<Animator>();
+        playerAnimator.SetTrigger("attack");
     }
 
 
