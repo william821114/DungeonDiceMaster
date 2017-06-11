@@ -12,6 +12,7 @@ public class StateManager : MonoBehaviour {
 
 	public UIManager uiManager;
 	public BattleCheckManager bcManager;
+    public AudioManager audioManager;
 	public Monster monster;
 	public GameObject monsterMark;
     public int turn;
@@ -31,8 +32,11 @@ public class StateManager : MonoBehaviour {
 		currentCharacter = dataManager.choosedHero;
         turn = 0;
 
-		// 從怪物池中隨機產生怪物，目前先寫死。
-		monster = GameObject.Instantiate (dataManager.choosedMonster, Vector3.zero, Quaternion.identity) as Monster;
+        // 找到Audio manager
+        audioManager = (AudioManager)FindObjectOfType(typeof(AudioManager));
+
+        // 從怪物池中隨機產生怪物，目前先寫死。
+        monster = GameObject.Instantiate (dataManager.choosedMonster, Vector3.zero, Quaternion.identity) as Monster;
 		monster.transform.position = monsterMark.transform.position;
 		monster.transform.rotation = monsterMark.transform.rotation;
 		monster.gameObject.transform.parent = monsterMark.transform;
@@ -120,9 +124,14 @@ public class StateManager : MonoBehaviour {
 			currentCharacter.transform.localPosition = new Vector3 (0f, 10f, 0f);
 
 			if (currentCharacter.Hp > 0)
-				screenEffectManager.fadeOutToLoot();
+            {
+                screenEffectManager.fadeOutToLoot();
+            }
 			else
-				screenEffectManager.fadeOutToGameOver();
+            {
+                screenEffectManager.fadeOutToGameOver();
+            }
+				
 			break;
 		
 		default:
@@ -137,7 +146,7 @@ public class StateManager : MonoBehaviour {
 		bcManager.destroyAllDice(); // 清掉骰子模型
 
         yield return new WaitForSeconds(2);
-        monster.gameObject.GetComponents<AudioSource>()[0].Play(0);
+        audioManager.playPlayerAttack();
         uiManager.showMonsterHurt();
         yield return new WaitForSeconds(1.5f);
         // demo用
@@ -163,9 +172,9 @@ public class StateManager : MonoBehaviour {
 
         yield return new WaitForSeconds(1);
         uiManager.showPlayerHurt();
-        monster.gameObject.GetComponents<AudioSource>()[1].Play(0);
+        audioManager.playMonsterAttack();
         yield return new WaitForSeconds(0.5f);
-        currentCharacter.gameObject.GetComponents<AudioSource>()[0].Play(0);
+        audioManager.playPlayerHurt();
         yield return new WaitForSeconds(0.5f);
 
         uiManager.updateCharacterUI();

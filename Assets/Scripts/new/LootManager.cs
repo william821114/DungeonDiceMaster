@@ -28,6 +28,7 @@ public class LootManager : MonoBehaviour {
 	public ParticleSystem healEffect;
 
 	public ScreenEffectManager screenEffectManager;
+    public AudioManager audioManager;
 
 	private SpriteRenderer[] characterPieces;
 	private List<int> randomNumbers = new List<int>();
@@ -39,7 +40,11 @@ public class LootManager : MonoBehaviour {
 	void Awake () {
 		characterPieces = new SpriteRenderer[characterButton.Length];
 
-		for (int i = 0; i < characterButton.Length; i++) {
+        // 找到Audio manager
+        audioManager = (AudioManager)FindObjectOfType(typeof(AudioManager));
+        audioManager.playBattleVictory();
+
+        for (int i = 0; i < characterButton.Length; i++) {
 			characterPieces [i] = characterButton [i].GetComponent<SpriteRenderer> ();
 		}
 	}

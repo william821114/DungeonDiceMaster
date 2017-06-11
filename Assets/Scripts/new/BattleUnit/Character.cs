@@ -91,8 +91,10 @@ public class Character : BattleUnit {
 
     public void check(int finalCheckValue)
     {
+        TextMesh HurtValue = this.gameObject.transform.GetChild(1).gameObject.GetComponent<TextMesh>();
+        HurtValue.text = "-0";
         // 檢查迴避勝幾回合 ， 0 的話可攻擊
-        if(noHurtTurn > 0)
+        if (noHurtTurn > 0)
         {
             noHurtTurn -= 1;
             Debug.Log("迴避傷害 剩餘次數:" + noHurtTurn);
@@ -104,7 +106,6 @@ public class Character : BattleUnit {
                 willGetHurt = true;
                 Debug.Log("Character: get Hurt - " + damage);
                 //取得 player hurtvalue並預先更新數字
-                TextMesh HurtValue = this.gameObject.transform.GetChild(1).gameObject.GetComponent<TextMesh>();
                 HurtValue.text = "-" + damage.ToString();
 
                 this.Hp -= damage;
