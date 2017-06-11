@@ -361,6 +361,7 @@ public class UIManager : MonoBehaviour {
 
     private void playSkillActivatedAnimation()
     {
+        stateManager.audioManager.playSkillActivated();
         canvasAnimator.SetTrigger("skillActivated");
     }
 

@@ -54,13 +54,16 @@ public class Monster : BattleUnit
     public void check(int finalCheckValue)
     {
         int damage = finalCheckValue - this.Def;
+        TextMesh HurtValue = this.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMesh>();
+        HurtValue.text = "-0";
+
         if (damage > 0)
         {
             willGetHurt = true;
             Debug.Log("Monster: get Hurt - " + damage);
 
             //取得 monster底下的 hurtvalue並預先更新數字
-            TextMesh HurtValue = this.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMesh>();
+           
             HurtValue.text = "-" + damage.ToString();
 
 
