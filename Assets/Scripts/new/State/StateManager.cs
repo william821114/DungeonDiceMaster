@@ -154,7 +154,7 @@ public class StateManager : MonoBehaviour {
         else
             yield return new WaitForSeconds(1);
 
-        if(se.isDamage)
+        if(se != null && se.isDamage)
         {
             uiManager.showPlayerAttackAnim();
             yield return new WaitForSeconds(0.5f);
