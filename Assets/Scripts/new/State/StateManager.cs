@@ -149,19 +149,22 @@ public class StateManager : MonoBehaviour {
 
         uiManager.showPlayerSkillActivate();
 
-
         if (se == null)
             yield return new WaitForSeconds(1.5f);
         else
             yield return new WaitForSeconds(1);
 
-        uiManager.showPlayerAttackAnim();
-        yield return new WaitForSeconds(0.5f);
-        audioManager.playPlayerAttack();
-        uiManager.showMonsterHurt();
-        yield return new WaitForSeconds(1);
+        if(se.isDamage)
+        {
+            uiManager.showPlayerAttackAnim();
+            yield return new WaitForSeconds(0.5f);
+            audioManager.playPlayerAttack();
+            uiManager.showMonsterHurt();
+            yield return new WaitForSeconds(1);
 
-        if(se != null && se.isHeal)
+        }
+
+        if (se != null && se.isHeal)
         {
             uiManager.showPlayerRecoverHp();
             yield return new WaitForSeconds(1);
@@ -198,13 +201,26 @@ public class StateManager : MonoBehaviour {
 
         if(monster.mse.isDamage)
         {
-            uiManager.showMonsterAttack();
-            yield return new WaitForSeconds(0.5f);
-            uiManager.showPlayerHurt();
-            audioManager.playMonsterAttack();
-            yield return new WaitForSeconds(0.5f);
-            audioManager.playPlayerHurt();
-            yield return new WaitForSeconds(0.5f);
+            uiManager.showMonsterAttack();     
+
+            //迴避
+            if (monster.mse.isAtkDodged)
+            {
+                uiManager.showPlayerDodge();
+                audioManager.playPlayerDodge();
+                yield return new WaitForSeconds(0.5f);
+                audioManager.playMonsterAttackDodged();
+                yield return new WaitForSeconds(0.5f);
+                
+            } else
+            {
+                yield return new WaitForSeconds(0.5f);
+                uiManager.showPlayerHurt();
+                audioManager.playMonsterAttack();
+                yield return new WaitForSeconds(0.5f);
+                audioManager.playPlayerHurt();
+                yield return new WaitForSeconds(0.5f);
+            }    
         }
 
         if(monster.mse.isHeal)
@@ -215,7 +231,6 @@ public class StateManager : MonoBehaviour {
         }
 
         uiManager.updateCharacterUI();
-        
         uiManager.showNextButton(); 
         currentUnitIndex = (currentUnitIndex + 1) % battleUnits.Length;
     }
