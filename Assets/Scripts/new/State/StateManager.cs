@@ -122,8 +122,10 @@ public class StateManager : MonoBehaviour {
 		case State.BattleState.BattleEnd:
 			currentCharacter.transform.SetParent (dataManager.transform, false);
 			currentCharacter.transform.localPosition = new Vector3 (0f, 10f, 0f);
+            currentCharacter.resetDiceState();
 
-			if (currentCharacter.Hp > 0)
+
+            if (currentCharacter.Hp > 0)
             {
                 screenEffectManager.fadeOutToLoot();
             }
@@ -154,7 +156,7 @@ public class StateManager : MonoBehaviour {
         else
             yield return new WaitForSeconds(1);
 
-        if(se != null && se.isDamage)
+        if(bcManager.turnDamage > 0)
         {
             uiManager.showPlayerAttackAnim();
             yield return new WaitForSeconds(0.5f);

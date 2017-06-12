@@ -182,4 +182,12 @@ public class Character : BattleUnit {
             this.diceStates[i].decreaseDisableTurn();
         }
     }
+
+    public void resetDiceState()
+    {
+        for (int i = 0; i < this.diceStates.Length; i++)
+        {
+            this.diceStates[i].disableTurn = 0;
+        }
+    }
 }

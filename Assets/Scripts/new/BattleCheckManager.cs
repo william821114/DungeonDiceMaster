@@ -20,8 +20,10 @@ public class BattleCheckManager : MonoBehaviour {
     private SkillEffect usingBattleSkillEffect; // 戰鬥技能在本回合中造成的效果
 	private int usingGambleSkillIndex; // 目前使用的賭博技能，因為賭技通用且固定，直接用int來表示，另一個原因是賭技歧異度大，不太適合統一繼承。
     public MonsterSkillEffect usingMonsterSkillEffect;
+    public int turnDamage;
 
-	private Dice[] dices; // 從角色中取得的骰子會放在這裡
+
+    private Dice[] dices; // 從角色中取得的骰子會放在這裡
     private Dice[] disableddices;
 	private int finalCheckValue = 0; // 最終用來做判定的值
 	private int[] checkValue; // 每個骰子擲出來的結果放在這裡
@@ -304,6 +306,7 @@ public class BattleCheckManager : MonoBehaviour {
 
             // 重置 Skill Effect
             usingBattleSkillEffect = null;
+            this.turnDamage = 0;
 
             finalCheckValue = 0;
             // 拿到重擲的final check value

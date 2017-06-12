@@ -74,6 +74,7 @@ public class Monster : BattleUnit
 
             if (this.Hp <= 0) this.Hp = 0;
             //monsterHurtValueText.text = "-" + damage;
+            bcManager.turnDamage = damage;
         }
     }
 
