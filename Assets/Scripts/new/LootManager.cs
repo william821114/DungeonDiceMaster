@@ -181,19 +181,19 @@ public class LootManager : MonoBehaviour {
 		switch (loot.lootType) {
 		case 0:
 			acceptButton.onClick.AddListener(() => this.hpRecover(loot.characterIndex) );
-			confirmPanel.showText ("Use Hp Potion on " + dataManager.team[loot.characterIndex].unitName + " ?");
+			confirmPanel.showText ("將生命藥水使用在 " + dataManager.team[loot.characterIndex].unitName + " 身上？");
 			break;
 		case 1:
 			acceptButton.onClick.AddListener(() => this.mpRecover(loot.characterIndex) );
-			confirmPanel.showText ("Use Mp Potion on " + dataManager.team[loot.characterIndex].unitName + " ?");
+			confirmPanel.showText ("將魔法藥水使用在 " + dataManager.team[loot.characterIndex].unitName + " 身上？");
 			break;
 		case 2:
 			acceptButton.onClick.AddListener(() => this.addGambleSkillTimes(loot.gambleSkillType) );
-			confirmPanel.showText ("Get This Gamble Skill ?");
+			confirmPanel.showText ("確定要獲取這個賭技？");
 			break;
 		case 3:
 			acceptButton.onClick.AddListener(() => this.changeDice(loot.characterIndex, loot.diceIndex, loot.dice) );
-			confirmPanel.showText ("Switch the Dice ? \n (Old dice will be destroyed !)");
+			confirmPanel.showText ("確定要替換這顆骰子？ \n （被替換的骰子將會消失！）");
 			break;
 		default:
 			Debug.Log("LootManager - showConfirmPanel Error");
@@ -274,7 +274,6 @@ public class LootManager : MonoBehaviour {
 
 	public void changeDice(int characterIndex, int diceIndex, Dice dice){
 		dataManager.team [characterIndex].battleDice [diceIndex] = dice;
-
 		confirmPanel.hide();
 		screenEffectManager.fullScreenFadeOut ();
 	}

@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviour {
     public Text monsterSkillText;
 
 	public UITextManager textManager;
+	public TipBarManager tipManager;
 
     private Monster monster;
 	private Sprite[] monsterSkillIcon;
@@ -194,12 +195,16 @@ public class UIManager : MonoBehaviour {
             }
         }
         bcManager.setUsingGambleSkill(usingGambleSkillIndex);
-        //stateManager.setUsingGambleSkill(usingGambleSkillIndex);
-    }
+
+		if(usingGambleSkillIndex != -1)
+			tipManager.showGambleSkillTip(usingGambleSkillIndex);
+	}
 
     private void processGambleSkillTimes() {
-        if (usingGambleSkillIndex != -1)
-            dataManager.gambleSkillTimes[usingGambleSkillIndex]--;
+		if (usingGambleSkillIndex != -1) {
+			tipManager.hideTips();
+			dataManager.gambleSkillTimes [usingGambleSkillIndex]--;
+		}
     }
 
 
@@ -242,6 +247,7 @@ public class UIManager : MonoBehaviour {
         hideNextButton();
 
         playSwipeToDiceRollingAnimation();
+		tipManager.showTips ();
     }
 
     public void showEnemyRollingPanel() {
@@ -252,6 +258,7 @@ public class UIManager : MonoBehaviour {
 
     public void showGambleSkillPanel() {
         showNextButton();
+		tipManager.hideTips ();
 
         int[] gambleSkillTimes = dataManager.gambleSkillTimes;
 

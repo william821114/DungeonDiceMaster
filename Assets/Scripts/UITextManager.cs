@@ -33,12 +33,12 @@ public class UITextManager : MonoBehaviour {
 
 		switch (lootType) {
 		case 0:
-			title.text = "Health Postion";
-			information.text = "This item can recover character's HP\n 10 points.";
+			title.text = "生命藥水";
+			information.text = "此道具可以恢復角色10點生命值。\n（拖移至角色圖像上使用）";
 			break;
 		case 1:
-			title.text = "Magic Postion";
-			information.text = "This item can recover character's MP\n 3 points.";
+			title.text = "魔法藥水";
+			information.text = "此道具可以恢復角色3點魔力值。\n（拖移至角色圖像上使用）";
 			break;
 		default:
 			Debug.Log ("UITextManager - showLootDetail error");
@@ -54,28 +54,28 @@ public class UITextManager : MonoBehaviour {
 
 		switch (skillType) {
 		case 0:
-			title.text = "Steal";
-			information.text = "Take a dice from enemy.\n\nNext Turn, \nThe enemy roll one less dice.\nYou roll one more dice.";
+			title.text = "盜高一尺";
+			information.text = "盜取對方一顆骰子。\n\n下個回合，\n對方少擲一顆骰子，\n你多擲一顆骰子。";
 			break;
 		case 1:
-			title.text = "Thr33";
-			information.text = "If the dice value is less than 3, transform it to 3.";
+			title.text = "投影";
+			information.text = "所有數值未達3的骰子，\n全部轉變成3。";
 			break;
 		case 2:
-			title.text = "One More Dice";
-			information.text = "Throw one more D6.";
+			title.text = "口袋夾層";
+			information.text = "多擲一顆六面骰，\n所得數值與前次擲骰的結果相加。";
 			break;
 		case 3:
-			title.text = "Keep";
-			information.text = "Choose a dice to keep.\nReroll other dices.";
+			title.text = "鎖定";
+			information.text = "選擇一個骰子保留其數值，\n重擲其他骰子。";
 			break;
 		case 4:
-			title.text = "6 - 9";
-			information.text = "If the dice value is 6, transform it to 9.";
+			title.text = "反轉";
+			information.text = "數值為6的骰子，全部轉變成9。";
 			break;
 		case 5:
-			title.text = "Reroll";
-			information.text = "Reroll all dices.";
+			title.text = "時光倒轉";
+			information.text = "重擲所有骰子。";
 			break;
 		default:
 			Debug.Log ("UITextManager - showLootDetail error");
