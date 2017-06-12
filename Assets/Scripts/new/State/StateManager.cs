@@ -161,7 +161,7 @@ public class StateManager : MonoBehaviour {
         uiManager.showMonsterHurt();
         yield return new WaitForSeconds(1);
 
-        if(se.isHeal)
+        if(se != null && se.isHeal)
         {
             uiManager.showPlayerRecoverHp();
             yield return new WaitForSeconds(1);
@@ -190,6 +190,11 @@ public class StateManager : MonoBehaviour {
 
         yield return new WaitForSeconds(1);
         
+        if(monster.mse.isSkillActivated)
+        {
+            uiManager.showMonsterSkillActivated();
+            yield return new WaitForSeconds(0.5f);
+        }
 
         if(monster.mse.isDamage)
         {

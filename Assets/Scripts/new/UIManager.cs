@@ -30,6 +30,8 @@ public class UIManager : MonoBehaviour {
     public Text battleSkillText;
     public Image battleSkillImage;
 
+    public Text monsterSkillText;
+
 	public UITextManager textManager;
 
     private Monster monster;
@@ -320,6 +322,12 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    public void showMonsterSkillActivated()
+    {
+        monsterSkillText.text = monster.mse.usingSkill.name;
+        playMonsterSkillActivatedAnimation();
+    }
+
     public void showMonsterHurt()
     {
         //monster.check 裡已經把這回合受到的傷害數字更新到hurt value了
@@ -384,6 +392,12 @@ public class UIManager : MonoBehaviour {
     {
         stateManager.audioManager.playSkillActivated();
         canvasAnimator.SetTrigger("skillActivated");
+    }
+
+    private void playMonsterSkillActivatedAnimation()
+    {
+        stateManager.audioManager.playSkillActivated();
+        canvasAnimator.SetTrigger("monsterSkillActivated");
     }
 
     private void playMonsterHurtAnimation()

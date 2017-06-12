@@ -12,7 +12,7 @@ public class Robber : Monster
         // 技能1 : 綁架 封印一顆骰子
         int finalCheckValue = 0;
         Character target = stateManager.getCharacter();
-        MonsterSkillEffect mse = new MonsterSkillEffect();
+        mse = new MonsterSkillEffect();
 
         for (int i = 0; i < checkValue.Length; i++)
         {
