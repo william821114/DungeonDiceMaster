@@ -9,6 +9,8 @@ public class AudioManager : MonoBehaviour {
     public AudioSource[] monsterHurtSound;
     public AudioSource SkillActivatedSound;
     public AudioSource BattleVictorySound;
+    public AudioSource playerDodgeSound;
+    public AudioSource monsterAttackDodgedSound;
 
     void Awake()
     {
@@ -43,5 +45,15 @@ public class AudioManager : MonoBehaviour {
     public void playBattleVictory()
     {
         BattleVictorySound.Play();
+    }
+
+    public void playPlayerDodge()
+    {
+        playerDodgeSound.Play();
+    }
+
+    public void playMonsterAttackDodged()
+    {
+        monsterAttackDodgedSound.Play();
     }
 }

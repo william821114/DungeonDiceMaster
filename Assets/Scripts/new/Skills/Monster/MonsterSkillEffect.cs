@@ -13,6 +13,7 @@ public class MonsterSkillEffect
     public bool isDisable;
     public bool isSelfDisable;
     public bool isSkillActivated;
+    public bool isAtkDodged;
     public int damage;
     public int heal;
     public int MPDamage;
@@ -35,6 +36,7 @@ public class MonsterSkillEffect
         this.isSelfDisable = false;
         this.isMPDamage = false;
         this.isHealMP = false;
+        this.isAtkDodged = false;
 
         // 初始值設定 activated 為 false，在 Skill 中的 calSkillEffect 發動成功時，
         // 將這個參數設定為 true ，以觸發技能發動的特效

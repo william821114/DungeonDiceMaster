@@ -129,6 +129,7 @@ public class Character : BattleUnit {
             if (noHurtTurn > 0)
             {
                 noHurtTurn -= 1;
+                mse.isAtkDodged = true;
                 Debug.Log("迴避傷害 剩餘次數:" + noHurtTurn);
             }
             else
