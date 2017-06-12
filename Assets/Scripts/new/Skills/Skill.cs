@@ -20,6 +20,7 @@ public class Skill : MonoBehaviour
     public bool isSelfDisable;
 
     public string skillName_ch;
+    public GameObject skillprefab;
 
     //These methods are virtual and thus can be overriden
     //in child classes

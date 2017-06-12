@@ -16,6 +16,8 @@ public class StateManager : MonoBehaviour {
 	public Monster monster;
 	public GameObject monsterMark;
     public int turn;
+    public GameObject normalAttackPrefab;
+    public GameObject HealPrefab;
 
     public ScreenEffectManager screenEffectManager;
 
@@ -159,8 +161,18 @@ public class StateManager : MonoBehaviour {
         if(bcManager.turnDamage > 0)
         {
             uiManager.showPlayerAttackAnim();
+            
             yield return new WaitForSeconds(0.5f);
             audioManager.playPlayerAttack();
+            if (se != null && se.isSkillActivated && se.isDamage)
+            {
+                Instantiate(bcManager.getBattleSkill().skillprefab, monster.transform.position, Quaternion.identity);
+            }
+
+            else
+            {
+                Instantiate(normalAttackPrefab, monster.transform.position, Quaternion.identity);
+            }
             uiManager.showMonsterHurt();
             yield return new WaitForSeconds(1);
 
@@ -168,6 +180,7 @@ public class StateManager : MonoBehaviour {
 
         if (se != null && se.isHeal)
         {
+            Instantiate(HealPrefab, currentCharacter.transform.position, Quaternion.identity);
             uiManager.showPlayerRecoverHp();
             yield return new WaitForSeconds(1);
         }
@@ -218,6 +231,16 @@ public class StateManager : MonoBehaviour {
             {
                 yield return new WaitForSeconds(0.5f);
                 uiManager.showPlayerHurt();
+
+                if (monster.mse.isSkillActivated)
+                {
+                    Instantiate(monster.mse.usingSkill.skillprefab, currentCharacter.transform.position, Quaternion.identity);
+                }
+                else
+                {
+                    Instantiate(normalAttackPrefab, currentCharacter.transform.position, Quaternion.identity);
+                }
+
                 audioManager.playMonsterAttack();
                 yield return new WaitForSeconds(0.5f);
                 audioManager.playPlayerHurt();
@@ -228,6 +251,7 @@ public class StateManager : MonoBehaviour {
         if(monster.mse.isHeal)
         {
             uiManager.showMonsterRecoverHp();
+            Instantiate(HealPrefab, monster.transform.position, Quaternion.identity);
             yield return new WaitForSeconds(0.5f);
             uiManager.updateMonsterUI();
         }

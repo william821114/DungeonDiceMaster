@@ -14,33 +14,16 @@ public class FireMagician : Monster
         Character target = stateManager.getCharacter();
         mse = new MonsterSkillEffect();
 
-        if (stateManager.turn % 4 == 0)
+        if (stateManager.turn % 3 == 0)
         {
             bool isAllEven = true;
             
-            for (int i = 0; i < checkValue.Length; i++)
-            {
-                if (checkValue[i] % 2 != 0)
-                {
-                    isAllEven = false;
-                }
-
-                finalCheckValue += checkValue[i];
-            }
-
-            if(isAllEven)
-            {
+           
                 //大字火
                 mse.setDamage(40);
                 mse.setSkillActivated(true);
                 mse.setUsingSkill(this.skill[2]);
-            }
-            else
-            {
-                // 普通
-                mse.setDamage(finalCheckValue);
-                mse.setSkillActivated(false);
-            }
+            
             
         }
         

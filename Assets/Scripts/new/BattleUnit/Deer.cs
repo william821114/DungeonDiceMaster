@@ -65,7 +65,7 @@ public class Deer : Monster {
                     finalCheckValue *= 2;
                     mse.setSkillActivated(true);
                     mse.setDamage(finalCheckValue);
-                    mse.setUsingSkill(this.skill[1]);
+                    mse.setUsingSkill(this.skill[2]);
                     Debug.Log(mse.usingSkill.name + "發動成功! -" + finalCheckValue);
                     Debug.Log(mse.usingSkill.description);
                 } else

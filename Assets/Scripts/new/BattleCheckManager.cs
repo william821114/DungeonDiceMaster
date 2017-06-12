@@ -476,6 +476,11 @@ public class BattleCheckManager : MonoBehaviour {
         return usingBattleSkillEffect;
     }
 
+    public Skill getBattleSkill()
+    {
+        return usingBattleSkill;
+    }
+
 	public void lockSelectDice(bool toLock, int lockedDiceValue){
 		flickArea.enabled = toLock;
 		checkValue [0] = lockedDiceValue;
