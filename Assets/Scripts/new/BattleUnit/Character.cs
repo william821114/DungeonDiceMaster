@@ -24,8 +24,9 @@ public class Character : BattleUnit {
 
 
     public StateManager stateManager;
+    public BattleCheckManager bcManager;
 
-	public Sprite characterPiece;
+    public Sprite characterPiece;
 	public Sprite characterHalf;
 	public Sprite characterFull;
 
@@ -39,6 +40,8 @@ public class Character : BattleUnit {
 
 	void Awake(){
 		DontDestroyOnLoad (this);
+
+        bcManager = (BattleCheckManager)FindObjectOfType(typeof(BattleCheckManager));
 
         diceStates = new DiceState[battleDice.Length];
         for (int i = 0; i < battleDice.Length; i++)
@@ -115,6 +118,7 @@ public class Character : BattleUnit {
 
     public void check(MonsterSkillEffect mse)
     {
+        Debug.Log(mse.isDamage);
         if (mse.isSkillActivated)
         {
             Debug.Log("怪獸技能 " + mse.usingSkill.name + " 發動成功!");
@@ -159,6 +163,9 @@ public class Character : BattleUnit {
         if (!isDead)
         {
             Hp = (Hp + value) >= MaxHp ? MaxHp : (Hp + value);
+
+            TextMesh HealValue = this.gameObject.transform.GetChild(2).gameObject.GetComponent<TextMesh>();
+            HealValue.text = "+" + value.ToString();
         }
     }
 

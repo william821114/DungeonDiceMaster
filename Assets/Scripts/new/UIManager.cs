@@ -341,6 +341,16 @@ public class UIManager : MonoBehaviour {
         playPlayerAtkAnimation();
     }
 
+    public void showPlayerRecoverHp()
+    {
+        playPlayerRecoverHp();
+    }
+
+    public void showMonsterRecoverHp()
+    {
+        playMonsterRecoverHp();
+    }
+
     //-----------------------------------Anitmation Trigger----------------------------------
     private void playShowBattleSkillAnimation() {
         _animator.SetTrigger("ShowBattleSkill");
@@ -398,6 +408,18 @@ public class UIManager : MonoBehaviour {
     {
         Animator playerAnimator = currentCharacter.gameObject.GetComponent<Animator>();
         playerAnimator.SetTrigger("attack");
+    }
+
+    private void playPlayerRecoverHp()
+    {
+        Animator playerAnimator = currentCharacter.gameObject.GetComponent<Animator>();
+        playerAnimator.SetTrigger("recoverHp");
+    }
+
+    private void playMonsterRecoverHp()
+    {
+        Animator monsterAnimator = monster.gameObject.GetComponent<Animator>();
+        monsterAnimator.SetTrigger("recoverHp");
     }
 
 

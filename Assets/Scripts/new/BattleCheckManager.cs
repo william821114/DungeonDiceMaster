@@ -19,6 +19,7 @@ public class BattleCheckManager : MonoBehaviour {
 	private Skill usingBattleSkill; // 目前使用的戰鬥技能
     private SkillEffect usingBattleSkillEffect; // 戰鬥技能在本回合中造成的效果
 	private int usingGambleSkillIndex; // 目前使用的賭博技能，因為賭技通用且固定，直接用int來表示，另一個原因是賭技歧異度大，不太適合統一繼承。
+    public MonsterSkillEffect usingMonsterSkillEffect;
 
 	private Dice[] dices; // 從角色中取得的骰子會放在這裡
     private Dice[] disableddices;
