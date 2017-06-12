@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour {
     public TextMesh currentCharacterHP;
     public TextMesh currentCharacterMP;
     public TextMesh currentCharacterDEF;
+    public TextMesh currentCharacterDODGE;
     public SpriteRenderer currentCharacterHalf;
     public SpriteRenderer[] battleSkill;
 	public MonsterSkillButtonManager[] msbm;
@@ -92,6 +93,7 @@ public class UIManager : MonoBehaviour {
         currentCharacterHP.text = "" + currentCharacter.Hp;
         currentCharacterMP.text = "" + currentCharacter.Mp;
         currentCharacterDEF.text = "" + currentCharacter.Def;
+        currentCharacterDODGE.text = "" + currentCharacter.noHurtTurn;
     }
 
     //-----------------------------------Button Function Set----------------------------------
@@ -234,6 +236,7 @@ public class UIManager : MonoBehaviour {
         currentCharacterHP.text = "" + currentCharacter.Hp;
         currentCharacterMP.text = "" + currentCharacter.Mp;
         currentCharacterDEF.text = "" + currentCharacter.Def;
+        currentCharacterDODGE.text = "" + currentCharacter.noHurtTurn;
 
         playShowBattleSkillAnimation();
     }
@@ -359,6 +362,11 @@ public class UIManager : MonoBehaviour {
         playMonsterRecoverHp();
     }
 
+    public void showPlayerDodge()
+    {
+        playPlayerDodge();
+    }
+
     //-----------------------------------Anitmation Trigger----------------------------------
     private void playShowBattleSkillAnimation() {
         _animator.SetTrigger("ShowBattleSkill");
@@ -434,6 +442,12 @@ public class UIManager : MonoBehaviour {
     {
         Animator monsterAnimator = monster.gameObject.GetComponent<Animator>();
         monsterAnimator.SetTrigger("recoverHp");
+    }
+
+    private void playPlayerDodge()
+    {
+        Animator playerAnimator = currentCharacter.gameObject.GetComponent<Animator>();
+        playerAnimator.SetTrigger("dodge");
     }
 
 
