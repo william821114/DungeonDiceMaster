@@ -25,6 +25,7 @@ public class Monster : BattleUnit
     public DiceState[] diceStates;
     public bool willGetHurt = false;
     public MonsterSkill[] skill;
+    public MonsterSkillEffect mse;
 
 	public Sprite[] monsterSkills;
 
@@ -33,6 +34,7 @@ public class Monster : BattleUnit
 
     public Character actioningCharacter;
     public StateManager stateManager;
+    public BattleCheckManager bcManager;
     public Animator actioningCharacterAnimator;
 
     
@@ -43,6 +45,7 @@ public class Monster : BattleUnit
     void Awake()
     {
         stateManager = (StateManager)FindObjectOfType(typeof(StateManager));
+        bcManager = (BattleCheckManager)FindObjectOfType(typeof(BattleCheckManager));
         this.diceStates = new DiceState[battleDice.Length];
         for(int i = 0; i < battleDice.Length; i ++)
         {
@@ -123,8 +126,10 @@ public class Monster : BattleUnit
     public void recoverHP(int value)
     {
         if (!isDead)
-        {
+        {           
             Hp = (Hp + value) >= MaxHp ? MaxHp : (Hp + value);
+            TextMesh HealValue = this.gameObject.transform.GetChild(1).gameObject.GetComponent<TextMesh>();
+            HealValue.text = "+" + value;
         }
     }
 

@@ -47,7 +47,7 @@ public class StateManager : MonoBehaviour {
 		uiManager.setMonster (monster);
 		bcManager.setMonster (monster);
 
-		// 目前先設成玩家先攻
+		// 目前先設成玩家先攻 
 		battleUnits [0] = (BattleUnit)currentCharacter;
 		battleUnits [1] = (BattleUnit)monster;
 
@@ -142,26 +142,33 @@ public class StateManager : MonoBehaviour {
 
     IEnumerator PlayerAttackRoutine()
     {
-		uiManager.showPlayerAttack();
+        SkillEffect se = bcManager.getBattleSkillEffect();
+
+        uiManager.showPlayerAttack();
 		bcManager.destroyAllDice(); // 清掉骰子模型
 
         uiManager.showPlayerSkillActivate();
 
 
-        if (bcManager.getBattleSkillEffect() == null)
+        if (se == null)
             yield return new WaitForSeconds(1.5f);
         else
             yield return new WaitForSeconds(1);
 
-
         uiManager.showPlayerAttackAnim();
         yield return new WaitForSeconds(0.5f);
-
         audioManager.playPlayerAttack();
         uiManager.showMonsterHurt();
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1);
+
+        if(se.isHeal)
+        {
+            uiManager.showPlayerRecoverHp();
+            yield return new WaitForSeconds(1);
+        }
+        
         // demo用
-        if(monster.Hp <= 0)
+        if (monster.Hp <= 0)
         {
 			// 提醒一下，換scene前一定要將角色parent移回dataManager，不然就算有Don't Destroy，也因為父親被砍，而消失。
 			// 只有戰敗死亡的時候，才不用管，反正都要重頭來過
@@ -182,16 +189,28 @@ public class StateManager : MonoBehaviour {
 		bcManager.destroyAllDice(); // 清掉骰子模型
 
         yield return new WaitForSeconds(1);
+        
 
-        uiManager.showMonsterAttack();
-        yield return new WaitForSeconds(0.5f);
-        uiManager.showPlayerHurt();
-        audioManager.playMonsterAttack();
-        yield return new WaitForSeconds(0.5f);
-        audioManager.playPlayerHurt();
-        yield return new WaitForSeconds(0.5f);
+        if(monster.mse.isDamage)
+        {
+            uiManager.showMonsterAttack();
+            yield return new WaitForSeconds(0.5f);
+            uiManager.showPlayerHurt();
+            audioManager.playMonsterAttack();
+            yield return new WaitForSeconds(0.5f);
+            audioManager.playPlayerHurt();
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        if(monster.mse.isHeal)
+        {
+            uiManager.showMonsterRecoverHp();
+            yield return new WaitForSeconds(0.5f);
+            uiManager.updateMonsterUI();
+        }
 
         uiManager.updateCharacterUI();
+        
         uiManager.showNextButton(); 
         currentUnitIndex = (currentUnitIndex + 1) % battleUnits.Length;
     }

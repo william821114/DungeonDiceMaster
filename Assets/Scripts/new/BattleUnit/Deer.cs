@@ -12,7 +12,7 @@ public class Deer : Monster {
         int finalCheckValue = 0;
         int k = Random.Range(0, 15000);
         Character target = stateManager.getCharacter();
-        MonsterSkillEffect mse = new MonsterSkillEffect();
+        mse = new MonsterSkillEffect();
 
         if (this.Hp > this.MaxHp / 2)
         {
