@@ -111,7 +111,7 @@ public class Character : BattleUnit {
                 //取得 player hurtvalue並預先更新數字
                 HurtValue.text = "-" + damage.ToString();
 
-                this.Hp = ((this.Hp -= damage) > 0) ? this.Hp : 0;
+                this.Hp = ((this.Hp - damage) > 0) ? this.Hp : 0;
             }
         }   
     }
