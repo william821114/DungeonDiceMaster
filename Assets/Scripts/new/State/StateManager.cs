@@ -154,7 +154,7 @@ public class StateManager : MonoBehaviour {
         uiManager.showPlayerSkillActivate();
 
         if (se == null)
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(0.8f);
         else
             yield return new WaitForSeconds(1);
 
@@ -257,6 +257,12 @@ public class StateManager : MonoBehaviour {
         }
 
         uiManager.updateCharacterUI();
+
+        if (currentCharacter.Hp <= 0)
+        {
+            setState(State.BattleState.BattleEnd);
+        }
+
         uiManager.showNextButton(); 
         currentUnitIndex = (currentUnitIndex + 1) % battleUnits.Length;
     }

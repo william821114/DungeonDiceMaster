@@ -40,10 +40,6 @@ public class LootManager : MonoBehaviour {
 	void Awake () {
 		characterPieces = new SpriteRenderer[characterButton.Length];
 
-        // 找到Audio manager
-        audioManager = (AudioManager)FindObjectOfType(typeof(AudioManager));
-        audioManager.playBattleVictory();
-
         for (int i = 0; i < characterButton.Length; i++) {
 			characterPieces [i] = characterButton [i].GetComponent<SpriteRenderer> ();
 		}
