@@ -47,14 +47,11 @@ public class Dodge : Skill
 
         if (isTrigger)
         {
-
             Debug.Log("疾風發動成功!");
             skilleffect.setSkillActivated(true);
-            finalCheckValue = 1;
-
+            skilleffect.setDodge(1);
         }
-        skilleffect.setDisable(0, 2);
-        skilleffect.setDodge(1);
+
         skilleffect.setDamage(finalCheckValue);
 
         return skilleffect;
