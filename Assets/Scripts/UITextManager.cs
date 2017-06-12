@@ -96,16 +96,16 @@ public class UITextManager : MonoBehaviour {
 		if (character == "Knight") {
 			switch (skillType) {
 			case 0:
-				title.text = "Round Slash";
-				information.text = "If each dice you rolled greater than 2, \nattack power +4.";
+				title.text = "迴旋斬";
+				information.text = "若所有骰子點數大於 2，\n攻擊點數 +4.";
 				break;
 			case 1:
-				title.text = "Heavy Slash";
-				information.text = "If dices total value greater than 7, \n double attack power & recover 2 HP.";
+				title.text = "重擊";
+				information.text = "若所有骰子點數加總大於 7， \n攻擊點數加倍 & 回復 2 HP.";
 				break;
 			case 2:
-				title.text = "Dodge";
-				information.text = "If dices total value less than 5, \n dodge next turn's damage.";
+				title.text = "閃避";
+				information.text = "若骰子點數加總小於 5， \n迴避下回合傷害.";
 				break;
 			default:
 				Debug.Log ("UITextManager - showBattleSkillDetail error");
@@ -125,16 +125,16 @@ public class UITextManager : MonoBehaviour {
 		if (monster == "Deer") {
 			switch (skillType) {
 			case 0:
-				title.text = "Antlers";
-				information.text = "When enemy's HP greater than 50%, \nprobable attack power +5.";
+				title.text = "犄角攻擊";
+				information.text = "當 HP 大於 50% 以上時, \n若骰子總和大於 6 ，攻擊加 5";
 				break;
 			case 1:
-				title.text = "Heal";
-				information.text = "When enemy's HP less than 50%, \nprobable recover 50% Max HP.";
+				title.text = "治癒";
+				information.text = "怪物血量小於 50% 時，\n50% 機率 ，回復 1/2 MaxHp";
 				break;
 			case 2:
-				title.text = "Trapped Beast";
-				information.text = "When enemy's HP less than 50%, \nprobable double attack power.";
+				title.text = "困獸之鬥";
+				information.text = "怪物血量小於 50% 時，\n50% 機率 如果所有骰子都大於 2，\n攻擊最後加倍";
 				break;
 			default:
 				Debug.Log ("UITextManager - showBattleSkillDetail error");
@@ -143,16 +143,16 @@ public class UITextManager : MonoBehaviour {
 		} else if (monster == "Rogue") {
 			switch (skillType) {
 			case 0:
-				title.text = "High Defence";
-				information.text = "This enemy uses 'Steal' skill every turn.";
+				title.text = "肉盾";
+				information.text = "每一回合都會使用 綁架 封印我方一顆骰子";
 				break;
 			case 1:
-				title.text = "Low Attack";
-				information.text = "This enemy's attack will down 1/3.";
+				title.text = "搔癢";
+				information.text = "攻擊點數減少 1/3";
 				break;
 			case 2:
-				title.text = "Steal";
-				information.text = "Take a random dice from hero.";
+				title.text = "綁架";
+				information.text = "隨機封印一顆骰子";
 				break;
 			default:
 				Debug.Log ("UITextManager - showBattleSkillDetail error");
@@ -161,16 +161,16 @@ public class UITextManager : MonoBehaviour {
 		} else if (monster == "FireMagician") {
 			switch (skillType) {
 			case 0:
-				title.text = "Fire Ball";
-				information.text = "If each dice this enemy rolled less than 3, \nhis attack power +10.";
+				title.text = "火球術";
+				information.text = "若骰子全部小於 3，\n則最後傷害 + 10";
 				break;
 			case 1:
-				title.text = "Seal Magic";
-				information.text = "If each dice this enemy rolled is odd number, \nseal one player dices 2 turns.";
+				title.text = "封印術";
+				information.text = "若全部骰子為奇數，\n封印隨機一顆骰子 2 回合";
 				break;
 			case 2:
-				title.text = "Wide Fire";
-				information.text = "Multiple of 3's turn, \nif each dice this enemy rolled is even number, \ngive player 40 damage.";
+				title.text = "野火燎原";
+				information.text = "每 3 倍數回合必用，\n若所有骰子為偶數，\n造成 40 傷害";
 				break;
 			default:
 				Debug.Log ("UITextManager - showBattleSkillDetail error");

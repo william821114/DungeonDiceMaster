@@ -68,6 +68,9 @@ public class Deer : Monster {
                     mse.setUsingSkill(this.skill[1]);
                     Debug.Log(mse.usingSkill.name + "發動成功! -" + finalCheckValue);
                     Debug.Log(mse.usingSkill.description);
+                } else
+                {
+                    mse.setDamage(finalCheckValue);       
                 }
             }
         }

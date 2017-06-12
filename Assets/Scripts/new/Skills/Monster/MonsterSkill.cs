@@ -6,4 +6,5 @@ public class MonsterSkill : MonoBehaviour
 {
     public string name;
     public string description;
+    public Sprite image;
 }
