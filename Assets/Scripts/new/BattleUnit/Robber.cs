@@ -19,12 +19,21 @@ public class Robber : Monster
             finalCheckValue += checkValue[i];
         }
 
-        int k = Random.Range(0, target.diceStates.Length - 1);
+        int s = Random.Range(0, 15000);
 
-        mse.setDisable(k, 1);
-        mse.setDamage(finalCheckValue * 2 / 3);
-        mse.setSkillActivated(true);
-        mse.setUsingSkill(this.skill[0]);
+        if(s < 10000)
+        {
+            int k = Random.Range(0, target.diceStates.Length - 1);
+            mse.setDisable(k, 1);
+            mse.setDamage(finalCheckValue * 2 / 3);
+            mse.setSkillActivated(true);
+            mse.setUsingSkill(this.skill[0]);
+        }
+
+        else
+        {
+            mse.setDamage(finalCheckValue * 2 / 3);
+        }
 
         target.check(mse);
     }

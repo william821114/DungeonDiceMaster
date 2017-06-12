@@ -9,6 +9,7 @@ public class Dodge : Skill
     {
         bool isTrigger = true;
         finalCheckValue = 0;
+        
         for (int i = 0; i < checkValue.Length; i++)
         {
             if (checkValue[i] > 5) isTrigger = false;
@@ -17,7 +18,7 @@ public class Dodge : Skill
         if (isTrigger)
         {
 
-            Debug.Log("迴避發動成功!");
+            Debug.Log("疾風發動成功!");
             finalCheckValue = 1;
 
         }
@@ -40,19 +41,22 @@ public class Dodge : Skill
         finalCheckValue = 0;
         for (int i = 0; i < checkValue.Length; i++)
         {
-            if (checkValue[i] > 5) isTrigger = false;
+            if (checkValue[i] > 4) isTrigger = false;
+            finalCheckValue += checkValue[i];
         }
 
         if (isTrigger)
         {
 
-            Debug.Log("迴避發動成功!");
+            Debug.Log("疾風發動成功!");
             skilleffect.setSkillActivated(true);
             finalCheckValue = 1;
 
         }
         skilleffect.setDisable(0, 2);
         skilleffect.setDodge(finalCheckValue);
+        skilleffect.setDamage(finalCheckValue);
+
         return skilleffect;
     }
 }

@@ -16,21 +16,16 @@ public class FireMagician : Monster
 
         if (stateManager.turn % 3 == 0)
         {
-            bool isAllEven = true;
-            
-           
-                //大字火
-                mse.setDamage(40);
-                mse.setSkillActivated(true);
-                mse.setUsingSkill(this.skill[2]);
-            
-            
+            //大字火
+            mse.setDamage(40);
+            mse.setSkillActivated(true);
+            mse.setUsingSkill(this.skill[2]);
         }
         
         else
         {
             bool isAllOdd = true;
-            bool isAllSmallerThan3 = true;
+            bool isAllSmallerThan5 = true;
             for (int i = 0; i < checkValue.Length; i++)
             {
                 if(checkValue[i] % 2 == 0)
@@ -38,9 +33,9 @@ public class FireMagician : Monster
                     isAllOdd = false;
                 }
 
-                if(checkValue[i] > 3)
+                if(checkValue[i] > 5)
                 {
-                    isAllSmallerThan3 = false;
+                    isAllSmallerThan5 = false;
                 }
 
                 finalCheckValue += checkValue[i];
@@ -55,7 +50,7 @@ public class FireMagician : Monster
                 mse.setUsingSkill(this.skill[1]);
             }
 
-            else if (isAllSmallerThan3)
+            else if (isAllSmallerThan5)
             {
                 // 火球術
                 mse.setDamage(finalCheckValue + 10);

@@ -29,7 +29,7 @@ public class HeavySlash : Skill
 
         }
 
-        if (finalCheckValue > 7)
+        if (finalCheckValue > 8)
         {
             finalCheckValue *= 2;
             skilleffect.setDamage(finalCheckValue);

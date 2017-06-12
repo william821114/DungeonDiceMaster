@@ -97,21 +97,21 @@ public class UITextManager : MonoBehaviour {
 			switch (skillType) {
 			case 0:
 				title.text = "迴旋斬";
-				information.text = "若所有骰子點數大於 2，\n攻擊點數 +4.";
+				information.text = "若所有骰子點數大於 2，\n攻擊點數 +4";
 				break;
 			case 1:
-				title.text = "重擊";
-				information.text = "若所有骰子點數加總大於 7， \n攻擊點數加倍 & 回復 2 HP.";
+				title.text = "噬血一擊";
+				information.text = "若所有骰子點數加總大於 8， \n攻擊點數加倍 & 回復 2 HP";
 				break;
 			case 2:
-				title.text = "閃避";
-				information.text = "若骰子點數加總小於 5， \n迴避下回合傷害.";
+				title.text = "疾風斬";
+				information.text = "若骰子點數加總小於等於 4， \n迴避一回合傷害";
 				break;
 			default:
 				Debug.Log ("UITextManager - showBattleSkillDetail error");
 				break;
 			}
-		} else if (character == "Theif") {
+		} else if (character == "Thief") {
 		} else if (character == "Priest") {
 		}
 
@@ -144,11 +144,11 @@ public class UITextManager : MonoBehaviour {
 			switch (skillType) {
 			case 0:
 				title.text = "肉盾";
-				information.text = "每一回合都會使用 綁架 封印我方一顆骰子";
+				information.text = "每一回合有 2/3 機率\n使用 綁架 封印我方一顆骰子";
 				break;
 			case 1:
 				title.text = "搔癢";
-				information.text = "攻擊點數減少 1/3";
+				information.text = "天生攻擊力減少 1/3";
 				break;
 			case 2:
 				title.text = "綁架";
@@ -162,7 +162,7 @@ public class UITextManager : MonoBehaviour {
 			switch (skillType) {
 			case 0:
 				title.text = "火球術";
-				information.text = "若骰子全部小於 3，\n則最後傷害 + 10";
+				information.text = "若骰子全部小於等於 5，\n則最後傷害 + 5";
 				break;
 			case 1:
 				title.text = "封印術";
@@ -170,7 +170,7 @@ public class UITextManager : MonoBehaviour {
 				break;
 			case 2:
 				title.text = "野火燎原";
-				information.text = "每 3 倍數回合必用，\n若所有骰子為偶數，\n造成 40 傷害";
+				information.text = "每 3 倍數回合必用，\n發動強大的魔法，\n造成 40 傷害";
 				break;
 			default:
 				Debug.Log ("UITextManager - showBattleSkillDetail error");
