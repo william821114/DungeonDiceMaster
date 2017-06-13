@@ -178,7 +178,7 @@ public class StateManager : MonoBehaviour {
 
         }
 
-        if (se != null && se.isHeal)
+        if (se != null && se.isHeal && se.heal > 0)
         {
             Instantiate(HealPrefab, currentCharacter.transform.position, Quaternion.identity);
             uiManager.showPlayerRecoverHp();

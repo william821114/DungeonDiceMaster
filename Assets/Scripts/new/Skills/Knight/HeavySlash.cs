@@ -37,6 +37,10 @@ public class HeavySlash : Skill
             skilleffect.setSkillActivated(true);
             Debug.Log("重擊發動成攻! - " + finalCheckValue);
         }
+        else
+        {
+            skilleffect.setDamage(finalCheckValue);
+        }
 
         return skilleffect;
     }
