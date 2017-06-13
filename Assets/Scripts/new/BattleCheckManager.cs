@@ -70,11 +70,29 @@ public class BattleCheckManager : MonoBehaviour {
 			if (!isReadyToRoll) {
 
 				Dice[] d = currentCharacter.getBattleDice ();
-                Dice[] disableDices = currentCharacter.getDisableDice();
+
+                
+              
+                List<Dice> useableDices = new List<Dice>();
+                List<Dice> disabledDices = new List<Dice>();
+
+
+                for (int i = 0; i < d.Length; i++)
+                {
+                    if(currentCharacter.diceStates[i].disableTurn > 0)
+                    {
+                        disabledDices.Add(d[i]);
+                    }
+                    else
+                    {    
+                        useableDices.Add(d[i]);
+                    }
+                }
 
                 // 召喚battledice
-                dices = new Dice[d.Length];
-                disableddices = new Dice[disableDices.Length];
+                dices = useableDices.ToArray();
+                disableddices = disabledDices.ToArray();
+
 
                 for (int i = 0; i < dices.Length; i++) {
 
@@ -98,7 +116,7 @@ public class BattleCheckManager : MonoBehaviour {
 				}
 
                 //召喚disabledice
-                for (int i = 0; i < disableDices.Length; i++)
+                for (int i = 0; i < disableddices.Length; i++)
                 {
                     disableddices[i] = GameObject.Instantiate(d[i], new Vector3(Random.Range(-2.5f, 2.5f), -2.5f, Random.Range(-5.5f, -2f)), Quaternion.identity) as Dice;
                     disableddices[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;

@@ -59,16 +59,7 @@ public class Character : BattleUnit {
 	}
 
 	public Dice[] getBattleDice(){
-        List<Dice> usableBattleDices = new List<Dice>();
-        for(int i = 0; i < battleDice.Length; i ++)
-        {
-            if(diceStates[i].disableTurn == 0)
-            {
-                usableBattleDices.Add(battleDice[i]);
-            }
-        }
-
-		return usableBattleDices.ToArray();
+        return battleDice;
 	}
 
     public Dice[] getDisableDice()
