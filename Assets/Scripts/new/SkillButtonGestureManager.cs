@@ -17,6 +17,7 @@ public class SkillButtonGestureManager : MonoBehaviour {
 	public int index;
 
 	public UIManager uimanager;
+	public UsingSkillIconManager usim;
 
 	private SpriteRenderer icon;
 
@@ -31,8 +32,10 @@ public class SkillButtonGestureManager : MonoBehaviour {
 			{
 				if(state){
 					state = false;
+					usim.setNoSkill();
 				} else{
 					state = true;
+					usim.setUsingSkill(index, skillOn);
 					foreach (SkillButtonGestureManager skillButton in otherButtons) {
 						skillButton.state = false;
 					}

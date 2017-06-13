@@ -409,11 +409,17 @@ public class BattleCheckManager : MonoBehaviour {
         else if(rollState == 1)
         {
             Debug.Log("Roll1");
+			string temp = "";
             // 這邊會計算擲骰的結果值，同時處理battle skill的效果
             for (int i = 0; i < checkValue.Length; i++)
             {
                 finalCheckValue += checkValue[i];
+				if (i == checkValue.Length - 1)
+					temp = temp + checkValue [i] + " = " + finalCheckValue;
+				else 
+					temp = temp + checkValue [i] + " + "; 
             }
+			uiManager.setLastRollResult(temp);
         }
 			
 		if (usingGambleSkillIndex != -1 || rollState == 1 || rollState == 3)

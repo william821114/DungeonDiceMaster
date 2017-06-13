@@ -27,6 +27,12 @@ public class TipBarManager : MonoBehaviour {
 		_animator.SetTrigger ("HideTipBar");
 	}
 
+	public void showLastResultTip(string result){
+		tip.text = "前次執骰結果\n" + result;
+
+		_animator.SetTrigger ("ShowTipBar");
+	}
+
 	public void showGambleSkillTip(int skillType){
 		switch (skillType) {
 		case 0:

@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour {
 
 	public UITextManager textManager;
 	public TipBarManager tipManager;
+	public UsingSkillIconManager usim;
 
     private Monster monster;
 	private Sprite[] monsterSkillIcon;
@@ -45,6 +46,7 @@ public class UIManager : MonoBehaviour {
     private DataManager dataManager;
     private Skill usingBattleSkill;
     private int usingGambleSkillIndex;
+	private string lastRollResult;
 
     // Use this for initialization
 
@@ -198,8 +200,10 @@ public class UIManager : MonoBehaviour {
         }
         bcManager.setUsingGambleSkill(usingGambleSkillIndex);
 
-		if(usingGambleSkillIndex != -1)
-			tipManager.showGambleSkillTip(usingGambleSkillIndex);
+		if (usingGambleSkillIndex != -1)
+			tipManager.showGambleSkillTip (usingGambleSkillIndex);
+		else
+			tipManager.hideTips ();
 	}
 
     private void processGambleSkillTimes() {
@@ -261,7 +265,7 @@ public class UIManager : MonoBehaviour {
 
     public void showGambleSkillPanel() {
         showNextButton();
-		tipManager.hideTips ();
+		tipManager.showLastResultTip (lastRollResult);
 
         int[] gambleSkillTimes = dataManager.gambleSkillTimes;
 
@@ -299,6 +303,8 @@ public class UIManager : MonoBehaviour {
 
     public void showPlayerAttack() {
 		hideNextButton();
+		usim.setNoSkill ();
+
         if (usingGambleSkillIndex == -1)
             playSwipeToAttackScreen2Animation();
         else
@@ -489,6 +495,10 @@ public class UIManager : MonoBehaviour {
 		}
 
 		nextButton.interactable = !toLock;
+	}
+
+	public void setLastRollResult(string lastResult){
+		this.lastRollResult = lastResult;
 	}
 }
 	
